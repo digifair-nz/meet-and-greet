@@ -1,3 +1,11 @@
+// Student Dashboard
 export const FETCH_COMPANIES_START = "FETCH_COMPANIES_START";
 export const FETCH_COMPANIES_SUCCESS = "FETCH_COMPANIES_SUCCESS";
 export const FETCH_COMPANIES_FAIL = "FETCH_COMPANIES_FAIL";
+
+// Student queue
+
+// Start the queue
+export const START_QUEUE_INIT = "START_QUEUE_INIT";
+export const START_QUEUE_SUCCESS = "START_QUEUE_SUCCESS";
+export const START_QUEUE_FAIL = "START_QUEUE_FAIL";

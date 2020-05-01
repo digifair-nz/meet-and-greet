@@ -18,15 +18,17 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //   studentDashboard: studentDashboardReducer,
 // });
 
-// const store = createStore(
-//   rootReducer,
-//   composeEnhancers(applyMiddleware(thunk))
-// );
+const store = createStore(
+  studentDashboardReducer,
+  composeEnhancers(applyMiddleware(thunk))
+);
 
 const app = (
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
 );
 
 ReactDOM.render(app, document.getElementById("root"));

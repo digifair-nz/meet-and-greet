@@ -14,21 +14,38 @@ import classes from "./StudentDashboard.module.css";
 
 import { connect } from "react-redux";
 
-class StudentDashboard extends Component {
-  state = {
-    companies: [
-      { companyName: "Google", companyLogo: googleLogo },
-      { companyName: "Xero", companyLogo: xeroLogo },
-      { companyName: "Imagr", companyLogo: imagrLogo },
-      { companyName: "Google", companyLogo: googleLogo },
-      { companyName: "Xero", companyLogo: xeroLogo },
-    ],
-  };
+import * as actions from "../../store/actions/index";
 
+class StudentDashboard extends Component {
+  /*
+  The dashboard students will see during the event. The dasboard will contain company cards which will represent
+  different companies that are participating during the event.
+
+  This dashboard reaches out to the store (which fetches company data from the server) and populates the container
+  with CompanyCard component.
+
+  It also manages the queue status by dispatching actions 
+
+
+  Author: Michael Shaimerden (michael@tadesign.co.nz)  May - 2020
+  */
+
+  componentDidMount() {
+    this.props.fetchCompanies();
+  }
+
+  queueToCompanyHandler = (companyId) => {
+    this.props.queueToCompany(companyId);
+  };
   render() {
-    let companyCards = this.state.companies.map((company) => {
+    let companyCards = this.props.companies.map((company, index) => {
       return (
-        <CompanyCard src={company.companyLogo} key={company.companyName} />
+        <CompanyCard
+          onClick={() => this.queueToCompanyHandler(index)}
+          isQueued={company.isQueued}
+          src={company.companyLogo}
+          key={company.companyId}
+        />
       );
     });
     return (
@@ -38,4 +55,18 @@ class StudentDashboard extends Component {
     );
   }
 }
-export default StudentDashboard;
+
+const mapStateToProps = (state) => {
+  return {
+    companies: state.companies,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchCompanies: () => dispatch(actions.fetchCompanies()),
+    queueToCompany: (companyId) => dispatch(actions.queueStudent(companyId)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentDashboard);

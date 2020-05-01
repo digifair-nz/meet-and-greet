@@ -1,42 +1,50 @@
 import * as actionTypes from "./actionTypes";
 
-export const fetchOrdersSuccess = (orders) => {
-  return {
-    type: actionTypes.FETCH_ORDERS_SUCCESS,
-    orders: orders,
-  };
-};
+import axios from "../../axios-orders";
 
-export const fetchCompaniesFail = (error) => {
+export const fetchCompaniesStart = () => {
   return {
-    type: actionTypes.FETCH_ORDERS_FAIL,
-    error: error,
-  };
-};
-
-export const fetchOrdersStart = () => {
-  return {
-    type: actionTypes.FETCH_ORDERS_START,
+    type: actionTypes.FETCH_COMPANIES_START,
   };
 };
 
 export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
+  };
+};
+
+export const startQueueSuccess = (companyId) => {
+  return {
+    type: actionTypes.START_QUEUE_SUCCESS,
+    companyId: companyId,
+  };
+};
+
+export const startQueueFail = (error) => {
+  return {
+    type: actionTypes.START_QUEUE_FAIL,
+    error: error,
+  };
+};
+export const startQueueInit = () => {
+  return {
+    type: actionTypes.START_QUEUE_INIT,
+  };
+};
+
+export const queueStudent = (companyId) => {
+  const company = { companyId: companyId, isQueued: false };
+  return (dispatch) => {
+    dispatch(startQueueInit);
     axios
-      .get("/orders.json")
+      .post("/queue.json", company)
       .then((res) => {
-        const fetchedOrders = [];
-        for (let key in res.data) {
-          fetchedOrders.push({
-            ...res.data[key],
-            id: key,
-          });
-        }
-        dispatch(fetchOrdersSuccess(fetchedOrders));
+        
+        dispatch(startQueueSuccess(companyId));
       })
-      .catch((err) => {
-        dispatch(fetchOrdersFail(err));
+      .catch((error) => {
+        dispatch(startQueueFail(error));
       });
   };
 };
