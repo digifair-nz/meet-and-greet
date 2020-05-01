@@ -1,0 +1,23 @@
+/* .CompanyCardContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+} */
+.CompanyCardContainer {
+  display: grid;
+  grid-template-columns: 20% 20% 20%;
+  width: 100%;
+  height: 100%;
+  grid-row-gap: 5%;
+  grid-column-gap: 5%;
+  justify-content: center;
+  /* flex-basis: 100%; */
+  /* flex-wrap: wrap; */
+  grid-template-rows: 20% 20% 20% 20%;
+
+  grid-auto-rows: 20%;
+}
