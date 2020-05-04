@@ -17,25 +17,12 @@ const initialState = {
 // Queue Init (sends a companyId and current queue status) if all good then queue start
 //
 const startQueueSuccess = (state, action) => {
-  // Change queue status of the desired company
-
   let updatedCompanies = [...state.companies];
-  let updatedCompany = updatedCompanies[action.companyId];
+
+  let updatedCompany = { ...updatedCompanies[action.companyId] };
+
   updatedCompany.isQueued = true;
-
-  // let updatedCompany = state.companies.filter(
-  //   (company) => company.companyId === action.companyId
-  // );
-
-  // updatedCompany = updatedCompany[0];
-
-  // updatedCompany.isQueued = true;
-
-  // let updatedCompanies = state.companies.filter(
-  //   (company) => company.companyId != action.companyId
-  // );
-
-  // updatedCompanies = updatedCompanies.concat(updatedCompany);
+  updatedCompanies[action.companyId] = updatedCompany;
 
   return {
     ...state,
