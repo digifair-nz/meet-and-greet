@@ -4,16 +4,13 @@ import Aux from "../../hoc/Auxillary";
 
 // Components
 import CompanyCard from "../../components/StudentDashbaord/CompanyCard/CompanyCard";
+import Modal from "../../components/UI/Modal/Modal";
 
-// TEMP! Hardcode images
-import googleLogo from "../../assets/company_logos/googleLogo.png";
-import xeroLogo from "../../assets/company_logos/xeroLogo.png";
-import imagrLogo from "../../assets/company_logos/imagrLogo.png";
-
+// CSS
 import classes from "./StudentDashboard.module.css";
 
+//Redux
 import { connect } from "react-redux";
-
 import * as actions from "../../store/actions/index";
 
 class StudentDashboard extends Component {
@@ -30,6 +27,9 @@ class StudentDashboard extends Component {
   Author: Michael Shaimerden (michael@tadesign.co.nz)  May - 2020
   */
 
+  state = {
+    q: [12, 13, 5, 3, 5],
+  };
   componentDidMount() {
     this.props.fetchCompanies();
   }
@@ -39,23 +39,28 @@ class StudentDashboard extends Component {
   };
   render() {
     let companyCards = this.props.companies.map((company, index) => {
+     
       return (
         <CompanyCard
-          onClick={() => this.queueToCompanyHandler(index)}
+          companyId={index}
           isQueued={company.isQueued}
-          src={company.companyLogo}
+          companyLogo={company.companyLogo}
           key={company.companyId}
+          hadSession={company.hadSession}
+          queuePosition={this.state.q[index]}
         />
       );
     });
     return (
       <Aux>
         <div className={classes.CompanyCardContainer}>{companyCards}</div>
+        {/* <Modal show={true}><div><h1>Hello</h1></div></Modal> */}
       </Aux>
     );
   }
 }
 
+// Redux
 const mapStateToProps = (state) => {
   return {
     companies: state.companies,
@@ -65,7 +70,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
-    queueToCompany: (companyId) => dispatch(actions.queueStudent(companyId)),
   };
 };
 

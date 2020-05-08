@@ -2,18 +2,6 @@ import * as actionTypes from "./actionTypes";
 
 import axios from "../../axios-orders";
 
-export const fetchCompaniesStart = () => {
-  return {
-    type: actionTypes.FETCH_COMPANIES_START,
-  };
-};
-
-export const fetchCompanies = () => {
-  return (dispatch) => {
-    dispatch(fetchCompaniesStart());
-  };
-};
-
 export const startQueueSuccess = (companyId) => {
   return {
     type: actionTypes.START_QUEUE_SUCCESS,
@@ -40,7 +28,6 @@ export const queueStudent = (companyId) => {
     axios
       .post("/queue.json", company)
       .then((res) => {
-        
         dispatch(startQueueSuccess(companyId));
       })
       .catch((error) => {

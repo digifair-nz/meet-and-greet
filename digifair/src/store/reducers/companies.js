@@ -3,14 +3,40 @@ import * as actionTypes from "../actions/actionTypes";
 import googleLogo from "../../assets/company_logos/googleLogo.png";
 import xeroLogo from "../../assets/company_logos/xeroLogo.png";
 import imagrLogo from "../../assets/company_logos/imagrLogo.png";
+import soulMachinesLogo from "../../assets/company_logos/soulMachinesLogo.png";
 import { updateObject } from "../utility";
 const initialState = {
   companies: [
-    { companyId: "Google", companyLogo: googleLogo, isQueued: false },
-    { companyId: "Xero", companyLogo: xeroLogo, isQueued: false },
-    { companyId: "Imagr", companyLogo: imagrLogo, isQueued: false },
-    { companyId: "Google2", companyLogo: googleLogo, isQueued: false },
-    { companyId: "Xero2", companyLogo: xeroLogo, isQueued: false },
+    {
+      companyId: "Google",
+      companyLogo: googleLogo,
+      isQueued: false,
+      hadSession: false,
+    },
+    {
+      companyId: "Xero",
+      companyLogo: xeroLogo,
+      isQueued: false,
+      hadSession: false,
+    },
+    {
+      companyId: "Imagr",
+      companyLogo: imagrLogo,
+      isQueued: false,
+      hadSession: false,
+    },
+    {
+      companyId: "Soul Machines",
+      companyLogo: soulMachinesLogo,
+      isQueued: false,
+      hadSession: true,
+    },
+    {
+      companyId: "Xero2",
+      companyLogo: xeroLogo,
+      isQueued: false,
+      hadSession: false,
+    },
   ],
 };
 
@@ -23,7 +49,7 @@ const startQueueSuccess = (state, action) => {
 
   updatedCompany.isQueued = true;
   updatedCompanies[action.companyId] = updatedCompany;
-
+  console.log(updatedCompanies);
   return {
     ...state,
     companies: updatedCompanies,
