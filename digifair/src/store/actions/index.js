@@ -1,1 +1,2 @@
-export { fetchCompanies,queueStudent } from "./studentDashboard";
+export { queueStudent } from "./studentQueue";
+export { fetchCompanies } from "./fetchCompanies";
