@@ -10,7 +10,7 @@ import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 
-import studentDashboardReducer from "./store/reducers/studentDashboard";
+import companiesReducer from "./store/reducers/companies";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -19,7 +19,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // });
 
 const store = createStore(
-  studentDashboardReducer,
+  companiesReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 
