@@ -5,7 +5,13 @@ export const FETCH_COMPANIES_FAIL = "FETCH_COMPANIES_FAIL";
 
 // Student queue
 
-// Start the queue
-export const START_QUEUE_INIT = "START_QUEUE_INIT";
-export const START_QUEUE_SUCCESS = "START_QUEUE_SUCCESS";
-export const START_QUEUE_FAIL = "START_QUEUE_FAIL";
+// Queue Student to a Company
+export const QUEUE_INIT = "QUEUE_INIT";
+export const QUEUE_SUCCESS = "QUEUE_SUCCESS";
+export const QUEUE_FAIL = "QUEUE_FAIL";
+
+
+// Dequeue Student from a Company
+export const DEQUEUE_INIT = "DEQUEUE_INIT";
+export const DEQUEUE_SUCCESS = "DEQUEUE_SUCCESS";
+export const DEQUEUE_FAIL = "DEQUEUE_FAIL";
