@@ -9,6 +9,7 @@ const logger = require('morgan')
 require('./models/db')
 
 const userRouter = require('./routes/user')
+const clubRouter = require('./routes/club')
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 app.use('/user', userRouter)
+app.use('/club', clubRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
