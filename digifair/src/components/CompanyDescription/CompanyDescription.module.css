@@ -1,0 +1,21 @@
+.Logo {
+  width: 30%;
+  padding: 5%;
+}
+
+.DescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.CloseIcon {
+  position: absolute;
+  width: 25px;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}

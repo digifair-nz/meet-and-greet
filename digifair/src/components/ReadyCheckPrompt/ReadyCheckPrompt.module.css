@@ -1,0 +1,34 @@
+.PromptContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Logo {
+  width: 30%;
+  padding: 5%;
+}
+.ButtonContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.ContentContainer{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.ContentContainer span{
+    font-size: 1.2em;
+    padding: 1%;
+}
+

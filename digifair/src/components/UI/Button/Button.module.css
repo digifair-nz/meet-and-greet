@@ -1,0 +1,32 @@
+.Button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 2% 10%;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 2%;
+  transition: ease-in-out 100ms;
+}
+.Button:hover{
+  transform: scale(1.1);
+}
+.Success {
+  color: black;
+  background-color: #5db931;
+}
+
+.Danger {
+  color: black;
+  background-color: rgb(212, 39, 33);
+}
+
+.Button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}

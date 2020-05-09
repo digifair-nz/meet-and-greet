@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 
-import Aux from "../../hoc/Auxillary";
+// Higher Order Components
+import Aux from "../../hoc/Auxiliary";
+import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 // Components
 import CompanyCard from "../../components/StudentDashbaord/CompanyCard/CompanyCard";
 import Modal from "../../components/UI/Modal/Modal";
-
+import CompanyDescription from "../../components/CompanyDescription/CompanyDescription";
+import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
 // CSS
 import classes from "./StudentDashboard.module.css";
 
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+
+import axios from "axios";
 
 class StudentDashboard extends Component {
   /*
@@ -29,17 +34,40 @@ class StudentDashboard extends Component {
 
   state = {
     q: [12, 13, 5, 3, 5],
+    showInfoPopup: false,
+    infoPopUpIndex: 0, // default, not used
+    readyCompanyIndex: 0,
   };
+
+  // Set default tab title on mounting
+
+  // Get push notifications here
+  // Change back to default
+
   componentDidMount() {
     this.props.fetchCompanies();
+    document.title = "Dashboard";
   }
 
   queueToCompanyHandler = (companyId) => {
     this.props.queueToCompany(companyId);
   };
+
+  onClickModal = () => {
+    this.setState({
+      showInfoPopup: false,
+    });
+  };
+  showInfoPopup = (event, companyId) => {
+    event.stopPropagation();
+    this.setState({
+      showInfoPopup: true,
+      popUpIndex: companyId,
+    });
+  };
+  // Fetch companies logic and spinner
   render() {
     let companyCards = this.props.companies.map((company, index) => {
-     
       return (
         <CompanyCard
           companyId={index}
@@ -48,13 +76,30 @@ class StudentDashboard extends Component {
           key={company.companyId}
           hadSession={company.hadSession}
           queuePosition={this.state.q[index]}
+          onInfoClick={(event) => this.showInfoPopup(event, index)}
+          queuing={company.queuing}
         />
       );
     });
     return (
       <Aux>
         <div className={classes.CompanyCardContainer}>{companyCards}</div>
-        {/* <Modal show={true}><div><h1>Hello</h1></div></Modal> */}
+        {/* Company Information Pop up*/}
+        <Modal modalClosed={this.onClickModal} show={this.state.showInfoPopup}>
+          <CompanyDescription
+            description={
+              this.props.companies[this.state.infoPopUpIndex].companyDescription
+            }
+            logo={this.props.companies[this.state.infoPopUpIndex].companyLogo}
+            closeModal={this.onClickModal}
+          />
+        </Modal>
+        {/* Queue ready prompt Pop up*/}
+        <Modal show={true}>
+          <ReadyCheckPrompt
+            logo={this.props.companies[this.state.readyCompanyIndex].companyLogo}
+          />
+        </Modal>
       </Aux>
     );
   }

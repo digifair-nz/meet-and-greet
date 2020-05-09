@@ -9,6 +9,12 @@ import userIcon from "../../../assets/icons/person.png";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
 
+import Spinner from "../../UI/Spinner/Spinner";
+
+// Error handling
+import axios from "axios";
+import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+
 class CompanyCard extends Component {
   /*
 
@@ -22,30 +28,25 @@ class CompanyCard extends Component {
   Dispatches an action to queue
 
   */
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return (
-  //     nextProps.show !== this.props.show ||
-  //     nextProps.children !== this.props.children
-  //   );
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.queuing !== this.props.queuing;
+    // Also update if the queue status has changed.
+  }
   onCardClick = () => {
-    if (!this.props.hadSession) {
+    // Prevent multiple queue requests
+
+    if (!this.props.hadSession && !this.props.isQueued) {
       this.props.queueToCompany(this.props.companyId);
+    } else if (this.props.isQueued) {
+      this.props.dequeueFromComapany(this.props.companyId);
     } else {
       alert("You already had a session with this company");
     }
   };
   render() {
     // If the student has talked to a recruiter from this company, disable queuing ability
-
-    //
-    let disabledOpacity = 1;
-
-    if (this.props.hadSession) {
-      disabledOpacity = 0.4;
-    }
     let currentClass = classes.CompanyCard;
-
+    console.log("[COMPANY CARD] render: " + this.props.companyId);
     if (this.props.isQueued) {
       currentClass = classes.CompanyCardActive;
     } else if (this.props.hadSession) {
@@ -57,8 +58,14 @@ class CompanyCard extends Component {
 
       <div onClick={this.onCardClick} className={currentClass}>
         {/* Card header contains information icon (prompts company description info) and queue status */}
+
         <div className={classes.CardHeader}>
-          <img className={classes.InfoIcon} src={informationIcon} />
+          <img
+            onClick={this.props.onInfoClick}
+            className={classes.InfoIcon}
+            src={informationIcon}
+            alt="Information icon"
+          />
 
           {/*
            If users are not queued, they will see a green circle indicating that they can queue to this company.
@@ -78,12 +85,21 @@ class CompanyCard extends Component {
               }
             ></div>
           )}
+          {/* Green circle indicates that student can queue while Red circle means he can't */}
         </div>
-        <img
-          src={this.props.companyLogo}
-          alt={this.props.alt}
-          className={classes.CompanyLogo}
-        />
+
+        {/* Show a spinner instead of the company logo to indicate queue request */}
+        {/* {this.props.loading && this.state.clicked && !this.props.isQueued ?  */}
+        {this.props.queuing ? (
+          <Spinner />
+        ) : (
+          <img
+            src={this.props.companyLogo}
+            alt={this.props.alt}
+            className={classes.CompanyLogo}
+            alt="Company Logo"
+          />
+        )}
       </div>
     );
   }
@@ -100,6 +116,8 @@ CompanyCard.propTypes = {
 const mapDispatchToProps = (dispatch) => {
   return {
     queueToCompany: (companyId) => dispatch(actions.queueStudent(companyId)),
+    dequeueFromComapany: (companyId) =>
+      dispatch(actions.dequeueStudent(companyId)),
   };
 };
 
