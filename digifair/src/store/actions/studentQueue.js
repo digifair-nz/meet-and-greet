@@ -37,11 +37,11 @@ export const queueStudent = (companyId) => {
     axios
       .post("/queue.json", company)
       .then((res) => {
+        let response = res.data; // This is where I get my initial queue position?
         dispatch(queueSuccess(companyId));
       })
       .catch((error) => {
-        console.log(error);
-        dispatch(queueFail(error));
+        dispatch(queueFail(error, companyId));
       });
   };
 };
@@ -81,10 +81,10 @@ export const dequeueStudent = (companyId) => {
     axios
       .post("/queue.json", company)
       .then((res) => {
+        let response = res.data;
         dispatch(dequeueSuccess(companyId));
       })
       .catch((error) => {
-        console.log(error);
         dispatch(dequeueFail(error, companyId));
       });
   };
