@@ -13,7 +13,7 @@
   margin: 2%;
   transition: ease-in-out 100ms;
 }
-.Button:hover{
+.Button:hover {
   transform: scale(1.1);
 }
 .Success {
@@ -26,7 +26,8 @@
   background-color: rgb(212, 39, 33);
 }
 
-
+.Accept {
+}
 
 .Button:disabled {
   color: #ccc;
