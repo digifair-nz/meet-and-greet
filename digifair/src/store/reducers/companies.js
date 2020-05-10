@@ -57,16 +57,21 @@ const initialState = {
 };
 
 // Queue
-
-const queueInit = (state, action) => {
-  // Update the company queuing status to true on initialization of the action
-
+const updateCompanyQueuing = (state, companyId, queueStatus) => {
+  // Returns an updated company queue status
   let updatedCompanies = [...state.companies]; // shallow copy of the state array
 
-  let updatedCompany = { ...updatedCompanies[action.companyId] }; // copy of the state object
+  let updatedCompany = { ...updatedCompanies[companyId] }; // copy of the state object
 
-  updatedCompany.queuing = true;
-  updatedCompanies[action.companyId] = updatedCompany;
+  updatedCompany.queuing = queueStatus;
+
+  updatedCompanies[companyId] = updatedCompany;
+
+  return updatedCompanies;
+};
+
+const queueInit = (state, action) => {
+  let updatedCompanies = updateCompanyQueuing(state, action.companyId, true);
 
   return updateObject(state, { companies: updatedCompanies });
 };
@@ -85,23 +90,13 @@ const queueSuccess = (state, action) => {
 };
 
 const queueFail = (state, action) => {
-  let updatedCompanies = [...state.companies];
-
-  let updatedCompany = { ...updatedCompanies[action.companyId] };
-
-  updatedCompany.queuing = false;
-  updatedCompanies[action.companyId] = updatedCompany;
+  let updatedCompanies = updateCompanyQueuing(state, action.companyId, false);
 
   return updateObject(state, { companies: updatedCompanies });
 };
 
 const dequeueInit = (state, action) => {
-  let updatedCompanies = [...state.companies];
-
-  let updatedCompany = { ...updatedCompanies[action.companyId] };
-
-  updatedCompany.queuing = true;
-  updatedCompanies[action.companyId] = updatedCompany;
+  let updatedCompanies = updateCompanyQueuing(state, action.companyId, true);
 
   return updateObject(state, { companies: updatedCompanies });
 };
@@ -113,21 +108,15 @@ const dequeueSuccess = (state, action) => {
   let updatedCompany = { ...updatedCompanies[action.companyId] };
 
   updatedCompany.isQueued = false;
+  updatedCompany.queuing = false;
+
   updatedCompanies[action.companyId] = updatedCompany;
-  console.log(updatedCompanies);
 
   return updateObject(state, { companies: updatedCompanies });
 };
 
 const dequeueFail = (state, action) => {
-  let updatedCompanies = [...state.companies];
-
-  let updatedCompany = { ...updatedCompanies[action.companyId] };
-
-  updatedCompany.isQueued = false;
-  updatedCompanies[action.companyId] = updatedCompany;
-  console.log(updatedCompanies);
-
+  let updatedCompanies = updateCompanyQueuing(state, action.companyId, false);
   return updateObject(state, { companies: updatedCompanies });
 };
 
