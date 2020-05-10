@@ -5,25 +5,111 @@
   width: 70%;
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px black;
-  padding: 16px;
 
+  z-index: 100;
   top: 25%;
   box-sizing: border-box;
   transition: all 0.3s ease-out;
   border-radius: 25px;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
+  width: 50%;
+  left: calc(50% - 250px);
+  left: calc(-50vw + 50%);
+  right: calc(-50vw + 50%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media (min-width: 600px) {
-  .Modal {
-    width: 50%;
-    left: calc(50% - 250px);
-    left: calc(-50vw + 50%);
-    right: calc(-50vw + 50%);
-    margin-left: auto;
-    margin-right: auto;
+/*
+--------------
+MOBILE and TABLET
+---------------
+*/
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 15%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .CompanyCardContainer {
+      grid-template-columns: 70%;
+      grid-auto-rows: 18%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .CompanyCardContainer {
+      grid-template-columns: 70%;
+      grid-auto-rows: 18%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .CompanyCardContainer {
+      grid-template-columns: 70%;
+      grid-auto-rows: 18%;
+      grid-row-gap: 6%;
+    }
+  }
+  @media (max-width: 414px) {
+    .CompanyCardContainer {
+      grid-template-columns: 70%;
+      grid-auto-rows: 18%;
+      grid-row-gap: 6%;
+    }
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 1366px) {
+    .CompanyCardContainer {
+      grid-template-columns: 30% 30%;
+      grid-auto-rows: 20%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .CompanyCardContainer {
+      grid-template-columns: 30% 30%;
+      grid-auto-rows: 20%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 812px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 35%;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 15%;
+      grid-row-gap: 6%;
+    }
+  }
+  @media (max-width: 736px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 30%;
+      grid-row-gap: 6%;
+    }
+  }
+  @media (max-width: 823px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 30%;
+      grid-row-gap: 6%;
+    }
   }
 }
