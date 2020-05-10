@@ -37,19 +37,10 @@ MOBILE and TABLET
       grid-row-gap: 6%;
     }
   }
-
-  @media (max-width: 375px) {
+  @media (max-width: 768px) {
     .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
-      grid-row-gap: 6%;
-    }
-  }
-
-  @media (max-width: 375px) {
-    .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 15%;
       grid-row-gap: 6%;
     }
   }
@@ -64,7 +55,14 @@ MOBILE and TABLET
   @media (max-width: 414px) {
     .CompanyCardContainer {
       grid-template-columns: 70%;
-      grid-auto-rows: 18%;
+      grid-auto-rows: 20%;
+      grid-row-gap: 6%;
+    }
+  }
+  @media (max-width: 375px) {
+    .CompanyCardContainer {
+      grid-template-columns: 70%;
+      grid-auto-rows: 20%;
       grid-row-gap: 6%;
     }
   }
@@ -86,7 +84,20 @@ MOBILE and TABLET
       grid-row-gap: 6%;
     }
   }
-
+  @media (max-width: 896px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 35%;
+      grid-row-gap: 6%;
+    }
+  }
+  @media (max-width: 823px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 30%;
+      grid-row-gap: 6%;
+    }
+  }
   @media (max-width: 812px) {
     .CompanyCardContainer {
       grid-template-columns: 35% 35%;
@@ -95,21 +106,7 @@ MOBILE and TABLET
     }
   }
 
-  @media (max-width: 768px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 15%;
-      grid-row-gap: 6%;
-    }
-  }
   @media (max-width: 736px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 30%;
-      grid-row-gap: 6%;
-    }
-  }
-  @media (max-width: 823px) {
     .CompanyCardContainer {
       grid-template-columns: 35% 35%;
       grid-auto-rows: 30%;

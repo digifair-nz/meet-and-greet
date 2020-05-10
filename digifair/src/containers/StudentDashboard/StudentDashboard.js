@@ -59,18 +59,17 @@ class StudentDashboard extends Component {
 
     // Maybe if they click on the notification it treats it as accept?
 
-    // setTimeout(() => {
-    //   if (notificationGranted) {
-    //     // Notification
-
-    //     const title = "Your Queue is Ready!";
-    //     const body = "Google is ready for you. Accept or decline your queue";
-    //     sendNotification(title, body);
-    //   }
-    //   this.setState({
-    //     showReadyPromptPopUp: true,
-    //   });
-    // }, 5000);
+    setTimeout(() => {
+      if (notificationGranted) {
+        // Notification
+        // const title = "Your Queue is Ready!";
+        // const body = "Google is ready for you. Accept or decline your queue";
+        // sendNotification(title, body);
+      }
+      this.setState({
+        showReadyPromptPopUp: true,
+      });
+    }, 1000);
   }
 
   // If the student declines the queue he will be ejected from the queue and close the pop up

@@ -26,6 +26,8 @@
   background-color: rgb(212, 39, 33);
 }
 
+
+
 .Button:disabled {
   color: #ccc;
   cursor: not-allowed;

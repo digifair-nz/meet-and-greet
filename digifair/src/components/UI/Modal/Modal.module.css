@@ -27,89 +27,46 @@ MOBILE and TABLET
 
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 15%;
-      grid-row-gap: 6%;
-    }
   }
 
-  @media (max-width: 375px) {
-    .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
-      grid-row-gap: 6%;
+  @media (max-width: 768px) {
+    .Modal {
+      width: 90%;
     }
   }
-
-  @media (max-width: 375px) {
-    .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
-      grid-row-gap: 6%;
-    }
-  }
-
   @media (max-width: 640px) {
-    .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
-      grid-row-gap: 6%;
-    }
   }
   @media (max-width: 414px) {
-    .CompanyCardContainer {
-      grid-template-columns: 70%;
-      grid-auto-rows: 18%;
-      grid-row-gap: 6%;
+  }
+  @media (max-width: 375px) {
+    .Modal {
+      width: 90%;
     }
   }
 }
 
 @media only screen and (orientation: landscape) {
   @media (max-width: 1366px) {
-    .CompanyCardContainer {
-      grid-template-columns: 30% 30%;
-      grid-auto-rows: 20%;
-      grid-row-gap: 6%;
-    }
   }
 
   @media (max-width: 1024px) {
-    .CompanyCardContainer {
-      grid-template-columns: 30% 30%;
-      grid-auto-rows: 20%;
-      grid-row-gap: 6%;
-    }
   }
-
-  @media (max-width: 812px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 35%;
-      grid-row-gap: 6%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 15%;
-      grid-row-gap: 6%;
-    }
-  }
-  @media (max-width: 736px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 30%;
-      grid-row-gap: 6%;
+  @media (max-width: 896px) {
+    /*Iphone 11 PRO */
+    .Modal {
+      width: 70%;
+      top: 15%;
     }
   }
   @media (max-width: 823px) {
-    .CompanyCardContainer {
-      grid-template-columns: 35% 35%;
-      grid-auto-rows: 30%;
-      grid-row-gap: 6%;
+  }
+  @media (max-width: 812px) {
+    .Modal {
+      width: 80%;
+      top: 15%;
     }
+  }
+
+  @media (max-width: 736px) {
   }
 }

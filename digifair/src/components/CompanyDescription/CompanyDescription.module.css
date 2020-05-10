@@ -74,3 +74,48 @@
 .DescriptionContainer:after {
   filter: blur(30px);
 }
+/*
+--------------
+MOBILE and TABLET
+---------------
+*/
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+  }
+
+  @media (max-width: 768px) {
+  }
+  @media (max-width: 640px) {
+  }
+  @media (max-width: 414px) {
+    .Logo {
+      padding: 10%;
+
+      width: 50%;
+    }
+  }
+  @media (max-width: 375px) {
+    .Logo {
+      width: 50%;
+    }
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 1366px) {
+  }
+
+  @media (max-width: 1024px) {
+  }
+  @media (max-width: 823px) {
+  }
+  @media (max-width: 812px) {
+    .Logo {
+      width: 25%;
+    }
+  }
+
+  @media (max-width: 736px) {
+  }
+}
