@@ -13,7 +13,7 @@ const companyDescription = (props) => {
         alt="Close button"
       />
       <img alt="Company logo" className={classes.Logo} src={props.logo} />
-      <div>{props.description}</div>
+      <div className={classes.DescriptionText}>{props.description}</div>
     </div>
   );
 };
