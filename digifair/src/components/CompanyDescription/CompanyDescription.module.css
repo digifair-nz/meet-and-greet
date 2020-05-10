@@ -1,0 +1,76 @@
+.Logo {
+  width: 30%;
+  padding: 5%;
+}
+
+.DescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background-color: white;
+  border-radius: 25px;
+}
+
+.CloseIcon {
+  position: absolute;
+  width: 25px;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 3%;
+}
+.DescriptionText {
+  padding-bottom: 5%;
+  padding-right: 10%;
+  padding-left: 10%;
+}
+/*
+ The glowing border effect
+*/
+.DescriptionContainer:before,
+.DescriptionContainer:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(
+    45deg,
+    #e2508b,
+    #e2508b,
+    #ff0067,
+    #ff0067,
+    blue,
+    #ff0067,
+    #e2508b,
+    #ff0067,
+    #e2508b,
+    #e2508b
+  );
+  background-size: 400%;
+  width: 100%;
+  height: 100%;
+
+  z-index: -1;
+  border-radius: 25px;
+  animation: glow 20s linear infinite;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.DescriptionContainer:after {
+  filter: blur(30px);
+}

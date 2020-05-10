@@ -1,0 +1,191 @@
+/*
+ DEFAULT CLASS ( STUDENT NOT QUEUED ) 
+*/
+.CompanyCard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  animation: fadein 0.5s linear;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  cursor: pointer;
+  animation: fadeIn ease 1s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.CompanyLogo {
+  width: 50%;
+}
+
+/*
+ ACTIVE CLASS ( STUDENT HAS QUEUED ) -- Glowing border effect applied
+*/
+.CompanyCardActive {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: white;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 25px;
+  position: relative;
+  cursor: wait;
+}
+
+.CompanyCard:hover {
+  transform: scale(1.05);
+}
+
+/*
+ The glowing border effect
+*/
+.CompanyCardActive:before,
+.CompanyCardActive:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(
+    45deg,
+    #e2508b,
+    #e2508b,
+    #ff0067,
+    #ff0067,
+    blue,
+    #ff0067,
+    #e2508b,
+    #ff0067,
+    #e2508b,
+    #e2508b
+  );
+  background-size: 400%;
+  width: 90%;
+  height: 90%;
+
+  z-index: -1;
+  border-radius: 25px;
+  animation: glow 20s linear infinite;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.CompanyCardActive:after {
+  filter: blur(30px);
+}
+
+/*
+ DISABLED CLASS (STUDENT HAD SESSION) -- Opacity lowered and cursor to not allowed
+*/
+.CompanyCardDisabled {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  display: flex;
+  animation: fadein 0.5s linear;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  cursor: not-allowed;
+}
+.CardHeader {
+  position: absolute;
+  top: 0;
+
+  width: 100%;
+}
+
+.InfoIcon {
+  height: 20px;
+
+  padding: 3%;
+  position: absolute;
+  left: 0;
+  z-index: 100;
+  cursor: pointer;
+}
+.userIcon {
+  height: 20px;
+  /* position: absolute; */
+  padding: 3%;
+  /* right: 0; */
+}
+.GreenCircle {
+  height: 19px;
+  border-radius: 100%;
+  width: 19px;
+  background-color: #4cc911;
+  position: absolute;
+  margin: 3%;
+  right: 0;
+}
+.RedCircle {
+  height: 19px;
+  border-radius: 100%;
+  width: 19px;
+  background-color: rgb(201, 48, 48);
+  position: absolute;
+  margin: 3%;
+  right: 0;
+}
+
+.QueueStatus {
+  position: absolute;
+  right: 0;
+  padding: 3%;
+  display: flex;
+  flex-direction: row;
+  animation: fadeIn ease 0.5s;
+}
+.QueuePosition {
+  padding-left: 5px;
+  animation: fadeIn ease 0.5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* RESPONSIVE */
+
+@media (min-width: 2000px) {
+  .CardContainer {
+    height: 25%;
+  }
+}
