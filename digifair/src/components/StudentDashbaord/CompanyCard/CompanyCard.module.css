@@ -34,7 +34,7 @@
 }
 
 /*
- ACTIVE CLASS ( STUDENT HAS QUEUED ) 
+ ACTIVE CLASS ( STUDENT HAS QUEUED ) -- Glowing border effect applied
 */
 .CompanyCardActive {
   width: 100%;
@@ -102,7 +102,7 @@
 }
 
 /*
- DISABLED CLASS (STUDENT HAD SESSION)
+ DISABLED CLASS (STUDENT HAD SESSION) -- Opacity lowered and cursor to not allowed
 */
 .CompanyCardDisabled {
   width: 100%;

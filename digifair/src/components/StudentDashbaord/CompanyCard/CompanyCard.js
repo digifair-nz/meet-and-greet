@@ -11,9 +11,7 @@ import * as actions from "../../../store/actions/index";
 
 import Spinner from "../../UI/Spinner/Spinner";
 
-// Error handling
-import axios from "axios";
-import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+
 
 class CompanyCard extends Component {
   /*

@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: white;
 }
 
 .Logo {
@@ -15,20 +16,66 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-
 }
 
-.ContentContainer{
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
+.ContentContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
 }
 
-.ContentContainer span{
-    font-size: 1.2em;
-    padding: 1%;
+.ContentContainer span {
+  font-size: 1.2em;
+  padding: 1%;
 }
 
+/*
+ The glowing border effect
+*/
+.PromptContainer:before,
+.PromptContainer:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(
+    45deg,
+    #e2508b,
+    #e2508b,
+    #ff0067,
+    #ff0067,
+    blue,
+    #ff0067,
+    #e2508b,
+    #ff0067,
+    #e2508b,
+    #e2508b
+  );
+  background-size: 400%;
+  width: 100%;
+  height: 100%;
+
+  z-index: -1;
+  border-radius: 25px;
+  animation: glow 20s linear infinite;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.PromptContainer:after {
+  filter: blur(30px);
+}
