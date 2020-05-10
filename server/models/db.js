@@ -10,10 +10,10 @@ mongoose.connection.on('connected', () => {
     console.log(`Mongoose connected to ${dbURI}`)
 })
 mongoose.connection.on('error', err => {
-    warn(`Mongoose connection error: ${err}`)
+    console.log(`Mongoose connection error: ${err}`)
 })
 mongoose.connection.on('disconnected', () => {
-    warn(`Mongoose disconnected`)
+    console.log(`Mongoose disconnected`)
 })
 
 // function to close the mongoose connection
