@@ -16,7 +16,9 @@ import classes from "./StudentDashboard.module.css";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 
-import axios from "axios";
+import axios from "../../axios-orders";
+
+import sendNotification from "../../components/Notification/Notification";
 
 class StudentDashboard extends Component {
   /*
@@ -36,7 +38,8 @@ class StudentDashboard extends Component {
     q: [12, 13, 5, 3, 5],
     showInfoPopup: false,
     infoPopUpIndex: 0, // default, not used
-    readyCompanyIndex: 0,
+    readyCompanyIndex: 0, // company ready to chat
+    showReadyPromptPopUp: false,
   };
 
   // Set default tab title on mounting
@@ -47,7 +50,37 @@ class StudentDashboard extends Component {
   componentDidMount() {
     this.props.fetchCompanies();
     document.title = "Dashboard";
+
+    // // Notification
+    let notificationGranted;
+    Notification.requestPermission().then(function (result) {
+      notificationGranted = result;
+    });
+
+    // Maybe if they click on the notification it treats it as accept?
+
+    // setTimeout(() => {
+    //   if (notificationGranted) {
+    //     // Notification
+
+    //     const title = "Your Queue is Ready!";
+    //     const body = "Google is ready for you. Accept or decline your queue";
+    //     sendNotification(title, body);
+    //   }
+    //   this.setState({
+    //     showReadyPromptPopUp: true,
+    //   });
+    // }, 5000);
   }
+
+  // If the student declines the queue he will be ejected from the queue and close the pop up
+  onDeclineHandler = () => {
+    this.props.dequeueFromComapany(this.state.readyCompanyIndex);
+    document.title = "Dashboard";
+    this.setState({
+      showReadyPromptPopUp: false,
+    });
+  };
 
   queueToCompanyHandler = (companyId) => {
     this.props.queueToCompany(companyId);
@@ -60,9 +93,10 @@ class StudentDashboard extends Component {
   };
   showInfoPopup = (event, companyId) => {
     event.stopPropagation();
+
     this.setState({
       showInfoPopup: true,
-      popUpIndex: companyId,
+      infoPopUpIndex: companyId,
     });
   };
   // Fetch companies logic and spinner
@@ -95,9 +129,14 @@ class StudentDashboard extends Component {
           />
         </Modal>
         {/* Queue ready prompt Pop up*/}
-        <Modal show={true}>
+        <Modal show={this.state.showReadyPromptPopUp}>
           <ReadyCheckPrompt
-            logo={this.props.companies[this.state.readyCompanyIndex].companyLogo}
+            logo={
+              this.props.companies[this.state.readyCompanyIndex].companyLogo
+            }
+            companyId={this.state.readyCompanyIndex}
+            onClick={this.onClickModal}
+            onDeclineHandler={this.onDeclineHandler}
           />
         </Modal>
       </Aux>
@@ -115,7 +154,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
+    dequeueFromComapany: (companyId) =>
+      dispatch(actions.dequeueStudent(companyId)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentDashboard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(StudentDashboard, axios));
