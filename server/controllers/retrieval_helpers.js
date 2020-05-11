@@ -13,7 +13,9 @@ const Queue = mongoose.model('Queue')
 const errorCodes = Object.freeze({
     validationError: 1,
     notFoundError: 2,
-    unknownError: 3
+    unknownError: 3,
+    mutationValidationError: 4,
+    mutationError: 5
 })
 
 const printError = arg => console.log(`\x1b[33m%s\x1b[0m`, arg)
@@ -26,6 +28,13 @@ const retrieverProto = {
                 this.handleError(errorCodes.validationError, res, validationResult.error)
                 return validationResult
             }
+            
+            if(this.mutate && this.mutationValidate) {
+                const mutationValidationResult = this.mutationValidate(req)
+                if(!mutationValidationResult.success) {
+                    this.handleError(errorCodes.mutationValidationError, res, mutationValidationResult.error)
+                }
+            }
     
             const ofCollection = await this.retrieve(req)
     
@@ -33,17 +42,26 @@ const retrieverProto = {
                 this.handleError(errorCodes.notFoundError, res)
                 return { success: false, data: null, error: `No document found.` }
             }
+
+            if(this.mutate) {
+                const mutationResult = this.mutate(ofCollection, req)
+                if(!mutationResult.success) {
+                    this.handleError(errorCodes.mutationError, res, mutationResult.error)
+                    return mutationResult
+                }
+            }
             return { success: true, data: ofCollection, error: null }
         }
         catch (error) {
-            return this.handleError(errorCodes.unknownError, res, error)
+            this.handleError(errorCodes.unknownError, res, error)
+            return { success: false, data: null, error }
         }
     }
 }
 
-function initialiseRetriever(validator, fetcher, errorHandler) {
+function initialiseRetriever(validator, fetcher, errorHandler, mutator, mutatorValidator) {
     return function(collection, fieldsDesired = '') {
-        const retriever = Object.assign(retrieverProto, validator, fetcher, errorHandler)
+        const retriever = Object.assign(retrieverProto, validator, fetcher, errorHandler, mutator || {}, mutatorValidator || {})
 
         retriever.collection = collection
         retriever.fieldsDesired = fieldsDesired
@@ -74,17 +92,26 @@ const loggerErrorHandler = {
         switch (errorCode) {
             case errorCodes.notFoundError:
             printError('Not found error')
-            console.log(res.fetcherData)
-            console.log(this.collection.modelName)
-            break;
+            return;
             case errorCodes.validationError:
             printError('Validation error')
-            console.log(error)
             break;
             case errorCodes.unknownError:
             printError('Unknown error')
-            console.log(error)
             break;
+            case errorCodes.mutationValidationError:
+            printError('Mutation validation error')
+            break;
+            case errorCodes.mutationError:
+            printError('Mutation error')
+            break;
+        }
+        if(errorCode == errorCodes.notFoundError) {
+            console.log(res.fetcherData)
+            console.log(this.collection.modelName)
+        }
+        else {
+            console.log(error)
         }
     }
 }
