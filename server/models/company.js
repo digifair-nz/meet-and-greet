@@ -16,8 +16,7 @@ const CompanySchema = new mongoose.Schema({
         type: String,
         default: 'No description'
     },
-    rooms: [RoomSchema],
-    queues: [QueueSchema]
+    rooms: [RoomSchema]
 })
 
 mongoose.model('Company', CompanySchema)

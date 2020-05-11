@@ -5,6 +5,10 @@ const QueueSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: true
     },
+    companyId: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
     data: {
         type: [mongoose.Types.ObjectId],
         default: []

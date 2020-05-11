@@ -8,6 +8,8 @@ function getEvent() {
 async function createEvent(req, res) {
     if(!validate.isEvent(req.body, res)) return
     
+    
+
     const event = new Event({
         name: req.body.name,
         description: req.body.description,

@@ -17,7 +17,11 @@ const eventSchema = Joi.object({
     description: Joi.string().required(),
     companiesAttending: Joi.array().items(Joi.objectId()).required()
 })
+const idSchema = Joi.object({
+    _id: Joi.objectId().required()
+})
 
 module.exports = {
-    isEvent: isValid(eventSchema)
+    isEvent: isValid(eventSchema),
+    isId: isValid(idSchema)
 }
