@@ -1,4 +1,4 @@
-const validate = require('./validation')
+const test = require('./validation')
 
 const mongoose = require('mongoose')
 const Company = mongoose.model('Company')
@@ -16,10 +16,10 @@ const errorCodes = Object.freeze({
     unknownError: 3
 })
 
-const error = arg => console.log('\x1b[33m%s\x1b[0m', ar)
+const printError = arg => console.log(`\x1b[33m%s\x1b[0m`, arg)
 
 const retrieverProto = {
-    retrieve: async function retrieve(req, res) {
+    from: async function from(req, res) {
         try {
             const validationResult = this.validate(req)
             if(!validationResult.success) {
@@ -54,8 +54,9 @@ function initialiseRetriever(validator, fetcher, errorHandler) {
 
 const paramIdValidator = {
     validate: function validate(req) {
-        if(validate.isId({ _id: req.params._id })) {
-            req.fetcherData._id = _id
+        if(test.isId({ _id: req.params._id })) {
+            if(!req.fetcherData) req.fetcherData = {}
+            req.fetcherData._id = req.params._id
             return { success: true, error: null }
         }
         else {
@@ -72,16 +73,16 @@ const loggerErrorHandler = {
     handleError: function handleError(errorCode, res, error) {
         switch (errorCode) {
             case errorCodes.notFoundError:
-            error('Not found error')
+            printError('Not found error')
             console.log(res.fetcherData)
             console.log(this.collection.modelName)
             break;
             case errorCodes.validationError:
-            error('Validation error')
+            printError('Validation error')
             console.log(error)
             break;
             case errorCodes.unknownError:
-            error('Unknown error')
+            printError('Unknown error')
             console.log(error)
             break;
         }
@@ -114,5 +115,5 @@ const loggerErrorHandler = {
 const idRetriever = initialiseRetriever(paramIdValidator, idFetcher, loggerErrorHandler)
 
 module.exports = {
-    companyId: idRetriever(Company)
+    companyById: idRetriever(Company)
 }
