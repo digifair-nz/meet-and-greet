@@ -79,5 +79,25 @@ function initialiseRetriever(options) {
     }
 }
 
+const idRetriever = initialiseRetriever({
+    validator: validators.paramIsId,
+    fetcher: fetchers.byId,
+})
+
+const enqueueStatusRetriever = initialiseRetriever({
+    validator: validators.paramIsId,
+    fetcher: fetchers.byEventAndCompany,
+    mutator: mutators.enqueue
+})
+
+const dequeueStatusRetriever = initialiseRetriever({
+    validator: validators.paramIsId,
+    fetcher: fetchers.byEventAndCompany,
+    mutator: mutators.dequeue
+})
+
 module.exports = {
+    companyById: idRetriever(Company),
+    enqueueStatus: enqueueStatusRetriever(Queue, 'data'),
+    dequeueStatus: dequeueStatusRetriever(Queue, 'data')   
 }
