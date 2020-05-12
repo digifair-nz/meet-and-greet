@@ -5,6 +5,10 @@ const RoomSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: true
     },
+    companyId: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -13,5 +17,3 @@ const RoomSchema = new mongoose.Schema({
 })
 
 mongoose.model('Room', RoomSchema)
-
-module.exports = RoomSchema

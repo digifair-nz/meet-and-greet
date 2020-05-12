@@ -12,6 +12,10 @@ const QueueSchema = new mongoose.Schema({
     data: {
         type: [mongoose.Types.ObjectId],
         default: []
+    },
+    blacklist: {
+        type: [mongoose.Types.ObjectId],
+        default: []
     }
 })
 

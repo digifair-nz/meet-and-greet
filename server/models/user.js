@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: 'student'
     },
-    prohibitedQueues: [mongoose.Schema.Types.Mixed],
     isOccupied: {
         type: Boolean,
         default: false
