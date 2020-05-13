@@ -17,6 +17,6 @@ router.post('/dequeue/:_id', authCtrl.asStudent, queueCtrl.dequeue)
 // router.post('/dequeue', authCtrl.asStudent, queueCtrl.dequeueAll)
 
 // router.post('/end/:_id', authCtrl.asStudent, queueCtrl.requeueStudent)
-// router.post('/accept/:_id', authCtrl.asStudent, queueCtrl.acceptQueue)
+router.post('/accept/:_id', authCtrl.asStudent, queueCtrl.acceptQueue)
 
 module.exports = router

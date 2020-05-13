@@ -13,6 +13,20 @@ const paramIdValidator = {
     }
 }
 
+const bodyHasIdsValidator = {
+    validate: function validate(req) {
+        if(test.isIdArray({ _ids: req.body._ids })) {
+            if(!req.fetcherData) req.fetcherData = {}
+            req.fetcherData._ids = req.body._ids
+            return { success: true, error: null }
+        }
+        else {
+            return { success: false, error: `At least one id is invalid: ${req.body._ids}`}
+        }
+    }
+}
+
 module.exports = {
-    paramIsId: paramIdValidator
+    paramIsId: paramIdValidator,
+    bodyHasIds: bodyHasIdsValidator
 }

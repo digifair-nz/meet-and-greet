@@ -6,11 +6,11 @@ const fetchers = require('./fetchers')
 const errorHandlers = require('./errorHandlers')
 const mutators = require('./mutators')
 const mutationValidators = require('./mutation_validators')
-const verifiers = require('./verifiers')
 
 const mongoose = require('mongoose')
 const Company = mongoose.model('Company')
 const Queue = mongoose.model('Queue')
+const User = mongoose.model('User')
 
 const retrieverProto = {
     from: async function from(req, res) {
@@ -83,10 +83,20 @@ const idRetriever = initialiseRetriever({
     validator: validators.paramIsId,
     fetcher: fetchers.byId,
 })
+const idsRetriever = initialiseRetriever({
+    validator: validators.bodyHasIds,
+    fetcher: fetchers.byIds
+})
 
 const enqueueStatusRetriever = initialiseRetriever({
     validator: validators.paramIsId,
     fetcher: fetchers.byEventAndCompany,
+    mutator: mutators.enqueue
+})
+
+const enqueueAllStatusRetriever = initialiseRetriever({
+    validator: validators.paramIsId,
+    fetcher: fetchers.allByEventAndCompany,
     mutator: mutators.enqueue
 })
 
@@ -96,8 +106,16 @@ const dequeueStatusRetriever = initialiseRetriever({
     mutator: mutators.dequeue
 })
 
+const byEventByCompanyRetriever = initialiseRetriever({
+    validator: validators.paramIsId,
+    fetcher: fetchers.byEventAndCompany
+})
+
 module.exports = {
     companyById: idRetriever(Company),
+    usersByIds: idsRetriever(User),
     enqueueStatus: enqueueStatusRetriever(Queue, 'data'),
-    dequeueStatus: dequeueStatusRetriever(Queue, 'data')   
+    enqueueAllStatus: enqueueAllStatusRetriever(Queue, 'data'),
+    dequeueStatus: dequeueStatusRetriever(Queue, 'data'),
+    queue: byEventByCompanyRetriever(Queue)
 }

@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: 'student'
     },
-    isOccupied: {
+    inSession: {
         type: Boolean,
         default: false
     }
