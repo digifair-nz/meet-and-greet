@@ -17,10 +17,10 @@ async function adminLogin(req, res) {
     if(error) return res.status(400).json(error.details[0].message)
     
     const club = await Club.findOne({ email: req.body.email })
-    if(!club) return res.status(400).json('Email not found.')
+    if(!club) return res.status(400).json({ message: 'Email not found.' })
     // use bcrypt to check if the password is correct
     const validPassword = await bcrypt.compare(req.body.password, club.password)
-    if(!validPassword) return res.status(400).json('Invalid password.')
+    if(!validPassword) return res.status(400).json({ message: 'Invalid password.' })
     // sign and send the jwt
     const token = jwt.sign({ _id: club._id, accountType: 'club' }, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send(token)
@@ -36,10 +36,10 @@ async function defaultLogin(req, res) {
     }
 
     const event = await Event.findById(req.params._id)
-    if(!event) return res.status(400).json('Bad link.')
+    if(!event) return res.status(400).json({ message: 'Bad link.' })
 
     const user = await User.findOne({ email: req.body.email })
-    if(!user) return res.status(400).json('Email not found')
+    if(!user) return res.status(400).json({ message: 'Email not found' })
 
     const token = jwt.sign({ _id: user._id, accountType: user.accountType, eventId: req.params._id }, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send(token)

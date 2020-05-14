@@ -12,7 +12,7 @@ async function getEvent(req, res) {
             '_id': {
                 $in: event.companiesAttending
             }
-        }).select('name description image _id')
+        }).select('name description logoURL _id')
         return res.status(200).json(companies)
     }
     catch (err) {

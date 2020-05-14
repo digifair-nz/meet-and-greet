@@ -5,7 +5,7 @@ const CompanySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageURL: {
+    logoURL: {
         type: String,
         required: true
     },
