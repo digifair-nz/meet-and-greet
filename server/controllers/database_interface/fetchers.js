@@ -14,7 +14,8 @@ const idsFetcher = {
 }
 
 const byEventAndCompanyFetcher = {
-    retrieve: function(req) {
+    retrieve: async function(req) {
+        const data = await this.collection.find({})
         return this.collection.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
     }
 }

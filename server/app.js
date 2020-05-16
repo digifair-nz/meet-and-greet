@@ -8,10 +8,10 @@ const logger = require('morgan')
 
 require('./models/db')
 
+const app = express()
+
 const userRouter = require('./routes/user')
 const clubRouter = require('./routes/club')
-
-const app = express()
 
 app.use(logger('dev'))
 app.use(express.json())
