@@ -14,7 +14,7 @@
   border-radius: 25px;
   transition: all 0.2s ease-in-out;
   position: relative;
-  cursor: pointer;
+  cursor: url("../../assets/icons/enter-door.png"), auto;
   animation: fadeIn ease 1s;
 }
 
@@ -46,7 +46,7 @@
   box-sizing: border-box;
   border-radius: 25px;
   position: relative;
-  cursor: wait;
+  cursor: url("../../assets/icons/exit-door.png"), auto;
 }
 
 .CompanyCard:hover {
@@ -133,10 +133,10 @@
   padding: 3%;
   position: absolute;
   left: 0;
-  z-index: 100;
+  z-index: 10;
   cursor: pointer;
 }
-.userIcon {
+.UserIcon {
   height: 20px;
   /* position: absolute; */
   padding: 3%;
