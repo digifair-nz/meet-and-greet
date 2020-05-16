@@ -1,24 +1,25 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
+import axios from "../../axios-orders";
 
 // Higher Order Components
 import Aux from "../../hoc/Auxiliary";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 // Components
-import CompanyCard from "../../components/StudentDashbaord/CompanyCard/CompanyCard";
+import CompanyCard from "../../components/CompanyCard/CompanyCard";
+import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 import Modal from "../../components/UI/Modal/Modal";
-import CompanyDescription from "../../components/CompanyDescription/CompanyDescription";
+
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
+import sendNotification from "../../components/Notification/Notification";
+import Spinner from "../../components/UI/Spinner/Spinner";
+
 // CSS
 import classes from "./StudentDashboard.module.css";
 
 //Redux
-import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
-
-import axios from "../../axios-orders";
-
-import sendNotification from "../../components/Notification/Notification";
 
 class StudentDashboard extends Component {
   /*
@@ -36,9 +37,8 @@ class StudentDashboard extends Component {
 
   state = {
     q: [12, 13, 5, 3, 5],
-    showInfoPopup: false,
-    infoPopUpIndex: 0, // default, not used
-    readyCompanyIndex: 0, // company ready to chat
+
+    readyCompanyIndex: 1, // company ready to chat
     showReadyPromptPopUp: false,
   };
 
@@ -49,9 +49,11 @@ class StudentDashboard extends Component {
 
   componentDidMount() {
     this.props.fetchCompanies();
+
+    console.log("[STUDENT DASHBOARD] Mounted");
     document.title = "Dashboard";
 
-    // // Notification
+    // Notification
     let notificationGranted;
     Notification.requestPermission().then(function (result) {
       notificationGranted = result;
@@ -59,85 +61,82 @@ class StudentDashboard extends Component {
 
     // Maybe if they click on the notification it treats it as accept?
 
+    // ****READY POP UP*****
     setTimeout(() => {
       if (notificationGranted) {
         // Notification
-        // const title = "Your Queue is Ready!";
-        // const body = "Google is ready for you. Accept or decline your queue";
-        // sendNotification(title, body);
+        const title = "Your Queue is Ready!";
+        const body = "Google is ready for you. Accept or decline your queue";
+        sendNotification(title, body);
       }
       this.setState({
         showReadyPromptPopUp: true,
       });
-    }, 1000);
+    }, 10000);
   }
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
-    this.props.dequeueFromComapany(this.state.readyCompanyIndex);
-    document.title = "Dashboard";
+    document.title = "Dashboard"; // Change back from notification tab name
     this.setState({
       showReadyPromptPopUp: false,
     });
   };
 
-  queueToCompanyHandler = (companyId) => {
-    this.props.queueToCompany(companyId);
-  };
-
-  onClickModal = () => {
-    this.setState({
-      showInfoPopup: false,
-    });
-  };
-  showInfoPopup = (event, companyId) => {
-    event.stopPropagation();
-
-    this.setState({
-      showInfoPopup: true,
-      infoPopUpIndex: companyId,
-    });
-  };
   // Fetch companies logic and spinner
   render() {
-    let companyCards = this.props.companies.map((company, index) => {
-      return (
-        <CompanyCard
-          companyId={index}
-          isQueued={company.isQueued}
-          companyLogo={company.companyLogo}
-          key={company.companyId}
-          hadSession={company.hadSession}
-          queuePosition={this.state.q[index]}
-          onInfoClick={(event) => this.showInfoPopup(event, index)}
-          queuing={company.queuing}
-        />
+    let companyCards;
+    let readyCheckPopUp;
+    if (!this.props.companies) {
+      companyCards = <Spinner />;
+      readyCheckPopUp = null;
+    } else {
+      companyCards = this.props.companies.map((company, index) => {
+        // console.log(company);
+        return (
+          <CompanyCard
+            id={company._id}
+            index={index}
+            isQueued={company.isQueued}
+            logo={company.logoURL}
+            key={company._id}
+            hadSession={company.hadSession}
+            queuePosition={this.state.q[index]}
+            onInfoClick={(event) => this.showInfoPopup(event, index)}
+            queuing={company.queuing}
+            description={company.description}
+          />
+        );
+      });
+      readyCheckPopUp = (
+        <Aux>
+          <Modal show={this.state.showReadyPromptPopUp}>
+            <ReadyCheckPrompt
+              logo={this.props.companies[this.state.readyCompanyIndex].logoURL}
+              companyId={this.props.companies[this.state.readyCompanyIndex]._id}
+              onClick={this.onClickModal}
+              onDeclineHandler={this.onDeclineHandler}
+              index={this.state.readyCompanyIndex}
+            />
+          </Modal>
+        </Aux>
       );
-    });
+    }
+
+    if (this.props.error) {
+      companyCards = (
+        <h1 className={classes.ErrorMessage}>{this.props.error}</h1>
+      );
+    }
     return (
       <Aux>
+        <Toolbar isAuth={true} drawerToggleClicked={false}>
+          <span>Queue to all</span>
+          <span>Dequeue from all</span>
+          <span>Hello</span>
+        </Toolbar>
         <div className={classes.CompanyCardContainer}>{companyCards}</div>
-        {/* Company Information Pop up*/}
-        <Modal modalClosed={this.onClickModal} show={this.state.showInfoPopup}>
-          <CompanyDescription
-            description={
-              this.props.companies[this.state.infoPopUpIndex].companyDescription
-            }
-            logo={this.props.companies[this.state.infoPopUpIndex].companyLogo}
-            closeModal={this.onClickModal}
-          />
-        </Modal>
-        {/* Queue ready prompt Pop up*/}
-        <Modal show={this.state.showReadyPromptPopUp}>
-          <ReadyCheckPrompt
-            logo={
-              this.props.companies[this.state.readyCompanyIndex].companyLogo
-            }
-            companyId={this.state.readyCompanyIndex}
-            onClick={this.onClickModal}
-            onDeclineHandler={this.onDeclineHandler}
-          />
-        </Modal>
+        {readyCheckPopUp}
       </Aux>
     );
   }
@@ -146,15 +145,14 @@ class StudentDashboard extends Component {
 // Redux
 const mapStateToProps = (state) => {
   return {
-    companies: state.companies,
+    companies: state.companies.companies,
+    error: state.companies.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
-    dequeueFromComapany: (companyId) =>
-      dispatch(actions.dequeueStudent(companyId)),
   };
 };
 
