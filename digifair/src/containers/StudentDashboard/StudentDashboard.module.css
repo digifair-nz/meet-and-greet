@@ -6,10 +6,16 @@
   grid-row-gap: 7%;
   grid-column-gap: 7%;
   justify-content: center;
-
+  padding-top: 5%;
   grid-auto-rows: 20%;
+  overflow-y: scroll;
+  margin-left: 10%;
 }
 
+.ErrorMessage {
+  text-align: center;
+  color: red;
+}
 /*
 --------------
 DESKTOP

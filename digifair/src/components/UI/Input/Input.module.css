@@ -1,0 +1,71 @@
+.Input {
+  width: 100%;
+
+  box-sizing: border-box;
+  background-color: #ffc4dc;
+  border-radius: 50px;
+
+  position: relative;
+  height: 4vh;
+  margin-bottom: 6%;
+}
+
+/* Brwoser autofill  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ffc4dc inset !important;
+  z-index: 1;
+}
+
+.InputElement {
+  outline: none;
+  border: 0px solid rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0);
+  font: inherit;
+  height: 4vh;
+  box-sizing: border-box;
+  padding: 10px;
+  display: block;
+  width: 100%;
+  border-radius: 50px;
+  /* background-color: #ffc4dc; */
+  width: 80%;
+  left: 4vh;
+  top: 0;
+  position: absolute;
+}
+
+.InputElement::placeholder {
+  color: black;
+}
+
+.InputElement:focus {
+  outline: none;
+}
+
+/* The circular key and user icon*/
+
+.IconWrapper {
+  width: 4vh;
+  height: 4vh;
+  background-color: black;
+  border-radius: 50%;
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+.InputIcon {
+  width: 65%;
+}
+
+/* If wrong values are submited */
+.Invalid {
+  border: 1px solid red;
+  background-color: #fda49a;
+}

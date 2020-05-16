@@ -13,7 +13,8 @@ class ReadyCheckPrompt extends Component {
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
-    this.props.dequeueFromComapany(this.props.companyId);
+    this.props.onDeclineHandler();
+    this.props.dequeueFromComapany(this.props.companyId, this.props.index);
   };
 
   render() {
@@ -33,11 +34,11 @@ class ReadyCheckPrompt extends Component {
           <Button
             onClick={this.props.onClick}
             clicked={this.onAcceptHandler}
-            btnType="Success"
+            btnType="Accept"
           >
             Accept
           </Button>
-          <Button clicked={this.props.onDeclineHandler} btnType="Danger">
+          <Button clicked={this.onDeclineHandler} btnType="Decline">
             Decline
           </Button>
         </div>
@@ -48,8 +49,8 @@ class ReadyCheckPrompt extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dequeueFromComapany: (companyId) =>
-      dispatch(actions.dequeueStudent(companyId)),
+    dequeueFromComapany: (companyId, index) =>
+      dispatch(actions.dequeueStudent(companyId, index)),
   };
 };
 

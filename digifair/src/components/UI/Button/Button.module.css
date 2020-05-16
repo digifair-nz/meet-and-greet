@@ -12,10 +12,11 @@
   letter-spacing: 2px;
   margin: 2%;
   transition: ease-in-out 100ms;
+  border-radius: 50px;
 }
-.Button:hover {
+/* .Button:hover {
   transform: scale(1.1);
-}
+} */
 .Success {
   color: black;
   background-color: #5db931;
@@ -26,7 +27,15 @@
   background-color: rgb(212, 39, 33);
 }
 
+/*
+ADD MORE ANIMATION HERE
+*/
 .Accept {
+  background-color: #e2508b;
+}
+
+.Decline {
+  background-color: #0056ff;
 }
 
 .Button:disabled {
