@@ -1,0 +1,71 @@
+/* HAMBURGER MENU */
+.ToggleMenu {
+  font-size: 20px;
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+}
+
+.ToggleMenu span {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 90%;
+  height: 0.13em;
+
+  background-color: #fff;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.ToggleMenu span:after,
+.ToggleMenu span:before {
+  position: absolute;
+
+  width: 70%;
+  height: 0.13em;
+  background: #fff;
+  content: "";
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+}
+
+.ToggleMenu span:before {
+  left: 0;
+}
+.ToggleMenu span:after {
+  right: 0;
+}
+
+.ToggleMenu span:before {
+  -webkit-transform: translateY(-0.5em);
+  transform: translateY(-0.5em);
+}
+
+.ToggleMenu span:after {
+  -webkit-transform: translateY(0.5em);
+  transform: translateY(0.5em);
+}
+
+.ToggleMenu.ActiveMenu span:before {
+  /* -webkit-transform: translateY(-0.36em) translateX(0.65em) rotate(45deg)
+    scaleX(0.6);
+  transform: translateY(-0.35em) translateX(0.65em) rotate(45deg) scaleX(0.6); */
+  transform: translateY(-0.25em) translateX(0.9em) rotate(45deg) scaleX(0.6);
+}
+
+.ToggleMenu.ActiveMenu span:after {
+  /* -webkit-transform: translateY(0.36em) translateX(0.65em) rotate(-45deg)
+    scaleX(0.6);
+  transform: translateY(0.35em) translateX(0.65em) rotate(-45deg) scaleX(0.6); */
+  transform: translateY(0.25em) translateX(0.4em) rotate(-45deg) scaleX(0.6);
+}
