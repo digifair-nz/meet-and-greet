@@ -1,5 +1,8 @@
-
-html, body, #root, .App {
+html,
+body,
+#root,
+.App {
   height: 100%;
+  font-family: "Raleway", sans-serif;
+  overflow: hidden;
 }
-
