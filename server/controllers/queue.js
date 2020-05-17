@@ -14,6 +14,7 @@ async function enqueue(req, res) {
     const positionInQueue = result.data.data.length - 1
     return res.status(200).json({ position: positionInQueue })
 }
+
 // async function enqueueAll(req, res) {
 //     const result = await get.enqueueAllStatus.from(req, res)
 
@@ -29,14 +30,17 @@ async function enqueue(req, res) {
 //     return res.status(200).json( { positions: positionInQueues })
 // }
 
-async function dequeue(req, res) {
-    const result = await get.dequeueStatus.from(req, res)
+function dequeue({ broadcastQueueUpdate }) {
+    return async function dequeue(req, res) {
+        const result = await get.dequeueStatus.from(req, res)
+    
+        if(!result.success) {
+            return res.status(500).json({ message: result.error })
+        }
+        broadcastQueueUpdate(result.data.data)
 
-    if(!result.success) {
-        return res.status(500).json({ message: `Failed to dequeue` })
+        return res.status(200).send()
     }
-    // notify on the websocket here
-    return res.status(200).send()
 }
 
 async function createQueue(req, res) {
@@ -56,14 +60,21 @@ async function createQueue(req, res) {
     }
 }
 
+// they ned to be more than just at the front of the queue the person needs to be waiting too
 async function acceptQueue(req, res) {
     const result = await get.queue.from(req, res)
-    const queue = result.data.data
-
+    
     if(!result.success) {
         return res.status(500).json({ message: `Failed to accept queue` })
     }
+
+    if(result.data.inSession) {
+        return res.status(403).json({ message: `Room in session` })
+    }
+
+    const queue = result.data.data
     const index = queue.indexOf(req.payload._id)
+
     if(index != 0) {
         req.body._ids = queue.slice(0, index)
         const queueMembersResult = await get.usersByIds.from(req, res)
@@ -75,15 +86,25 @@ async function acceptQueue(req, res) {
         if(!isFirst) {
             return res.status(403).json({ message: `Queue accept request denied` })
         }
-        else {
-            return res.status(200).json({ message: `Bruh you're allowed` })
-        }
     }
-    return res.status(200).json({
 
-    })
+    try {
+        result.data.inSession = true
+        await result.data.save()
+
+        const userResult = await get.user.from(req, res)
+        if(!userResult.success) throw userResult.error
+
+        if(userResult.data.inSession) throw 'User already in session'
+        userResult.data.inSession = true
+        await userResult.data.save()
+
+        return res.status(200).json({ message: `Success joining room as ${userResult.data.email}` })
+    }
+    catch (error) {
+        return res.status(500).json({ message: error })
+    }
 }
-
 
 module.exports = {
     enqueue,

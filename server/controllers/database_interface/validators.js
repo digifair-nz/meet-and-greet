@@ -15,7 +15,7 @@ const paramIdValidator = {
 
 const bodyHasIdsValidator = {
     validate: function validate(req) {
-        if(test.isIdArray({ _ids: req.body._ids })) {
+        if(test.isIdArray(req.body._ids)) {
             if(!req.fetcherData) req.fetcherData = {}
             req.fetcherData._ids = req.body._ids
             return { success: true, error: null }
