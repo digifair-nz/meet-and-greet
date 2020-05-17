@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app')
 var debug = require('debug')('server:server');
-
+// const url = require('url')
+// const jwt = require('jsonwebtoken')
+// const ws = require('ws')
 
 /**
  * Get port from environment and store in Express.
@@ -19,44 +21,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const ws = require('ws')
-const jwt = require('jsonwebtoken')
-const url = require('url')
-
-const server = require('http').createServer(require('../app'))
-const wss = new ws.Server({
-    server,
-    verifyClient: function({ req }, done) {
-        const { query: { token } } = url.parse(req.url, true)
-
-        try {
-            req.jwt = jwt.verify(token, process.env.TOKEN_SECRET)
-            done(true)
-        }
-        catch (err) {
-            return done(false, 403, 'Invalid token')
-        }
-    }
-})
-
-wss.on('connection', (ws, req) => {
-  ws.jwt = req.jwt
-    ws.on('message', (message) => {
-        console.log('received: %s', message)
-        ws.send(`Hello, you sent -> ${message}`)
-    })
-    ws.on('close', message => {
-        console.log('closed!')
-    })
-    ws.send('Hi there, I am a WebSocket server')
-    wss.broadcastQueueUpdate('test')
-})
-
-wss.broadcastQueueUpdate = function(queue) {
-    this.clients.forEach(client => {
-        client.send(queue.indexOf(client.jwt._id))
-    })
-}
+const server = app.server
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -125,5 +90,3 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
-
-module.exports = wss

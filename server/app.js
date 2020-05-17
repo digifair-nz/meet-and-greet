@@ -9,8 +9,38 @@ const logger = require('morgan')
 require('./models/db')
 
 const app = express()
+app.server = require('http').createServer(app)
 
-const userRouter = require('./routes/user')
+const url = require('url')
+const jwt = require('jsonwebtoken')
+const wsInstance = require('express-ws')(app, app.server, {
+    wsOptions: {
+        verifyClient: function({ req }, done) {
+            const { query: { token } } = url.parse(req.url, true)
+    
+            try {
+                req.jwt = jwt.verify(token, process.env.TOKEN_SECRET)
+                done(true)
+            }
+            catch (err) {
+                return done(false, 403, 'Invalid token')
+            }
+        }
+    }
+})
+
+app.ws('/', function(ws, req) {
+    ws.jwt = req.jwt
+    ws.send('Connected')
+})
+app.broadcastQueueUpdate = function(queue) {
+    wsInstance.getWss().clients.forEach(client => {
+        // console.log(client)
+        client.send(queue.indexOf(client.jwt._id))
+    })
+}
+
+const userRouter = require('./routes/user')({ broadcastQueueUpdate: app.broadcastQueueUpdate })
 const clubRouter = require('./routes/club')
 
 app.use(logger('dev'))
