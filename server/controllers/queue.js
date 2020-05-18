@@ -9,7 +9,7 @@ async function enqueue(req, res) {
     const result = await get.enqueueStatus.from(req, res)
 
     if(!result.success) {
-        return res.status(500).json({ message: `Failed to enqueue` })
+        return res.status(500).json({ message: result.error })
     }
     const positionInQueue = result.data.data.length - 1
     return res.status(200).json({ position: positionInQueue })
