@@ -8,13 +8,13 @@ import Aux from "../../hoc/Auxiliary";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 // Components
+import Button from "../../components/UI/Button/Button";
 import CompanyCard from "../../components/CompanyCard/CompanyCard";
-import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 import Modal from "../../components/UI/Modal/Modal";
-
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
 import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
 // CSS
 import classes from "./StudentDashboard.module.css";
@@ -48,31 +48,46 @@ class StudentDashboard extends Component {
   // Change back to default
 
   componentDidMount() {
+    // Company cards
     this.props.fetchCompanies();
 
     console.log("[STUDENT DASHBOARD] Mounted");
+
     document.title = "Dashboard";
 
-    // Notification
-    let notificationGranted;
-    Notification.requestPermission().then(function (result) {
-      notificationGranted = result;
-    });
+    // Open a socket connection
+    // This page is only accessible to authenticated users but double check before making a connection
+    if (this.props.token !== null) {
+      const ws = new WebSocket(
+        "ws://localhost:3000/?token=" + this.props.token
+      );
+      console.log(ws);
 
-    // Maybe if they click on the notification it treats it as accept?
+      console.log("Socket Connection Opened!");
+      ws.onmessage = function (message) {
+        console.log("######" + message);
+      };
+    }
+    // // Notification
+    // let notificationGranted;
+    // Notification.requestPermission().then(function (result) {
+    //   notificationGranted = result;
+    // });
 
-    // ****READY POP UP*****
-    setTimeout(() => {
-      if (notificationGranted) {
-        // Notification
-        const title = "Your Queue is Ready!";
-        const body = "Google is ready for you. Accept or decline your queue";
-        sendNotification(title, body);
-      }
-      this.setState({
-        showReadyPromptPopUp: true,
-      });
-    }, 10000);
+    // // Maybe if they click on the notification it treats it as accept?
+
+    // // ****READY POP UP*****
+    // setTimeout(() => {
+    //   if (notificationGranted) {
+    //     // Notification
+    //     const title = "Your Queue is Ready!";
+    //     const body = "Google is ready for you. Accept or decline your queue";
+    //     sendNotification(title, body);
+    //   }
+    //   this.setState({
+    //     showReadyPromptPopUp: true,
+    //   });
+    // }, 10000);
   }
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
@@ -131,11 +146,16 @@ class StudentDashboard extends Component {
     return (
       <Aux>
         <Toolbar isAuth={true} drawerToggleClicked={false}>
-          <span>Queue to all</span>
-          <span>Dequeue from all</span>
-          <span>Hello</span>
+          <Button btnType="Control">Queue All</Button>
+          <Button btnType="Control">Dequeue All</Button>
+          <Button btnType="Logout">Logout</Button>
         </Toolbar>
-        <div className={classes.CompanyCardContainer}>{companyCards}</div>
+
+        <div className={classes.Event}>
+          {/* <h1 className={classes.EventTitle}>CV Clinic July 2020</h1>
+          <h1 className={classes.EventTime}>Event Timer : Live Participants</h1> */}
+          <div className={classes.CompanyCardContainer}>{companyCards}</div>
+        </div>
         {readyCheckPopUp}
       </Aux>
     );
@@ -147,6 +167,7 @@ const mapStateToProps = (state) => {
   return {
     companies: state.companies.companies,
     error: state.companies.error,
+    token: state.studentAuth.token,
   };
 };
 

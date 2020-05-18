@@ -15,12 +15,10 @@ const User = mongoose.model('User')
 const retrieverProto = {
     from: async function from(req, res) {
         try {
-            if(this.validate) {
-                const validationResult = this.validate(req)
-                if(!validationResult.success) {
-                    this.handleError(errorCodes.validationError, res, validationResult.error)
-                    return validationResult
-                }
+            const validationResult = this.validate(req)
+            if(!validationResult.success) {
+                this.handleError(errorCodes.validationError, res, validationResult.error)
+                return validationResult
             }
             
             if(this.mutate && this.mutationValidate) {
@@ -64,14 +62,14 @@ const retrieverProto = {
  * @param {{ validator, fetcher, errorHandler, mutator, mutatorValidator }} options The components to fit together to create the retriever object. mutator, mutatorValidator, and verifier are optional. The validator object is responsible for validating the query to ensure that it is a valid query. The fetcher is responsbile for making the query. The errorHandler is expected to manage any errors which may occur. The mutator performs mutations on the object fetched by the fetcher and the mutatorValidator validates the mutation query.
  */
 function initialiseRetriever(options) {
-    if(!options.fetcher) throw new Error('Missing argument')
+    if(!options.validator || !options.fetcher) throw new Error('Missing argument')
 
     return function(collection, fieldsDesired = '') {
         const { validator, fetcher, mutator, mutatorValidator } = options
         const errorHandler = options.errorHandler || errorHandlers.logger
 
         const retriever = {
-            ...retrieverProto, ...validator || {}, ...fetcher, ...errorHandler, ...mutator || {}, ...mutatorValidator || {}
+            ...retrieverProto, ...validator, ...fetcher, ...errorHandler, ...mutator || {}, ...mutatorValidator || {}
         }
 
         retriever.collection = collection
@@ -88,10 +86,6 @@ const idRetriever = initialiseRetriever({
 const idsRetriever = initialiseRetriever({
     validator: validators.bodyHasIds,
     fetcher: fetchers.byIds
-})
-
-const userRetriever = initialiseRetriever({
-    fetcher: fetchers.user
 })
 
 const enqueueStatusRetriever = initialiseRetriever({
@@ -118,7 +112,6 @@ const byEventByCompanyRetriever = initialiseRetriever({
 })
 
 module.exports = {
-    user: userRetriever(User),
     companyById: idRetriever(Company),
     usersByIds: idsRetriever(User),
     enqueueStatus: enqueueStatusRetriever(Queue, 'data'),

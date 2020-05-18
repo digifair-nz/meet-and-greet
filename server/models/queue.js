@@ -16,10 +16,6 @@ const QueueSchema = new mongoose.Schema({
     blacklist: {
         type: [mongoose.Types.ObjectId],
         default: []
-    },
-    inSession: {
-        type: Boolean,
-        default: false
     }
 })
 

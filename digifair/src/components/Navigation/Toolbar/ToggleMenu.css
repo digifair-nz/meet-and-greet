@@ -1,11 +1,12 @@
 /* HAMBURGER MENU */
 .ToggleMenu {
-  font-size: 20px;
+  font-size: 15px;
   position: relative;
   display: inline-block;
   width: 2em;
   height: 2em;
   cursor: pointer;
+  transform: rotate(180deg);
 }
 
 .ToggleMenu span {
@@ -57,15 +58,47 @@
 }
 
 .ToggleMenu.ActiveMenu span:before {
-  /* -webkit-transform: translateY(-0.36em) translateX(0.65em) rotate(45deg)
-    scaleX(0.6);
-  transform: translateY(-0.35em) translateX(0.65em) rotate(45deg) scaleX(0.6); */
   transform: translateY(-0.25em) translateX(0.9em) rotate(45deg) scaleX(0.6);
 }
 
 .ToggleMenu.ActiveMenu span:after {
-  /* -webkit-transform: translateY(0.36em) translateX(0.65em) rotate(-45deg)
+  -webkit-transform: translateY(0.25em) translateX(0.4em) rotate(-45deg)
     scaleX(0.6);
-  transform: translateY(0.35em) translateX(0.65em) rotate(-45deg) scaleX(0.6); */
+
   transform: translateY(0.25em) translateX(0.4em) rotate(-45deg) scaleX(0.6);
+}
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+  }
+  @media (max-width: 768px) {
+  }
+
+  @media (max-width: 640px) {
+  }
+  @media (max-width: 414px) {
+  }
+  @media (max-width: 375px) {
+    .ToggleMenu {
+      position: absolute;
+      top: 15%;
+      right: 5%;
+    }
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 1366px) {
+  }
+
+  @media (max-width: 1024px) {
+  }
+  @media (max-width: 896px) {
+  }
+  @media (max-width: 823px) {
+  }
+  @media (max-width: 812px) {
+  }
+
+  @media (max-width: 736px) {
+  }
 }

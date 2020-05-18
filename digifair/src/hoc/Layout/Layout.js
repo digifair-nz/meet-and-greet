@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import Aux from "../Auxiliary";
-import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
+
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 import classes from "./Layout.module.css";
 
@@ -33,6 +33,7 @@ class Layout extends Component {
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler}
         /> */}
+
         <main className={classes.Content}>{this.props.children}</main>
       </Aux>
     );

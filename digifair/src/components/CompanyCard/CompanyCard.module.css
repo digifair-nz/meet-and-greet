@@ -6,6 +6,7 @@
   height: 100%;
   display: flex;
   animation: fadein 0.5s linear;
+  background-color: white;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -16,6 +17,10 @@
   position: relative;
   cursor: url("../../assets/icons/enter-door.png"), auto;
   animation: fadeIn ease 1s;
+}
+
+.CompanyCard:hover {
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {
@@ -43,14 +48,11 @@
   background: white;
   align-items: center;
   justify-content: center;
+  background-color: white;
   box-sizing: border-box;
   border-radius: 25px;
   position: relative;
   cursor: url("../../assets/icons/exit-door.png"), auto;
-}
-
-.CompanyCard:hover {
-  transform: scale(1.05);
 }
 
 /*
@@ -119,6 +121,7 @@
   transition: all 0.2s ease-in-out;
   position: relative;
   cursor: not-allowed;
+  background-color: white;
 }
 .CardHeader {
   position: absolute;
@@ -142,7 +145,8 @@
   padding: 3%;
   /* right: 0; */
 }
-.GreenCircle {
+
+.StatusCircle {
   height: 19px;
   border-radius: 100%;
   width: 19px;
@@ -151,14 +155,9 @@
   margin: 3%;
   right: 0;
 }
+
 .RedCircle {
-  height: 19px;
-  border-radius: 100%;
-  width: 19px;
   background-color: rgb(201, 48, 48);
-  position: absolute;
-  margin: 3%;
-  right: 0;
 }
 
 .QueueStatus {
