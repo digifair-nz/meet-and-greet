@@ -44,8 +44,6 @@ app.broadcastQueueUpdate = function(queue) {
 const userRouter = require('./routes/user')({ broadcastQueueUpdate: app.broadcastQueueUpdate })
 const clubRouter = require('./routes/club')
 
-const app = express()
-
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
