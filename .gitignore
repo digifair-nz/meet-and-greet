@@ -19,4 +19,3 @@ server/.vs/server/v16/.suo
 server/controllers/database_interface/fetchers.js
 server/controllers/database_interface/fetchers.js
 server/controllers/queue.js
-server/controllers/queue.js
