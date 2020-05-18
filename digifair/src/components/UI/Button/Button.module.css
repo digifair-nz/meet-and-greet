@@ -12,7 +12,6 @@
   letter-spacing: 2px;
   margin: 2%;
   transition: ease-in-out 100ms;
-  border-radius: 50px;
 }
 /* .Button:hover {
   transform: scale(1.1);
@@ -32,13 +31,21 @@ ADD MORE ANIMATION HERE
 */
 .Accept {
   background-color: #e2508b;
+  border-radius: 50px;
 }
 
 .Decline {
   background-color: #0056ff;
+  border-radius: 50px;
 }
-
+.Logout {
+  background-color: rgba(0, 0, 0, 1);
+}
 .Button:disabled {
   color: #ccc;
   cursor: not-allowed;
+}
+
+.Control {
+  background-color: #0056ff;
 }
