@@ -24,7 +24,7 @@ export const queueSuccess = (companyId, index) => {
   };
 };
 
-export const queueFail = (error, companyId, index) => {
+export const queueFail = (companyId, index, error) => {
   return {
     type: actionTypes.QUEUE_FAIL,
     error: error,
@@ -56,36 +56,35 @@ export const queueStudent = (companyId, index) => {
         const companies = getState().companies.companies;
 
         // This array will contain objects where each object is the company's status
-        let companiesStatus = [];
+        // let companiesStatus = [];
 
-        // Properties of interest for filtering
-        const status = ["_id", "hadSession", "isQueued"];
+        // // Properties of interest for filtering
+        // const status = ["_id", "hadSession", "isQueued"];
 
-        // Go through the companies state array
-        for (let i = 0; i < companies.length; i++) {
-          // Extract the company with specific properties filtered
+        // // Go through the companies state array
+        // for (let i = 0; i < companies.length; i++) {
+        //   // Extract the company with specific properties filtered
 
-          companiesStatus.push(
-            Object.keys(companies[i])
-              .filter((key) => status.includes(key))
-              .reduce((obj, key) => {
-                obj[key] = companies[i][key];
-                return obj;
-              }, {})
-          );
-        }
+        //   companiesStatus.push(
+        //     Object.keys(companies[i])
+        //       .filter((key) => status.includes(key))
+        //       .reduce((obj, key) => {
+        //         obj[key] = companies[i][key];
+        //         return obj;
+        //       }, {})
+        //   );
+        // }
 
-        // Update the company that is queued
-        companiesStatus[index].isQueued = true;
+        // // Update the company that is queued
+        // companiesStatus[index].isQueued = true;
 
-        console.log(companiesStatus);
         // Save the company statuses
-        localStorage.setItem("companiesStatus", companiesStatus);
+        // localStorage.setItem("companiesStatus", companiesStatus);
 
         dispatch(queueSuccess(companyId, index));
       })
       .catch((error) => {
-        dispatch(queueFail(error, companyId, index));
+        dispatch(queueFail(companyId, index, error));
       });
   };
 };
@@ -112,7 +111,7 @@ export const dequeueSuccess = (companyId, index) => {
   };
 };
 
-export const dequeueFail = (error, companyId, index) => {
+export const dequeueFail = (companyId, index, error) => {
   return {
     type: actionTypes.DEQUEUE_FAIL,
     error: error,
@@ -123,7 +122,7 @@ export const dequeueFail = (error, companyId, index) => {
 
 export const dequeueStudent = (companyId, index) => {
   return (dispatch, getState) => {
-    console.log(companyId);
+    // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
     axios
@@ -133,38 +132,37 @@ export const dequeueStudent = (companyId, index) => {
         // console.log(res);
         let response = res.data; // This is where I get my initial queue position?
 
-        const companies = getState().companies.companies;
+        // const companies = getState().companies.companies;
 
-        // This array will contain objects where each object is the company's status
-        let companiesStatus = [];
+        // // This array will contain objects where each object is the company's status
+        // let companiesStatus = [];
 
-        // Properties of interest for filtering
-        const status = ["_id", "hadSession", "isQueued"];
+        // // Properties of interest for filtering
+        // const status = ["_id", "hadSession", "isQueued"];
 
-        // Go through the companies state array
-        for (let i = 0; i < companies.length; i++) {
-          // Extract the company with specific properties filtered
-          companiesStatus.push(
-            Object.keys(companies[i])
-              .filter((key) => status.includes(key))
-              .reduce((obj, key) => {
-                obj[key] = companies[i][key];
-                return obj;
-              }, {})
-          );
-        }
+        // // Go through the companies state array
+        // for (let i = 0; i < companies.length; i++) {
+        //   // Extract the company with specific properties filtered
+        //   companiesStatus.push(
+        //     Object.keys(companies[i])
+        //       .filter((key) => status.includes(key))
+        //       .reduce((obj, key) => {
+        //         obj[key] = companies[i][key];
+        //         return obj;
+        //       }, {})
+        //   );
+        // }
 
-        // Update the company that is queued
-        companiesStatus[index].isQueued = true;
+        // // Update the company that is queued
+        // companiesStatus[index].isQueued = true;
 
-        console.log(companiesStatus);
-        // Save the company statuses
-        localStorage.setItem("companiesStatus", companiesStatus);
+        // // Save the company statuses
+        // localStorage.setItem("companiesStatus", companiesStatus);
 
         dispatch(dequeueSuccess(companyId, index));
       })
       .catch((error) => {
-        dispatch(dequeueFail(error, companyId, index));
+        dispatch(dequeueFail(companyId, index, error));
       });
   };
 };

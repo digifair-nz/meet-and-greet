@@ -64,7 +64,7 @@ class CompanyCard extends Component {
 
   onInfoCircleClick = (event) => {
     event.stopPropagation();
-    console.log("Clicked");
+
     this.setState({
       showInfoPopup: true,
     });
@@ -73,14 +73,22 @@ class CompanyCard extends Component {
   render() {
     // If the student has talked to a recruiter from this company, disable queuing ability
     let currentClass = classes.CompanyCard;
-    console.log(
-      "[COMPANY CARD] render: " + this.props.id + " " + this.state.showInfoPopup
-    );
+    // console.log(
+    //   "[COMPANY CARD] render: " + this.props.id + " " + this.state.showInfoPopup
+    // );
 
+    // Activate the glow when the person is queued or disable if the person had session
     if (this.props.isQueued) {
       currentClass = classes.CompanyCardActive;
     } else if (this.props.hadSession) {
       currentClass = classes.CompanyCardDisabled;
+    }
+
+    // Status circle (green if unqueued and red if not allowed to queue)
+    let statusCircle = classes.StatusCircle; // Green by default
+
+    if (this.props.hadSession) {
+      statusCircle += " " + classes.RedCircle; // Change to red if the user had a session
     }
 
     return (
@@ -88,7 +96,7 @@ class CompanyCard extends Component {
       <Aux>
         <Modal modalClosed={this.onClickModal} show={this.state.showInfoPopup}>
           <CompanyDescription
-            // show={this.state.showInfoPopup}
+            show={this.state.showInfoPopup}
             description={this.props.description}
             logo={this.props.logo}
             closeModal={this.onClickModal}
@@ -122,13 +130,7 @@ class CompanyCard extends Component {
                 </span>
               </div>
             ) : (
-              <div
-                className={
-                  !this.props.hadSession
-                    ? classes.GreenCircle
-                    : classes.RedCircle
-                }
-              ></div>
+              <div className={statusCircle}></div>
             )}
             {/* Green circle indicates that student can queue while Red circle means he can't */}
           </div>

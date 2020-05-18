@@ -6,11 +6,11 @@ import closeIcon from "../../assets/icons/cross.png";
 
 // Make into class?
 class CompanyDescription extends Component {
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // The only time company description needs to update
-  //   // is when it is meant to be showed
-  //   return nextProps.show !== this.props.show ;
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    // The only time company description needs to update
+    // is when it is meant to be showed
+    return nextProps.show !== this.props.show;
+  }
 
   render() {
     console.log("COMPANY DESCRIPTION");
