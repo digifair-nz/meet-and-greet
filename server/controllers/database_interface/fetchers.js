@@ -15,7 +15,6 @@ const idsFetcher = {
 
 const byEventAndCompanyFetcher = {
     retrieve: function(req) {
-        console.log(req.payload.eventId, req.params._id)
         return this.collection.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
     }
 }
