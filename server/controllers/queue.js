@@ -43,6 +43,12 @@ function dequeue({ broadcastQueueUpdate }) {
     }
 }
 
+function leaveSession({ broadcastQueueUpdate }) {
+    return async function leaveSession(req, res) {
+
+    }
+}
+
 async function createQueue(req, res) {
     if(!validate.isId({ _id: req.body.eventId}, res) || !validate.isId({ _id: req.body.companyId }, res)) {
         return

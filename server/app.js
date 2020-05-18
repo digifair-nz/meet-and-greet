@@ -36,6 +36,7 @@ app.ws('/', function(ws, req) {
 app.broadcastQueueUpdate = function(queue) {
     wsInstance.getWss().clients.forEach(client => {
         // console.log(client)
+        // don't send if -1
         client.send(queue.indexOf(client.jwt._id))
     })
 }
