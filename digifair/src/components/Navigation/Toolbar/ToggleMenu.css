@@ -79,8 +79,8 @@
   }
   @media (max-width: 375px) {
     .ToggleMenu {
-      position: absolute;
-      top: 15%;
+      position: fixed;
+      top: 1%;
       right: 5%;
     }
   }

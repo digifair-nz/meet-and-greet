@@ -4,8 +4,10 @@ import classes from "./Toolbar.module.css";
 import Logo from "../../../assets/company_logos/digifair-white.png";
 import LogoIcon from "../../../assets/company_logos/digifair_icon_notification.png";
 
+import Backdrop from "../../UI/Backdrop/Backdrop";
 import "./ToggleMenu.css";
 
+import Aux from "../../../hoc/Auxiliary";
 class Toolbar extends Component {
   /*
   Toolbar is a menu component that will encapsulate control buttons such as Queue to All, 
@@ -38,6 +40,16 @@ class Toolbar extends Component {
   };
   render() {
     // If the toolbar is minimized than logo is replaced with the icon
+
+    // To allow for more reusability of the tool bar, the controls container may vary in the number of buttons children
+    // therefore different containers will require different number of buttons. This will toggle the amount of height each row gets
+    // allowing the buttons to apear more uniformly expanded
+    let add = classes.StudentDashboard;
+    if (this.props.controlsLocation === "ChatRoom") {
+      add = classes.ChatRoom;
+    }
+
+    // Toggle between an icon and a full logo for Digifair
     let logo = !this.state.active ? (
       <img
         alt="Digifair White Icon"
@@ -48,27 +60,32 @@ class Toolbar extends Component {
       <img alt="Digifair White logo" className={classes.Logo} src={Logo} />
     );
 
+    // Determines width and visability of children
     let toolbarClass = classes.ToolbarMin;
     if (this.state.active) {
       toolbarClass = classes.ToolbarOpen;
     }
     return (
-      <header className={toolbarClass}>
-        {logo}
-        <div className={this.state.menuClass} onClick={this.onMenuClick}>
-          <span></span>
-        </div>
+      <Aux>
+        <header className={toolbarClass}>
+          {logo}
+          <div className={this.state.menuClass} onClick={this.onMenuClick}>
+            <span></span>
+          </div>
 
-        <div className={classes.ControlsContainer}>
-          {/*Make this a child prop to allow for different buttons? */}
-          {
-            this.state.active
-              ? this.props.children
-              : null /* Only show nested buttons if active */
-          }
-        </div>
-        <span className={classes.CreditsTitle}>Credits</span>
-      </header>
+          <div className={classes.ControlsContainer + " " + add}>
+            {/*Make this a child prop to allow for different buttons? */}
+            {
+              this.state.active
+                ? this.props.children
+                : null /* Only show nested buttons if active */
+            }
+          </div>
+          <span className={classes.CreditsTitle}>Credits</span>
+        </header>
+        {/* Dim the background when the menu opens */}
+        <Backdrop show={this.state.active} />
+      </Aux>
     );
   }
 }
