@@ -13,6 +13,9 @@ export const SET_STUDENT_AUTH_REDIRECT_PATH = "SET_STUDENT_AUTH_REDIRECT_PATH";
 
 // Student INFO
 
+// Queue Position update
+export const UPDATE_QUEUE_POSITION = "UPDATE_QUEUE_POSITION";
+
 // Fetch Companies for student dashboard
 export const FETCH_COMPANIES_START = "FETCH_COMPANIES_START";
 
