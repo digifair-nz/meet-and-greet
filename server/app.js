@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const createError = require('http-errors')
 const express = require('express')
+const expressWs = require('express-ws')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
@@ -13,7 +14,7 @@ app.server = require('http').createServer(app)
 
 const url = require('url')
 const jwt = require('jsonwebtoken')
-const wsInstance = require('express-ws')(app, app.server, {
+const wsInstance = expressWs(app, app.server, {
     wsOptions: {
         verifyClient: function({ req }, done) {
             const { query: { token } } = url.parse(req.url, true)
@@ -33,12 +34,15 @@ app.ws('/', function(ws, req) {
     ws.jwt = req.jwt
     ws.send('Connected')
 })
+const notInQueue = -1
 app.broadcastQueueUpdate = function(queue) {
-    wsInstance.getWss().clients.forEach(client => {
-        // console.log(client)
-        // don't send if -1
-        client.send(queue.indexOf(client.jwt._id))
-    })
+    for(const client of wsInstance.getWss().clients) {
+        const index = queue.members.indexOf(client.jwt._id)
+        if(index == notInQueue) {
+            continue
+        }
+        client.send({ companyId: queue.companyId, queuePosition: queue.members.indexOf(client.jwt._id) })
+    }
 }
 
 const userRouter = require('./routes/user')({ broadcastQueueUpdate: app.broadcastQueueUpdate })
