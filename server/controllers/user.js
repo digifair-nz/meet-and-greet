@@ -122,6 +122,88 @@ function dequeue({ broadcastQueueUpdate }) {
         }
     }
 }
+
+/**
+ * Attempt to join the session as the user represented by the payload id for the room represented by req.params._id.
+ * Fails if the session to join cannot be found, the session is occupied, the user cannot be found, the user is not in the
+ * queue for the session, the user is not at the front of the queue for the session, or the user themselves is in a session.
+ * Success sets the inSession fields on both the user and the room to true, the sessionPartners of the user and the room are set to each
+ * other, and a response is sent to the user client containing the token and sessionId needed to join the session
+ * and the sessionId they require to join the session
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ */
+async function joinSession(req, res) {
+    // validate the room id
+    if(!validate.isId(req.params, res)) {
+        return
+    }
+    try {
+        // find the rooms, queue and user from the database
+        const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
+        if(!rooms) {
+            return res.status(404).json({ message: 'Could not find the session to join' })
+        }
+        const queue = await Queue.findOne({ eventId: req.payload.eventI, companyId: req.params._id })
+        if(!queue) {
+            return res.status(404).json({ message: 'Could not find the queue for the session.' })
+        }
+        const user = await User.findById(req.payload._id)
+        if(!user) {
+            return res.status(404).json({ message: 'User could not be found' })
+        }
+        // fail if the user is not available
+        if(user.inSession) {
+            return res.status(403).json({ message: 'Failed to join session as user is already in a session' })
+        }
+        
+        const index = queue.members.indexOf(req.payload._id)
+        // fail if the user is not in the queue
+        if(index == -1) {
+            return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue.' })
+        }
+        // if the user is not at the front of the queue, check if the users ahead of them in the queue are occupied
+        // if they are, then we can proceed as if they were at the front of the queue
+        if(index != 0) {
+            // get the users earlier in the queue
+            const userIdsEarlierInQueue = queue.members.slice(0, index)
+            const usersEarlierInQueue = await User.find({
+                '_id': {
+                    $in: userIdsEarlierInQueue
+                }
+            })
+            if(!usersEarlierInQueue) {
+                throw new Error('Unexpected error joining session')
+            }
+            // fail if the user is not the first non-occupied user in the queue
+            const isFirstNonOccupied = usersEarlierInQueue.reduce((total, value) => total && value.inSession, true)
+            if(!isFirstNonOccupied) {
+                return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
+            }
+        }
+        // at this point we know that the user is in first position to join any available room, so we check for an available room
+        for(const room of rooms) {
+            // upon finding an available room, join it
+            if(!room.inSession) {
+                user.inSession = true
+                user.sessionPartner = room._id
+                await user.save()
+                room.inSession = true
+                room.sessionPartner = user._id
+                await room.save()
+        
+                // send the vonage details here
+                return res.status(200).json({ message: `Success joining room as ${user.email}.`, vonageToken: null, vonageSessionId: null })
+            }
+        }
+        // if we are here then we know that there is no available room
+        return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
+
+    }
+    catch (error) {
+        return res.status(500).json({ message: error })
+    }
+}
 module.exports = {
     getEvent
 }
