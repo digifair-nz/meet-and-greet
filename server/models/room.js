@@ -12,6 +12,17 @@ const RoomSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },
+    queue: {
+        type: [mongoose.Types.ObjectId],
+        default: []
+    },
+    inSession: {
+        type: Boolean,
+        default: false
+    },
+    sessionPartner: {
+        type: mongoose.Types.ObjectId,
     }
     // vonage session id
 })

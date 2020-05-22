@@ -10,10 +10,10 @@ const EventSchema = new mongoose.Schema({
         default: 'No description'
     },
     // time and date too
-    clubId: {
-        type: mongoose.Types.ObjectId,
-        required: true
-    },
+    // clubId: {
+    //     type: mongoose.Types.ObjectId,
+    //     required: true
+    // },
     companiesAttending: {
         type: [mongoose.Types.ObjectId],
         default: []
