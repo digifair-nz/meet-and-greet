@@ -13,6 +13,9 @@ const UserSchema = new mongoose.Schema({
     inSession: {
         type: Boolean,
         default: false
+    },
+    sessionPartner: {
+        type: mongoose.Types.ObjectId
     }
 })
 

@@ -1,20 +1,21 @@
 const mongoose = require('mongoose')
+mongoose.set('useCreateIndex', true)
 
-const dbURI = process.env.DB_URI
+const dbURI = process.env.LOCAL_DB_URI
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 
-mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connected to ${dbURI}`)
-})
+// mongoose.connection.on('connected', () => {
+//     console.log(`Mongoose connected to ${dbURI}`)
+// })
 mongoose.connection.on('error', err => {
     console.log(`Mongoose connection error: ${err}`)
 })
-mongoose.connection.on('disconnected', () => {
-    console.log(`Mongoose disconnected`)
-})
+// mongoose.connection.on('disconnected', () => {
+//     console.log(`Mongoose disconnected`)
+// })
 
 // function to close the mongoose connection
 function gracefulShutdown(msg, callback) {
@@ -46,6 +47,6 @@ process.on('SIGTERM', () => {
 require('./club')
 require('./company')
 require('./event')
-require('./queue')
 require('./room')
+require('./queue')
 require('./user')

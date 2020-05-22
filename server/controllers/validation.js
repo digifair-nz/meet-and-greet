@@ -14,13 +14,13 @@ function isValid(schema) {
 function isValidArray(schema) {
     return function(source, res) {
         if(!source || !Array.isArray(source)) {
-            if(res) res.status(400).json('Invalid request.')
+            if(res) res.status(400).json('No object provided for validation.')
             return false
         }
         for(const s of source) {
             const { error } = schema.validate(s)
             if(error) {
-                if(res) res.status(400).json(error.details[0].message)
+                if(res) res.status(400).json({ message: (process.env.NODE_ENV == 'development' ? error.details[0].message : 'Validation error') })
                 return (res ? false : error)
             }
         }
@@ -36,9 +36,13 @@ const eventSchema = Joi.object({
 const idSchema = Joi.object({
     _id: Joi.objectId().required()
 })
+const stringSchema = Joi.object({
+    string: Joi.string()
+})
 
 module.exports = {
     isEvent: isValid(eventSchema),
     isId: isValid(idSchema),
+    isString: isValid(stringSchema),
     isIdArray: isValidArray(idSchema)
 }

@@ -9,7 +9,7 @@ const QueueSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: true
     },
-    data: {
+    members: {
         type: [mongoose.Types.ObjectId],
         default: []
     },
