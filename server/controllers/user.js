@@ -204,6 +204,79 @@ async function joinSession(req, res) {
         return res.status(500).json({ message: error })
     }
 }
+
+/**
+ * Attempt to leave the session as the user represented by the payload id for the room represented by req.params._id.
+ * Fails if the user cannot be found, the session to leave cannot be found, the user or the room are not in active sessions with each other,
+ * or the blacklist cannot be found.
+ * Sucess sets the inSession status of the user and the sessionPartner of the user to false and adds the user to the blacklist for the room
+ * (if they are not already in the blacklist).
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ */
+async function leaveSession(req, res) {
+    try {
+        // get the user from the database
+        const user = await User.findById(req.payload._id)
+        if(!user) {
+            return res.status(404).json({ message: 'User could not be found' })
+        }
+        // make sure the user is in a session
+        if(!user.inSession || !user.sessionPartner) {
+            return res.status(403).json({ message: 'Leave session failed as user is not in an active session' })
+        }
+        // make sure the room is in a session with the user
+        const room = await Room.findById(user.sessionPartner)
+        if(!room) {
+            return res.status(404).json({ message: 'Could not find the session to leave' })
+        }
+        if(!room.inSession || room.sessionPartner != user._id) {
+            return res.status(403).json({ message: 'Leave session failed as user is not in session with the given room.' })
+        }
+        // get the queue from the database to add the user to the blacklist
+        const queue = await Queue.findOne({ eventId: room.eventId, companyId: room.companyId })
+        if(!queue) {
+            return res.status(404).json({ message: 'Leave session failed as the blacklist could not be found.' })
+        }
+
+        // at this point we know that the user and the room are in session with one another and we can remove the user from the session
+
+        user.inSession = false
+        user.sessionPartner = null
+        await user.save()
+        // add the user to the blacklist if they are not already in it
+        if(queue.blacklist.includes(req.payload._id)) {
+            queue.blacklist.push(req.payload._id)
+            await queue.save()
+        }
+
+        return res.status(200).json({ message: 'Successfully left the session' })
+    }
+    catch (error) {
+        return res.status(500).json({ message: error })
+    }
+
+}
+
+async function createQueue(eventId, companyId) {
+    const queue = new Queue({
+        eventId, companyId, blacklist: [], members: []
+    })
+    try {
+        await queue.save()
+        return queue
+    }
+    catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+
 module.exports = {
-    getEvent
+    getCompaniesForEvent,
+    enqueue,
+    dequeue,
+    joinSession,
+    leaveSession
 }
