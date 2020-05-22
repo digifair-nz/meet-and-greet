@@ -6,3 +6,4 @@ export {
   setStudentAuthRedirectPath,
   studentAuthCheckState,
 } from "./studentAuth";
+export { updateQueuePosition } from "./queuePosition";

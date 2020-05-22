@@ -16,6 +16,7 @@ import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
+import logoutIcon from "../../assets/icons/logout.png";
 // CSS
 import classes from "./StudentDashboard.module.css";
 
@@ -49,6 +50,7 @@ class StudentDashboard extends Component {
 
   componentDidMount() {
     // Company cards
+
     this.props.fetchCompanies();
 
     console.log("[STUDENT DASHBOARD] Mounted");
@@ -65,10 +67,11 @@ class StudentDashboard extends Component {
 
       console.log("Socket Connection Opened!");
       ws.onmessage = function (message) {
-        console.log("######" + message);
+        // dispatch update queue position
+        console.log(message);
       };
     }
-    // // Notification
+    // Notification
     // let notificationGranted;
     // Notification.requestPermission().then(function (result) {
     //   notificationGranted = result;
@@ -145,10 +148,16 @@ class StudentDashboard extends Component {
     }
     return (
       <Aux>
-        <Toolbar isAuth={true} drawerToggleClicked={false}>
+        <Toolbar
+          isAuth={true}
+          drawerToggleClicked={false}
+          controlsLocation="StudentDashboard"
+        >
           <Button btnType="Control">Queue All</Button>
           <Button btnType="Control">Dequeue All</Button>
-          <Button btnType="Logout">Logout</Button>
+          <Button iconType="Logout" btnType="Logout">
+            Logout
+          </Button>
         </Toolbar>
 
         <div className={classes.Event}>

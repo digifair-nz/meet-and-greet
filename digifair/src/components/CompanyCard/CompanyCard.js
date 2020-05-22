@@ -47,10 +47,11 @@ class CompanyCard extends Component {
   onCardClick = () => {
     // Prevent multiple queue requests
     // console.log("Company card is queued: " + this.props.isQueued);
-    if (!this.props.hadSession && !this.props.isQueued) {
+    if (!this.props.hadSession && !this.props.isQueued && !this.props.queuing) {
       this.props.queueToCompany(this.props.id, this.props.index);
-    } else if (this.props.isQueued) {
+    } else if (this.props.isQueued && !this.props.queuing) {
       this.props.dequeueFromComapany(this.props.id, this.props.index);
+    } else if (this.props.queuing) {
     } else {
       alert("You already had a session with this company");
     }

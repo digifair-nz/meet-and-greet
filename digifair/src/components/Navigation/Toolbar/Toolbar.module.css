@@ -14,7 +14,7 @@
   padding: 0 20px;
   position: fixed;
   box-sizing: border-box;
-  z-index: 90;
+  z-index: 110;
   transition: 0.5s;
 }
 
@@ -34,7 +34,9 @@
 /* Opened Toolbar */
 .ToolbarOpen {
   height: 100%;
-  width: 15%;
+
+  /* width: 15%; */
+  width: 17%;
   background-color: #e2508b;
   background-image: url("../../../assets/screen-images/background-fluids-full.png");
   background-repeat: no-repeat;
@@ -47,26 +49,39 @@
   padding: 0 20px;
   position: fixed;
   box-sizing: border-box;
-  z-index: 90;
+  z-index: 110;
   transition: 0.5s;
 }
 
 /* This is where control buttons go*/
 .ControlsContainer {
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90%;
-  justify-content: space-between;
-  height: 20%;
-  margin: auto;
-  padding-bottom: 30%; */
-  display: grid;
+  /* display: grid;
   width: 90%;
   height: 20%;
   margin: auto;
   grid-row-gap: 7%;
-  padding-bottom: 30%;
+  padding-bottom: 30%; */
+  display: grid;
+  width: 90%;
+  height: auto;
+
+  justify-self: center;
+  grid-row-gap: 7%;
+  justify-content: center;
+  grid-template-columns: 100%;
+  /* padding-bottom: 30%; */
+}
+
+/*
+ Switch between control container properties depending on the number of children in different containers
+*/
+.ControlsContainer.ChatRoom {
+  margin-top: 40%;
+  grid-auto-rows: 40%;
+}
+.ControlsContainer.StudentDashboard {
+  margin-top: 50%;
+  grid-auto-rows: 60%;
 }
 /* Apply to child control elements */
 .ControlsContainer * {
@@ -79,7 +94,9 @@
 MOBILE and TABLET
 ---------------
 */
-
+.ControlsContainerMin {
+  display: none;
+}
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
   }
@@ -94,13 +111,23 @@ MOBILE and TABLET
     .ToolbarMin {
       width: 100%;
       height: 5%;
+      transition: 0ms;
     }
     .LogoIcon {
       height: 100%;
       position: absolute;
       left: 0;
+      transition: 0;
     }
 
+    .Logo {
+      width: 50%;
+      padding-bottom: 0%;
+      padding-top: 2%;
+      position: absolute;
+      left: 3%;
+      transition: 0;
+    }
     .CreditsTitle {
       display: none;
     }

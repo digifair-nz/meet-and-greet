@@ -2,13 +2,16 @@ import * as actionTypes from "../actions/actionTypes";
 
 import { updateObject } from "../utility";
 const initialState = {
-  /// REFRACTOR FOR IS QUEUED
+  /// REFRACTOR FOR IS QUEUED?
 
   companies: null,
   loading: false,
   error: null,
 };
 
+/********************
+Fetch companies
+********************/
 // Company fetching
 const fetchCompaniesStart = (state, action) => {
   return {
@@ -27,6 +30,7 @@ const fetchCompaniesSuccess = (state, action) => {
     company.hadSession = false;
     company.isQueued = false;
     company.queuing = false;
+    company.queuePos = null;
   });
 
   // console.log(action.companies);
@@ -45,6 +49,9 @@ const fetchCompaniesFail = (state, action) => {
   };
 };
 
+/********************
+QUEUE/DEQUEUE STUDENT 
+********************/
 // Queue
 const updateCompanyQueuing = (state, index, queueStatus) => {
   // Returns an updated company queue status
@@ -110,6 +117,29 @@ const dequeueFail = (state, action) => {
   return updateObject(state, { companies: updatedCompanies });
 };
 
+/********************
+UPDATE QUEUE POSITION
+********************/
+const updateQueuePosition = (state, action) => {
+  // given companyId and queuePos, update the current position of the student for a specific company
+  let updatedCompanies = [...state.companies];
+  let updatedCompany;
+
+  // Find a specific company
+  for (let i = 0; i < updatedCompanies.length; i++) {
+    if (updatedCompanies[i]._id === action.companyId) {
+      updatedCompany = { ...updatedCompanies[i] };
+
+      updatedCompany.queuePosition = action.queuePosition;
+
+      updatedCompanies[i] = updatedCompany;
+      break;
+    }
+  }
+
+  return updateObject(state, { companies: updatedCompanies });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     //refractor
@@ -133,6 +163,8 @@ const reducer = (state = initialState, action) => {
       return dequeueSuccess(state, action);
     case actionTypes.DEQUEUE_FAIL:
       return dequeueFail(state, action);
+    case actionTypes.UPDATE_QUEUE_POSITION:
+      return updateQueuePosition(state, action);
     default:
       return state;
   }

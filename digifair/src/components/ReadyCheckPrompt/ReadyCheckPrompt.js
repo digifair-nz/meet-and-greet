@@ -3,13 +3,15 @@ import React, { Component } from "react";
 import Button from "../UI/Button/Button";
 import classes from "./ReadyCheckPrompt.module.css";
 
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 class ReadyCheckPrompt extends Component {
   // If the student accepts the queue, he will be redirected to the video chat room with the recruiter
-  onAcceptHandler = () => {};
+  onAcceptHandler = () => {
+    this.props.history.push("/chat-room");
+  };
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
@@ -54,4 +56,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(ReadyCheckPrompt);
+export default withRouter(connect(null, mapDispatchToProps)(ReadyCheckPrompt));
