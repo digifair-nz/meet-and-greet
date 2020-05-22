@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+// controllers for all endpoints which may be accessed by standard users of the application (i.e. users who are not companies nor clubs)
+
 const validate = require('./validation')
 
 const mongoose = require('mongoose')
@@ -35,8 +36,49 @@ async function getCompaniesForEvent(req, res) {
         // respond with the companies if failure did not occur
         return res.status(200).json(companies)
     }
-    catch (err) {
-        console.log(err)
+    catch (error) {
+        res.status(500).json({ message: error })
+    }
+}
+
+/**
+ * Attempt to enqueue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
+ * Fails if the user is already in the queue, or if the user has previously had a session with the company.
+ * Success pushes user to the members field of the queue.
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ */
+async function enqueue(req, res) {
+    // validate the room id
+    if(!validate.isId(req.params, res)) {
+        return
+    }
+    try {
+        // find the room in the database
+        let queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
+        if(!queue) {
+            queue = await createQueue(req.payload.eventId, req.params._id)
+        }
+
+        // fail if the user is already queued
+        if(queue.members.includes(req.payload._id)) {
+            return res.status(403).json({ message: 'Failed to enqueue as user is already in queue.'})
+        }
+        
+        // fail if the user is attempting to queue more than once (not allowed)
+        if(queue.blacklist.includes(req.payload._id)) {
+            return res.status(403).json({ message: 'Failed to enqueue as user has previously had session with room.' })
+        }
+
+        // add the user to the queue
+        queue.members.push(req.payload._id)
+        await queue.save()
+
+        return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error })
     }
 }
 
