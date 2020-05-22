@@ -82,6 +82,46 @@ async function enqueue(req, res) {
     }
 }
 
+/**
+ * Attempt to dequeue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
+ * Fails if the queue cannot be found or the user is not queued.
+ * Success removes the user from the members field of the queue and causes the queue position socket to broadcast an event to all
+ * users queued to the respective company.
+ * Note that the dequeue function is a higher order function. This allows it to be passed the broadcastQueueUpdate function to interact
+ * with the socket.
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ */
+function dequeue({ broadcastQueueUpdate }) {
+    return async function dequeue(req, res) {
+        // validate the room id
+        if(!validate.isId(req.params, res)) {
+            return
+        }
+        try {
+            // find the room in the database
+            const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
+            if(!queue) {
+                return res.status(404).json({ message: 'Queue not found in dequeue attempt' })
+            }
+            // fail if the user is not in the queue
+            const index = queue.members.indexOf(req.payload._id)
+            if(index == -1) {
+                return res.status(403).json({ message: 'Could not dequeue as user was not queued' })
+            }
+            // remove the user from the queue
+            queue.members.splice(index, 1)
+            await queue.save()
+
+            // notify other queue members that their position in the queue may have changed
+            broadcastQueueUpdate(queue)
+            return res.status(200).json({ message: 'Successfully dequeued from ' + queue.companyId })
+        }
+        catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
+}
 module.exports = {
     getEvent
 }
