@@ -15,6 +15,13 @@ const initialState = {
       queuePos: null,
     },
   ],
+  credentials: {
+    apiKey: "46721402",
+    sessionId:
+      "2_MX40NjcyMTQwMn5-MTU5MDE5MDk0OTg1M35MR3VKdXdwREMzd09zZHZpenlIL01iQkZ-fg",
+    token:
+      "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9NDFlMGMwMWE3YzFjYWQwYjM4N2M1NzQ5ZTk2NjA1MjNlYjAxYWExMTpzZXNzaW9uX2lkPTJfTVg0ME5qY3lNVFF3TW41LU1UVTVNREU1TURrME9UZzFNMzVNUjNWS2RYZHdSRU16ZDA5elpIWnBlbmxJTDAxaVFrWi1mZyZjcmVhdGVfdGltZT0xNTkwMTkwOTQ5JnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTAxOTA5NDkuODYxNTM1MDE0MjAxOA==",
+  },
 };
 
 const studentAuthStart = (state, action) => {
