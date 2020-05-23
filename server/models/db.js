@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 mongoose.set('useCreateIndex', true)
 
-const dbURI = process.env.LOCAL_DB_URI
+const dbURI = (process.env.JEST_WORKER_ID == undefined ? process.env.DB_URI : process.env.LOCAL_DB_URI)
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 
-// mongoose.connection.on('connected', () => {
-//     console.log(`Mongoose connected to ${dbURI}`)
-// })
+mongoose.connection.on('connected', () => {
+    console.log(`Mongoose connected to ${dbURI}`)
+})
 mongoose.connection.on('error', err => {
     console.log(`Mongoose connection error: ${err}`)
 })
