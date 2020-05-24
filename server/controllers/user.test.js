@@ -1,4 +1,6 @@
+const OpenTok = require('opentok')
 const app = require('../app')
+const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
 const supertest = require('supertest')
 const request = supertest(app)
 const mongoose = require('mongoose')
@@ -232,7 +234,7 @@ describe('Queueing tests', function() {
 describe('Session tests', function() {
     describe('Joining session tests', function() {
         test('Attempt to join empty session for which the user is at the front of the queue for', async function() {
-            const eventId = await setup.seedDatabase()
+            const eventId = await setup.seedDatabase(true)
             const token = (await request.post('/user/login/' + eventId).send({ email: 'Peter@gmail.com'})).headers['auth-token']
             const event = await Event.findById(eventId)
             const companyId = event.companiesAttending[0].toString()
@@ -249,11 +251,11 @@ describe('Session tests', function() {
             expect(user.inSession).toBe(true)
             expect(room.inSession).toBe(true)
             expect(queue.members.length).toBe(0)
-    
+
             expect(otherRooms.map(room => room.inSession)).toEqual([false, false])
         })
         test('Attempt to join empty session for which the user is first in queue who is not in session ', async function() {
-            const eventId = await setup.seedDatabase()
+            const eventId = await setup.seedDatabase(true)
             const token1 = (await request.post('/user/login/' + eventId).send({ email: 'Peter@gmail.com'})).headers['auth-token']
             const token2 = (await request.post('/user/login/' + eventId).send({ email: 'Michael@gmail.com'})).headers['auth-token']
             const event = await Event.findById(eventId)

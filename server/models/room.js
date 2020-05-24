@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const OpenTok = require('opentok')
+const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
 
 const RoomSchema = new mongoose.Schema({
     eventId: {
@@ -23,8 +25,19 @@ const RoomSchema = new mongoose.Schema({
     },
     sessionPartner: {
         type: mongoose.Types.ObjectId,
-    }
-    // vonage session id
+    },
+    sessionId: String
 })
-
+RoomSchema.methods.newSessionId = async function(_id) {
+    return new Promise((resolve, reject) => {
+        opentok.createSession({ mediaMode: 'routed' }, async (err, session) => {
+            if(err) {
+                reject(err)
+            }
+            this.sessionId = session.sessionId
+            await this.save()
+            resolve(session.sessionId)
+        })
+    })
+}
 mongoose.model('Room', RoomSchema)

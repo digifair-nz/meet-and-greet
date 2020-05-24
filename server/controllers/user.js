@@ -1,6 +1,7 @@
 // controllers for all endpoints which may be accessed by standard users of the application (i.e. users who are not companies nor clubs)
-
 const validate = require('./validation')
+const OpenTok = require('opentok')
+const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
 
 const mongoose = require('mongoose')
 // require database schemas used
@@ -133,78 +134,89 @@ function dequeue({ broadcastQueueUpdate }) {
  * @param {Object} req The request object
  * @param {Object} res The response object
  */
-async function joinSession(req, res) {
-    // validate the room id
-    if(!validate.isId(req.params, res)) {
-        return
-    }
-    try {
-        // find the rooms, queue and user from the database
-        const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
-        if(!rooms) {
-            return res.status(404).json({ message: 'Could not find the session to join' })
+function joinSession({ broadcastQueueUpdate }) {
+    return async function joinSession(req, res) {
+        // validate the room id
+        if(!validate.isId(req.params, res)) {
+            return
         }
-        const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
-        if(!queue) {
-            return res.status(404).json({ message: 'Could not find the queue for the session.' })
-        }
-        const user = await User.findById(req.payload._id)
-        if(!user) {
-            return res.status(404).json({ message: 'User could not be found' })
-        }
-        // fail if the user is not available
-        if(user.inSession) {
-            return res.status(403).json({ message: 'Failed to join session as user is already in a session' })
-        }
-        
-        const index = queue.members.indexOf(req.payload._id)
-        // fail if the user is not in the queue
-        if(index == -1) {
-            return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue.' })
-        }
-        // if the user is not at the front of the queue, check if the users ahead of them in the queue are occupied
-        // if they are, then we can proceed as if they were at the front of the queue
-        if(index != 0) {
-            // get the users earlier in the queue
-            const userIdsEarlierInQueue = queue.members.slice(0, index)
-            const usersEarlierInQueue = await User.find({
-                '_id': {
-                    $in: userIdsEarlierInQueue
+        try {
+            // find the rooms, queue and user from the database
+            const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
+            if(!rooms) {
+                return res.status(404).json({ message: 'Could not find the session to join' })
+            }
+            const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
+            if(!queue) {
+                return res.status(404).json({ message: 'Could not find the queue for the session.' })
+            }
+            const user = await User.findById(req.payload._id)
+            if(!user) {
+                return res.status(404).json({ message: 'User could not be found' })
+            }
+            // fail if the user is not available
+            if(user.inSession) {
+                return res.status(403).json({ message: 'Failed to join session as user is already in a session' })
+            }
+            
+            const index = queue.members.indexOf(req.payload._id)
+            // fail if the user is not in the queue
+            if(index == -1) {
+                return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue.' })
+            }
+            // if the user is not at the front of the queue, check if the users ahead of them in the queue are occupied
+            // if they are, then we can proceed as if they were at the front of the queue
+            if(index != 0) {
+                // get the users earlier in the queue
+                const userIdsEarlierInQueue = queue.members.slice(0, index)
+                const usersEarlierInQueue = await User.find({
+                    '_id': {
+                        $in: userIdsEarlierInQueue
+                    }
+                })
+                if(!usersEarlierInQueue) {
+                    throw new Error('Unexpected error joining session')
                 }
-            })
-            if(!usersEarlierInQueue) {
-                throw new Error('Unexpected error joining session')
+                // fail if the user is not the first non-occupied user in the queue
+                const isFirstNonOccupied = usersEarlierInQueue.reduce((total, value) => total && value.inSession, true)
+                if(!isFirstNonOccupied) {
+                    return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
+                }
             }
-            // fail if the user is not the first non-occupied user in the queue
-            const isFirstNonOccupied = usersEarlierInQueue.reduce((total, value) => total && value.inSession, true)
-            if(!isFirstNonOccupied) {
-                return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
-            }
-        }
-        // at this point we know that the user is in first position to join any available room, so we check for an available room
-        for(const room of rooms) {
-            // upon finding an available room, join it
-            if(!room.inSession) {
-                room.inSession = true
-                room.sessionPartner = user._id
-                await room.save()
-                // remove the user from the queue
-                queue.members.splice(index, 1)
-                await queue.save()
-                user.inSession = true
-                user.sessionPartner = room._id
-                await user.save()
-                
-                // send the vonage details here
-                return res.status(200).json({ message: `Success joining room as ${user.email}.`, vonageToken: null, vonageSessionId: null })
-            }
-        }
-        // if we are here then we know that there is no available room
-        return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
+            // at this point we know that the user is in first position to join any available room, so we check for an available room
+            for(const room of rooms) {
+                // upon finding an available room, join it
+                if(!room.inSession) {
+                    room.inSession = true
+                    room.sessionPartner = user._id
+                    await room.save()
+                    // remove the user from the queue
+                    queue.members.splice(index, 1)
+                    await queue.save()
+                    user.inSession = true
+                    user.sessionPartner = room._id
+                    await user.save()
+                    
+                    // notify other members in the queue of the shift in queue position 
+                    broadcastQueueUpdate(queue)
 
-    }
-    catch (error) {
-        return res.status(500).json({ message: error })
+                    let token = null
+                    if(room.sessionId) {
+                        token = opentok.generateToken(room.sessionId, {
+                            expireTime: (new Date().getTime()/ 1000) + 5 * 60
+                        })
+                    }
+                    return res.status(200).json({ message: `Success joining room as ${user.email}.`, vonageToken: token, vonageSessionId: room.sessionId || null })
+                }
+            }
+            // if we are here then we know that there is no available room
+            return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
+
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: error })
+        }
     }
 }
 

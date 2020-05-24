@@ -31,7 +31,7 @@ async function dropAllCollections () {
     }
 }
 
-async function seedDatabase() {
+async function seedDatabase(opentok = false) {
     const user1 = new User({
         email: 'Peter@gmail.com'
     })
@@ -79,9 +79,16 @@ async function seedDatabase() {
         await company1.save()
         await company2.save()
         await company3.save()
-        await room1.save()
-        await room2.save()
-        await room3.save()
+        if(opentok) {
+            await room1.newSessionId()
+            await room2.newSessionId()
+            await room3.newSessionId()
+        }
+        else {
+            await room1.save()
+            await room2.save()
+            await room3.save()
+        }
         
         event.companiesAttending = [company1._id, company2._id, company3._id]
         await event.save()

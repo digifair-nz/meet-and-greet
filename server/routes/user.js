@@ -17,7 +17,7 @@ module.exports = function(params) {
     // router.post('/dequeue', authCtrl.asStudent, userCtrl.dequeueAll)
     
     // endpoints for joining and leaving sessions
-    router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
+    router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession(params))
     router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
 
     return router
