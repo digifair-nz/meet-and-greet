@@ -4,6 +4,7 @@ mongoose.set('useCreateIndex', true)
 const User = mongoose.model('User')
 const Company = mongoose.model('Company')
 const Event = mongoose.model('Event')
+const Room = mongoose.model('Room')
 
 async function removeAllCollections () {
     const collections = Object.keys(mongoose.connection.collections)
@@ -55,6 +56,21 @@ async function seedDatabase() {
         name: "Company 3",
         logoURL: "http://company3logo",
     })
+    const room1 = new Room({
+        eventId: event._id,
+        companyId: company1._id,
+        name: 'Room 1' 
+    })
+    const room2 = new Room({
+        eventId: event._id,
+        companyId: company1._id,
+        name: 'Room 2' 
+    })
+    const room3 = new Room({
+        eventId: event._id,
+        companyId: company1._id,
+        name: 'Room 3' 
+    })
 
     try {
         await user1.save()
@@ -63,6 +79,9 @@ async function seedDatabase() {
         await company1.save()
         await company2.save()
         await company3.save()
+        await room1.save()
+        await room2.save()
+        await room3.save()
         
         event.companiesAttending = [company1._id, company2._id, company3._id]
         await event.save()
