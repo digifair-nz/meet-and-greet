@@ -144,7 +144,7 @@ async function joinSession(req, res) {
         if(!rooms) {
             return res.status(404).json({ message: 'Could not find the session to join' })
         }
-        const queue = await Queue.findOne({ eventId: req.payload.eventI, companyId: req.params._id })
+        const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
         if(!queue) {
             return res.status(404).json({ message: 'Could not find the queue for the session.' })
         }
@@ -185,13 +185,16 @@ async function joinSession(req, res) {
         for(const room of rooms) {
             // upon finding an available room, join it
             if(!room.inSession) {
-                user.inSession = true
-                user.sessionPartner = room._id
-                await user.save()
                 room.inSession = true
                 room.sessionPartner = user._id
                 await room.save()
-        
+                // remove the user from the queue
+                queue.members.splice(index, 1)
+                await queue.save()
+                user.inSession = true
+                user.sessionPartner = room._id
+                await user.save()
+                
                 // send the vonage details here
                 return res.status(200).json({ message: `Success joining room as ${user.email}.`, vonageToken: null, vonageSessionId: null })
             }
@@ -230,7 +233,7 @@ async function leaveSession(req, res) {
         if(!room) {
             return res.status(404).json({ message: 'Could not find the session to leave' })
         }
-        if(!room.inSession || room.sessionPartner != user._id) {
+        if(!room.inSession || room.sessionPartner.toString() != user._id.toString()) {
             return res.status(403).json({ message: 'Leave session failed as user is not in session with the given room.' })
         }
         // get the queue from the database to add the user to the blacklist
@@ -245,7 +248,7 @@ async function leaveSession(req, res) {
         user.sessionPartner = null
         await user.save()
         // add the user to the blacklist if they are not already in it
-        if(queue.blacklist.includes(req.payload._id)) {
+        if(!queue.blacklist.includes(req.payload._id)) {
             queue.blacklist.push(req.payload._id)
             await queue.save()
         }
