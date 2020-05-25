@@ -116,7 +116,12 @@ class VideoChat extends Component {
     otCore
       .startCall()
       .then(({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta, active: true });
+        if (!this.state.active) {
+          console.log(subscribers);
+          console.log(otCore.session);
+          console.log("Hello");
+          this.setState({ publishers, subscribers, meta, active: true });
+        }
       })
       .catch((error) => console.log(error));
   }

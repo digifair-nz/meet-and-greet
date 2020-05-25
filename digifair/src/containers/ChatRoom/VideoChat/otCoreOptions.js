@@ -25,7 +25,7 @@ export const otCoreOptions = {
   //https://www.npmjs.com/package/opentok-accelerator-core#communication-options
   communication: {
     callProperties: null, // Using default
-    connectionLimit: 2, // Possibly change to 2-3 for the production code
+    connectionLimit: 10, // Possibly change to 2-3 for the production code
   },
 
   screenSharing: {
