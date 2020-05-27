@@ -6,6 +6,7 @@ module.exports = function(wsInstance) {
     const Room = mongoose.model('Room')
     const User = mongoose.model('User')
     const Queue = mongoose.model('Queue')
+    const validate = require('./validation')
     
     /**
      * Creates one room for the event represented by req.body.eventId and for the company represented by req.body.companyId.
@@ -48,42 +49,52 @@ module.exports = function(wsInstance) {
     /**
      * Sends a ready notification to the first eligible member of the queue to notify them that they may join a room associated with that queue.
      * If the user does not accept the invitation then the next user is notified.
-     * If no user is found who accepts the invitation throughout the entire queue
+     * If no user is found who accepts the invitation throughout the entire queue then false is returned, if a user accepts then true is returned
      * @param {Document} queue The mongoose queue document to use
      */
-    async function findAndNotifyEligibleUser(queue) { 
+    async function findAndNotifyEligibleUser(queue) {
+        // loop through all of the members of the queue to find someone to join the session
         for(let i = 0; i < queue.members.length; i++) {
             const user = await User.findById(queue.members[i])
-            if(!user.inSession) {
-                const client = wsInstance.getWss().clients.find(client => client.payload._id == user._id)
-                if(client.hasHadSession[queue.companyId]) {
-                    continue
-                }
-                client.hasHadSession[queue.companyId] = true
+            // if the user is busy then skip over them
+            if(user.inSession) {
+                continue
+            }
+            // if the user has already been notified previously then skip over them
+            // this might happen if two rooms are looking for new students at the same time
+            const client = wsInstance.getWss().clients.find(client => client.payload._id == user._id)
+            if(client.hasBeenNotified[queue.companyId]) {
+                continue
+            }
+            // make sure the client is marked as having been notified
+            client.hasBeenNotified[queue.companyId] = true
 
-                client.send(JSON.stringify({
-                    messageType: 'ready',
-                    companyId: queue.companyId
-                }))
-                await timeout(10000)
+            // at this point we know that the client is eligible to join the session, so notify them that they must make a request within 10 seconds
+            client.send(JSON.stringify({
+                messageType: 'ready',
+                companyId: queue.companyId
+            }))
+            await timeout(10000)
 
-                try {
-                    const updatedUser = await User.findById(queue.members[i])
-                    if(updatedUser.inSession && updatedUser.sessionPartner.toString == queue._id.toString()) {
-                        return
-                    }
-                    // remove from queue and add to blacklist
-                    queue.blacklist.push(...queue.members.splice(i, 1))          
-                    await queue.save()
-                    user.previousSessions[client.payload.eventID][queue.companyId] = true
-                    await user.save()
+            try {
+                // check to see if the user joined the session that they were told that they were eligible for
+                const updatedUser = await User.findById(queue.members[i])
+                if(updatedUser.inSession && updatedUser.sessionPartner.toString == queue._id.toString()) {
+                    // if they did join the session then...
+                    return true
                 }
-                catch (error) {
-                    console.log(error)
-                    continue
-                }
+                // remove from queue and add to blacklist
+                queue.blacklist.push(...queue.members.splice(i, 1))          
+                await queue.save()
+                user.previousSessions[client.payload.eventID][queue.companyId] = true
+                await user.save()
+            }
+            catch (error) {
+                console.log(error)
+                continue
             }
         }
+        return false
     }
     function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))

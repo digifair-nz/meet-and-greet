@@ -204,7 +204,14 @@ module.exports = function(wsInstance) {
                             expireTime: (new Date().getTime()/ 1000) + 5 * 60
                         })
                     }
-                    return res.status(200).json({ message: `Success joining room as ${user.email}.`, vonageToken: token, vonageSessionId: room.sessionId || null })
+                    return res.status(200).json({
+                        message: `Success joining room as ${user.email}.`,
+                        credentials: {
+                            apiKey: process.env.VONAGE_API_KEY,
+                            sessionId: room.sessionId || null,
+                            token: token
+                        }
+                    })
                 }
             }
             // if we are here then we know that there is no available room
