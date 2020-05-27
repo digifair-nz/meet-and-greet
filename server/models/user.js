@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
     },
     sessionPartner: {
         type: mongoose.Types.ObjectId
+    },
+    previousSessions: {
+        type: {},
+        default: {}
     }
 })
 
