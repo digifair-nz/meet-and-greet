@@ -7,6 +7,8 @@ module.exports = function(wsInstance) {
     const User = mongoose.model('User')
     const Queue = mongoose.model('Queue')
     const validate = require('./validation')
+    const OpenTok = require('opentok')
+    const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
     
     /**
      * Creates one room for the event represented by req.body.eventId and for the company represented by req.body.companyId.
@@ -37,9 +39,79 @@ module.exports = function(wsInstance) {
         }
     }
 
-    
-    async function forceEndSession(req, res) {
-        const room = await Room.findById()
+    /**
+     * Marks the room as available to join and searches through the room's queue to find and notify a user who is eligible to join.
+     * Fails if there is still a student in the room, the next student has already been requested, or if the room or queue can't be found.
+     * If it succeeds then the room's inSession property is set to false and a new set of vonage credentials are generated for the company
+     * member IF they haven't already been regenerated previously when the company member kicked the student.
+     * This function searches 
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function getNextStudent(req, res) {
+        if(!validate.isId(req.params, res)) {
+            return
+        }
+        try {
+            // retrieve the required objects from the database and error if they can't be found
+            const room = await Room.findById(req.params._id)
+            if(!room) {
+                return res.status(404).json({ message: 'Could not request next student as room could not be found.' })
+            }
+            if(room.sessionPartner) {
+                return res.status(403).json({ message: 'Could not request next student as there is still a student within the session.' })
+            }
+            if(room.searching) {
+                return res.status(403).json({ message: 'Could not request next student as the next student has already been requested.' })
+            }
+            const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
+            if(!queue) {
+                return res.status(404).json({ message: 'Could not request next student as queue could not be found.' })
+            }
+            // open the room for new students and generate a new session so that the previous student can't reconnect
+            room.inSession = false
+
+            // if the student has been kicked previously then the session has already been regenerated and it doesn't have to be done again
+            if(room.kickedStudent) {
+                room.kickedStudent = false
+                res.status(200).json({
+                    message: 'Searching for student to join the session...',
+                    hasNewCredentials: false
+                })
+            }
+            // otherwise the session must be regenerated and the new details must be sent to the company
+            else {
+                const sessionId = await room.newSessionId()
+                // get the new token for the company
+                const token = opentok.generateToken(room.sessionId, {
+                    expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+                    role: 'moderator'
+                })
+                // send the new session id and token back to the company
+                res.status(200).json({
+                    message: 'Searching for student to join the session...',
+                    credentials: {
+                        apiKey: process.env.VONAGE_API_KEY,
+                        sessionId,
+                        token
+                    },
+                    hasNewCredentials: true
+                })
+            }
+            room.searching = true
+            await room.save()
+            // notify the next user that they may join
+            let foundUser = await findAndNotifyEligibleUser(queue)
+            while(!foundUser) {
+                foundUser = await findAndNotifyEligibleUser(queue)
+            }
+            room.searching = false
+            await room.save()
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: error })
+        }
     }
 
     /**
@@ -161,5 +233,6 @@ module.exports = function(wsInstance) {
     return {
         createRoom,
         kickStudent,
+        getNextStudent
     }
 }

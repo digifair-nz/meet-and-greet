@@ -26,6 +26,14 @@ const RoomSchema = new mongoose.Schema({
     sessionPartner: {
         type: mongoose.Types.ObjectId,
     },
+    kickedStudent: {
+        type: Boolean,
+        default: false
+    },
+    searching: {
+        type: Boolean,
+        default: false
+    },
     sessionId: String
 })
 RoomSchema.methods.newSessionId = async function(_id) {
