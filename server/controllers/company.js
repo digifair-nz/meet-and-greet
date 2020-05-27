@@ -42,8 +42,66 @@ module.exports = function(wsInstance) {
         const room = await Room.findById()
     }
 
-    async function requestNextStudent(req, res) {
-        
+    /**
+     * Kicks the student from the given session and changes the session id so that the student is not able to reconnect, even if they have manually
+     * saved their token.
+     * Fails if the room or queue cannot be foun, or if the student is not in the session.
+     * Success adds the student to the blacklist of the queue if they are not already in it, sets the sessionPartner and inSession properties of
+     * the user to null and false respectively, sets the sessionPartner of the room to null, marks the room as having kicked a user, and
+     * regenerates the vonage credentials for the company member who runs the specified session the student has just been kicked from.
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function kickStudent(req, res) {
+        if(!validate.isId(req.params, res)) {
+            return
+        }
+        try {
+            // retrieve the required objects from the database and error if they can't be found
+            const room = await Room.findById(req.params._id)
+            if(!room) {
+                return res.status(404).json({ message: 'Could not kick student as room could not be found.' })
+            }
+            const user = await User.findById(room.sessionPartner)
+            if(!room.sessionPartner || !user) {
+                return res.status(403).json({ message: 'Could not kick student as there is no student in the session.' })
+            }
+            const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
+            if(!queue) {
+                return res.status(404).json({ message: 'Could not kick student as queue could not be found.' })
+            }
+            // add the user to the blacklist if they aren't already in it
+            if(!queue.blacklist.contains(room.sessionPartner)) {
+                queue.blacklist.push(room.sessionPartner)
+                await queue.save()
+            }
+            // if the user has not left the room themselves, then remove them from the room properly
+            if(user.sessionPartner == room.sessionPartner) {
+                user.sessionPartner = null
+                user.inSession = false
+                await user.save()
+            }
+            // empty room and generate a new session id so that the student cannot rejoin the call
+            room.sessionPartner = null
+            room.kickedStudent = true
+            const sessionId = await room.newSessionId()
+            const token = opentok.generateToken(room.sessionId, {
+                expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+                role: 'moderator'
+            })
+            return res.status(200).json({
+                message: 'Successfully kicked student',
+                credentials: {
+                    apiKey: process.env.VONAGE_API_KEY,
+                    sessionId,
+                    token
+                }
+            })
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: error })
+        }
     }
     
     /**
@@ -101,6 +159,7 @@ module.exports = function(wsInstance) {
     }
 
     return {
-        createRoom
+        createRoom,
+        kickStudent,
     }
 }
