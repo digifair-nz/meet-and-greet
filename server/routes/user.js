@@ -1,6 +1,6 @@
-module.exports = function(params) {
+module.exports = function(wsInstance) {
     const router = require('express').Router();
-    const userCtrl = require('../controllers/user')
+    const userCtrl = require('../controllers/user')(wsInstance)
     const loginCtrl = require('../controllers/security/authentication')
     const authCtrl = require('../controllers/security/authorisation')
     
@@ -13,11 +13,11 @@ module.exports = function(params) {
     // endpoints for enqueuing and dequeuing
     router.post('/enqueue/:_id', authCtrl.asStudent, userCtrl.enqueue)
     // router.post('/enqueue', authCtrl.asStudent, userCtrl.enqueueAll)
-    router.post('/dequeue/:_id', authCtrl.asStudent, userCtrl.dequeue(params))
+    router.post('/dequeue/:_id', authCtrl.asStudent, userCtrl.dequeue)
     // router.post('/dequeue', authCtrl.asStudent, userCtrl.dequeueAll)
     
     // endpoints for joining and leaving sessions
-    router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession(params))
+    router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
     router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
 
     return router

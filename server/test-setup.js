@@ -45,16 +45,24 @@ async function seedDatabase(opentok = false) {
         name: "Test event",
     })
     const company1 = new Company({
-        name: "Company 1",
-        logoURL: "http://company1logo",
+        name: "Google",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/googleLogo.png?alt=media&token=0bb51a33-acd0-4294-992b-c1a5dd40630e",
     })
     const company2 = new Company({
-        name: "Company 2",
-        logoURL: "http://company2logo",
+        name: "Xero",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/xeroLogo.png?alt=media&token=91557793-95e2-47a2-b75b-c52f6152daa1",
     })
     const company3 = new Company({
-        name: "Company 3",
-        logoURL: "http://company3logo",
+        name: "Imagr",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
+    })
+    const company4 = new Company({
+        name: "Soul Machines",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/soulMachinesLogo.png?alt=media&token=60992d33-6ba3-4b9b-8d63-701e9f76688e",
+    })
+    const company5 = new Company({
+        name: "Soul Machines 2",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/soulMachinesLogo.png?alt=media&token=60992d33-6ba3-4b9b-8d63-701e9f76688e",
     })
     const room1 = new Room({
         eventId: event._id,
@@ -79,6 +87,8 @@ async function seedDatabase(opentok = false) {
         await company1.save()
         await company2.save()
         await company3.save()
+        await company4.save()
+        await company5.save()
         if(opentok) {
             await room1.newSessionId()
             await room2.newSessionId()
@@ -90,7 +100,7 @@ async function seedDatabase(opentok = false) {
             await room3.save()
         }
         
-        event.companiesAttending = [company1._id, company2._id, company3._id]
+        event.companiesAttending = [company1._id, company2._id, company3._id, company4._id, company5._id]
         await event.save()
 
         return event._id

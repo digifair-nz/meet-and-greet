@@ -29,23 +29,14 @@ const wsInstance = expressWs(app, app.server, {
         }
     }
 })
-
 app.ws('/', function(ws, req) {
     ws.jwt = req.jwt
-    ws.send('Connected')
+    ws.send(JSON.stringify({
+        messageType: 'connected'
+    }))
 })
-const notInQueue = -1
-app.broadcastQueueUpdate = function(queue) {
-    for(const client of wsInstance.getWss().clients) {
-        const index = queue.members.indexOf(client.jwt._id)
-        if(index == notInQueue) {
-            continue
-        }
-        client.send({ companyId: queue.companyId, queuePosition: queue.members.indexOf(client.jwt._id) })
-    }
-}
 
-const userRouter = require('./routes/user')({ broadcastQueueUpdate: app.broadcastQueueUpdate })
+const userRouter = require('./routes/user')(wsInstance)
 const clubRouter = require('./routes/club')
 
 app.use(logger('dev'))

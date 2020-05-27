@@ -1,100 +1,100 @@
 // controllers for all endpoints which may be accessed by standard users of the application (i.e. users who are not companies nor clubs)
-const validate = require('./validation')
-const OpenTok = require('opentok')
-const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
-
-const mongoose = require('mongoose')
-// require database schemas used
-const Company = mongoose.model('Company')
-const Event = mongoose.model('Event')
-const Room = mongoose.model('Room')
-const User = mongoose.model('User')
-const Queue = mongoose.model('Queue')
-
-/**
- * Gets the companies associated with the event represented by the eventId in the payload.
- * Fails if the event does not exist or the companies attending the event do not exist.
- * Sucess sends the list of the companies attending to the user client for display.
- * @param {Object} req The request object
- * @param {Object} res The response object
- */
-async function getCompaniesForEvent(req, res) {
-    try {
-        // get the event from the database
-        const event = await Event.findById(req.payload.eventId)
-        if(!event) {
-            return res.status(404).json({ message: 'Event does not exist' })
-        }
-        // get the companies from the database
-        const companies = await Company.find({
-            '_id': {
-                $in: event.companiesAttending
+module.exports = function(wsInstance) {
+    const validate = require('./validation')
+    const OpenTok = require('opentok')
+    const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
+    
+    const mongoose = require('mongoose')
+    // require database schemas used
+    const Company = mongoose.model('Company')
+    const Event = mongoose.model('Event')
+    const Room = mongoose.model('Room')
+    const User = mongoose.model('User')
+    const Queue = mongoose.model('Queue')
+    
+    /**
+     * Gets the companies associated with the event represented by the eventId in the payload.
+     * Fails if the event does not exist or the companies attending the event do not exist.
+     * Sucess sends the list of the companies attending to the user client for display.
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function getCompaniesForEvent(req, res) {
+        try {
+            // get the event from the database
+            const event = await Event.findById(req.payload.eventId)
+            if(!event) {
+                return res.status(404).json({ message: 'Event does not exist' })
             }
-        }).select('name description logoURL _id')
-        if(!companies) {
-            return res.status(404).json({ message: 'Companies attending the event could not be found' })
+            // get the companies from the database
+            const companies = await Company.find({
+                '_id': {
+                    $in: event.companiesAttending
+                }
+            }).select('name description logoURL _id')
+            if(!companies) {
+                return res.status(404).json({ message: 'Companies attending the event could not be found' })
+            }
+            // respond with the companies if failure did not occur
+            return res.status(200).json(companies)
         }
-        // respond with the companies if failure did not occur
-        return res.status(200).json(companies)
-    }
-    catch (error) {
-        res.status(500).json({ message: error })
-    }
-}
-
-/**
- * Attempt to enqueue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
- * Fails if the user is already in the queue, or if the user has previously had a session with the company.
- * Success pushes user to the members field of the queue.
- * @param {Object} req The request object
- * @param {Object} res The response object
- */
-async function enqueue(req, res) {
-    // validate the room id
-    if(!validate.isId(req.params, res)) {
-        return
-    }
-    try {
-        // find the room in the database
-        let queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
-        if(!queue) {
-            queue = await createQueue(req.payload.eventId, req.params._id)
+        catch (error) {
+            res.status(500).json({ message: error })
         }
-
-        // fail if the user is already queued
-        if(queue.members.includes(req.payload._id)) {
-            return res.status(403).json({ message: 'Failed to enqueue as user is already in queue.'})
-        }
-        
-        // fail if the user is attempting to queue more than once (not allowed)
-        if(queue.blacklist.includes(req.payload._id)) {
-            return res.status(403).json({ message: 'Failed to enqueue as user has previously had session with room.' })
-        }
-
-        // add the user to the queue
-        queue.members.push(req.payload._id)
-        await queue.save()
-
-        return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
     }
-    catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: error })
+    
+    /**
+     * Attempt to enqueue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
+     * Fails if the user is already in the queue, or if the user has previously had a session with the company.
+     * Success pushes user to the members field of the queue.
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function enqueue(req, res) {
+        // validate the room id
+        if(!validate.isId(req.params, res)) {
+            return
+        }
+        try {
+            // find the room in the database
+            let queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
+            if(!queue) {
+                queue = await createQueue(req.payload.eventId, req.params._id)
+            }
+    
+            // fail if the user is already queued
+            if(queue.members.includes(req.payload._id)) {
+                return res.status(403).json({ message: 'Failed to enqueue as user is already in queue.'})
+            }
+            
+            // fail if the user is attempting to queue more than once (not allowed)
+            if(queue.blacklist.includes(req.payload._id)) {
+                return res.status(403).json({ message: 'Failed to enqueue as user has previously had session with room.' })
+            }
+    
+            // add the user to the queue
+            queue.members.push(req.payload._id)
+            await queue.save()
+    
+            return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: error })
+        }
     }
-}
-
-/**
- * Attempt to dequeue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
- * Fails if the queue cannot be found or the user is not queued.
- * Success removes the user from the members field of the queue and causes the queue position socket to broadcast an event to all
- * users queued to the respective company.
- * Note that the dequeue function is a higher order function. This allows it to be passed the broadcastQueueUpdate function to interact
- * with the socket.
- * @param {Object} req The request object
- * @param {Object} res The response object
- */
-function dequeue({ broadcastQueueUpdate }) {
-    return async function dequeue(req, res) {
+    
+    /**
+     * Attempt to dequeue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
+     * Fails if the queue cannot be found or the user is not queued.
+     * Success removes the user from the members field of the queue and causes the queue position socket to broadcast an event to all
+     * users queued to the respective company.
+     * Note that the dequeue function is a higher order function. This allows it to be passed the broadcastQueueUpdate function to interact
+     * with the socket.
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function dequeue(req, res) {
         // validate the room id
         if(!validate.isId(req.params, res)) {
             return
@@ -113,7 +113,7 @@ function dequeue({ broadcastQueueUpdate }) {
             // remove the user from the queue
             queue.members.splice(index, 1)
             await queue.save()
-
+    
             // notify other queue members that their position in the queue may have changed
             broadcastQueueUpdate(queue)
             return res.status(200).json({ message: 'Successfully dequeued from ' + queue.companyId })
@@ -122,20 +122,18 @@ function dequeue({ broadcastQueueUpdate }) {
             return res.status(500).json({ message: error })
         }
     }
-}
-
-/**
- * Attempt to join the session as the user represented by the payload id for the room represented by req.params._id.
- * Fails if the session to join cannot be found, the session is occupied, the user cannot be found, the user is not in the
- * queue for the session, the user is not at the front of the queue for the session, or the user themselves is in a session.
- * Success sets the inSession fields on both the user and the room to true, the sessionPartners of the user and the room are set to each
- * other, and a response is sent to the user client containing the token and sessionId needed to join the session
- * and the sessionId they require to join the session
- * @param {Object} req The request object
- * @param {Object} res The response object
- */
-function joinSession({ broadcastQueueUpdate }) {
-    return async function joinSession(req, res) {
+    
+    /**
+     * Attempt to join the session as the user represented by the payload id for the room represented by req.params._id.
+     * Fails if the session to join cannot be found, the session is occupied, the user cannot be found, the user is not in the
+     * queue for the session, the user is not at the front of the queue for the session, or the user themselves is in a session.
+     * Success sets the inSession fields on both the user and the room to true, the sessionPartners of the user and the room are set to each
+     * other, and a response is sent to the user client containing the token and sessionId needed to join the session
+     * and the sessionId they require to join the session
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function joinSession(req, res) {
         // validate the room id
         if(!validate.isId(req.params, res)) {
             return
@@ -199,7 +197,7 @@ function joinSession({ broadcastQueueUpdate }) {
                     
                     // notify other members in the queue of the shift in queue position 
                     broadcastQueueUpdate(queue)
-
+    
                     let token = null
                     if(room.sessionId) {
                         token = opentok.generateToken(room.sessionId, {
@@ -211,87 +209,100 @@ function joinSession({ broadcastQueueUpdate }) {
             }
             // if we are here then we know that there is no available room
             return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
-
+    
         }
         catch (error) {
-            console.log(error)
             return res.status(500).json({ message: error })
         }
     }
-}
-
-/**
- * Attempt to leave the session as the user represented by the payload id for the room represented by req.params._id.
- * Fails if the user cannot be found, the session to leave cannot be found, the user or the room are not in active sessions with each other,
- * or the blacklist cannot be found.
- * Sucess sets the inSession status of the user and the sessionPartner of the user to false and adds the user to the blacklist for the room
- * (if they are not already in the blacklist).
- * @param {Object} req The request object
- * @param {Object} res The response object
- */
-async function leaveSession(req, res) {
-    try {
-        // get the user from the database
-        const user = await User.findById(req.payload._id)
-        if(!user) {
-            return res.status(404).json({ message: 'User could not be found' })
+    
+    /**
+     * Attempt to leave the session as the user represented by the payload id for the room represented by req.params._id.
+     * Fails if the user cannot be found, the session to leave cannot be found, the user or the room are not in active sessions with each other,
+     * or the blacklist cannot be found.
+     * Sucess sets the inSession status of the user and the sessionPartner of the user to false and adds the user to the blacklist for the room
+     * (if they are not already in the blacklist).
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     */
+    async function leaveSession(req, res) {
+        try {
+            // get the user from the database
+            const user = await User.findById(req.payload._id)
+            if(!user) {
+                return res.status(404).json({ message: 'User could not be found' })
+            }
+            // make sure the user is in a session
+            if(!user.inSession || !user.sessionPartner) {
+                return res.status(403).json({ message: 'Leave session failed as user is not in an active session' })
+            }
+            // make sure the room is in a session with the user
+            const room = await Room.findById(user.sessionPartner)
+            if(!room) {
+                return res.status(404).json({ message: 'Could not find the session to leave' })
+            }
+            if(!room.inSession || room.sessionPartner.toString() != user._id.toString()) {
+                return res.status(403).json({ message: 'Leave session failed as user is not in session with the given room.' })
+            }
+            // get the queue from the database to add the user to the blacklist
+            const queue = await Queue.findOne({ eventId: room.eventId, companyId: room.companyId })
+            if(!queue) {
+                return res.status(404).json({ message: 'Leave session failed as the blacklist could not be found.' })
+            }
+    
+            // at this point we know that the user and the room are in session with one another and we can remove the user from the session
+    
+            user.inSession = false
+            user.sessionPartner = null
+            await user.save()
+            // add the user to the blacklist if they are not already in it
+            if(!queue.blacklist.includes(req.payload._id)) {
+                queue.blacklist.push(req.payload._id)
+                await queue.save()
+            }
+    
+            return res.status(200).json({ message: 'Successfully left the session' })
         }
-        // make sure the user is in a session
-        if(!user.inSession || !user.sessionPartner) {
-            return res.status(403).json({ message: 'Leave session failed as user is not in an active session' })
+        catch (error) {
+            return res.status(500).json({ message: error })
         }
-        // make sure the room is in a session with the user
-        const room = await Room.findById(user.sessionPartner)
-        if(!room) {
-            return res.status(404).json({ message: 'Could not find the session to leave' })
-        }
-        if(!room.inSession || room.sessionPartner.toString() != user._id.toString()) {
-            return res.status(403).json({ message: 'Leave session failed as user is not in session with the given room.' })
-        }
-        // get the queue from the database to add the user to the blacklist
-        const queue = await Queue.findOne({ eventId: room.eventId, companyId: room.companyId })
-        if(!queue) {
-            return res.status(404).json({ message: 'Leave session failed as the blacklist could not be found.' })
-        }
-
-        // at this point we know that the user and the room are in session with one another and we can remove the user from the session
-
-        user.inSession = false
-        user.sessionPartner = null
-        await user.save()
-        // add the user to the blacklist if they are not already in it
-        if(!queue.blacklist.includes(req.payload._id)) {
-            queue.blacklist.push(req.payload._id)
+    
+    }
+    
+    async function createQueue(eventId, companyId) {
+        const queue = new Queue({
+            eventId, companyId, blacklist: [], members: []
+        })
+        try {
             await queue.save()
+            return queue
         }
-
-        return res.status(200).json({ message: 'Successfully left the session' })
+        catch (error) {
+            console.log(error)
+            return false
+        }
     }
-    catch (error) {
-        return res.status(500).json({ message: error })
+    
+    const notInQueue = -1
+    function broadcastQueueUpdate(queue) {
+        for(const client of wsInstance.getWss().clients) {
+            const index = queue.members.indexOf(client.jwt._id)
+            if(index == notInQueue) {
+                continue
+            }
+            client.send(JSON.stringify({
+                messageType: 'update',
+                companyId: queue.companyId,
+                queuePosition: queue.members.indexOf(client.jwt._id) + 1
+            }))
+        }
     }
 
-}
-
-async function createQueue(eventId, companyId) {
-    const queue = new Queue({
-        eventId, companyId, blacklist: [], members: []
-    })
-    try {
-        await queue.save()
-        return queue
+    return {
+        getCompaniesForEvent,
+        enqueue,
+        dequeue,
+        joinSession,
+        leaveSession
     }
-    catch (error) {
-        console.log(error)
-        return false
-    }
-}
-
-
-module.exports = {
-    getCompaniesForEvent,
-    enqueue,
-    dequeue,
-    joinSession,
-    leaveSession
 }
