@@ -24,15 +24,8 @@ export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
     axios
-      .get(
-        "/user/"
-        // headers: {
-        //   "auth-token": localStorage.getItem("token"),
-        // },
-      )
+      .get("/user/")
       .then((response) => {
-        // localStorage.setItem("token", token);
-        // console.log(response.data);
         dispatch(fetchCompaniesSuccess(response.data));
       })
       .catch((err) => {

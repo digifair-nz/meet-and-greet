@@ -10,18 +10,27 @@ import * as actions from "../../store/actions/index";
 class ReadyCheckPrompt extends Component {
   // If the student accepts the queue, he will be redirected to the video chat room with the recruiter
   onAcceptHandler = () => {
-    this.props.history.push("/chat-room");
+    document.title = "Dashboard";
+
+    this.props.studentJoinChatroom(this.props.companyId);
+    // this.this.props.history.push("/chat-room");
   };
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
+    document.title = "Dashboard";
     this.props.onDeclineHandler();
     this.props.dequeueFromComapany(this.props.companyId, this.props.index);
   };
 
   render() {
+    let redirect = null;
+    if (this.props.credentials !== null) {
+      redirect = <Redirect to="/chat-room" />;
+    }
     return (
       <div className={classes.PromptContainer}>
+        {redirect}
         <img
           className={classes.Logo}
           src={this.props.logo}
@@ -49,11 +58,21 @@ class ReadyCheckPrompt extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    credentials: state.studentAuth.credentials,
+    error: state.studentAuth.error,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     dequeueFromComapany: (companyId, index) =>
       dispatch(actions.dequeueStudent(companyId, index)),
+    studentJoinChatroom: (companyId) => {
+      dispatch(actions.studentJoinChatroom(companyId));
+    },
   };
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(ReadyCheckPrompt));
+export default connect(mapStateToProps, mapDispatchToProps)(ReadyCheckPrompt);

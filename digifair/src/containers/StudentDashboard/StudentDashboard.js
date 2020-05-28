@@ -16,7 +16,7 @@ import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
-import logoutIcon from "../../assets/icons/logout.png";
+// import logoutIcon from "../../assets/icons/logout.png";
 // CSS
 import classes from "./StudentDashboard.module.css";
 
@@ -39,7 +39,7 @@ class StudentDashboard extends Component {
   state = {
     q: [12, 13, 5, 3, 5],
 
-    readyCompanyIndex: 1, // company ready to chat
+    readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
   };
 
@@ -49,7 +49,11 @@ class StudentDashboard extends Component {
   // Change back to default
 
   componentDidMount() {
-    // Company cards
+    // Notification for ready check
+    let notificationGranted;
+    Notification.requestPermission().then(function (result) {
+      notificationGranted = result;
+    });
 
     this.props.fetchCompanies();
 
@@ -63,14 +67,49 @@ class StudentDashboard extends Component {
       const ws = new WebSocket(
         "ws://localhost:3000/?token=" + this.props.token
       );
-      console.log(ws);
+      // console.log(ws);
 
-      console.log("Socket Connection Opened!");
-      ws.onmessage = function (message) {
+      // console.log("Socket Connection Opened!");
+      ws.onmessage = (message) => {
         // dispatch update queue position
+        const packet = JSON.parse(message.data);
+        if (this.props.companies !== null && packet.companyId !== null) {
+          // console.log(packet.companyId);
+
+          // Once the student reaches his turn
+          if (packet.queuePosition === 1) {
+            // Find the company that is ready to chat and set the pop up
+            for (let i = 0; i < this.props.companies.length; i++) {
+              if (this.props.companies[i]._id === packet.companyId) {
+                this.setState({
+                  readyCompanyIndex: i,
+                  showReadyPromptPopUp: true,
+                });
+                // ****READY POP UP*****
+                if (notificationGranted) {
+                  // Notification
+                  const title = "Your Queue is Ready!";
+                  const body =
+                    "Google is ready for you. Accept or decline your queue";
+                  sendNotification(title, body);
+                }
+
+                break;
+              }
+            }
+          } else {
+            // Otherwise update queue position for the specific company
+            this.props.updateQueuePosition(
+              packet.companyId,
+              packet.queuePosition
+            );
+          }
+        }
+
         console.log(message);
       };
     }
+
     // Notification
     // let notificationGranted;
     // Notification.requestPermission().then(function (result) {
@@ -91,6 +130,7 @@ class StudentDashboard extends Component {
     //     showReadyPromptPopUp: true,
     //   });
     // }, 10000);
+    // Company cards
   }
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
@@ -119,26 +159,32 @@ class StudentDashboard extends Component {
             logo={company.logoURL}
             key={company._id}
             hadSession={company.hadSession}
-            queuePosition={this.state.q[index]}
+            queuePosition={company.queuePosition}
             onInfoClick={(event) => this.showInfoPopup(event, index)}
             queuing={company.queuing}
             description={company.description}
           />
         );
       });
-      readyCheckPopUp = (
-        <Aux>
-          <Modal show={this.state.showReadyPromptPopUp}>
-            <ReadyCheckPrompt
-              logo={this.props.companies[this.state.readyCompanyIndex].logoURL}
-              companyId={this.props.companies[this.state.readyCompanyIndex]._id}
-              onClick={this.onClickModal}
-              onDeclineHandler={this.onDeclineHandler}
-              index={this.state.readyCompanyIndex}
-            />
-          </Modal>
-        </Aux>
-      );
+      if (this.state.readyCompanyIndex !== null) {
+        readyCheckPopUp = (
+          <Aux>
+            <Modal show={this.state.showReadyPromptPopUp}>
+              <ReadyCheckPrompt
+                logo={
+                  this.props.companies[this.state.readyCompanyIndex].logoURL
+                }
+                companyId={
+                  this.props.companies[this.state.readyCompanyIndex]._id
+                }
+                onClick={this.onClickModal}
+                onDeclineHandler={this.onDeclineHandler}
+                index={this.state.readyCompanyIndex}
+              />
+            </Modal>
+          </Aux>
+        );
+      }
     }
 
     if (this.props.error) {
@@ -176,13 +222,15 @@ const mapStateToProps = (state) => {
   return {
     companies: state.companies.companies,
     error: state.companies.error,
-    token: state.studentAuth.token,
+    token: state.student.token,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
+    updateQueuePosition: (companyId, queuePosition) =>
+      dispatch(actions.updateQueuePosition(companyId, queuePosition)),
   };
 };
 
