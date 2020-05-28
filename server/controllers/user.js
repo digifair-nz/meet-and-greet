@@ -38,7 +38,9 @@ module.exports = function(wsInstance) {
             // add the position of the user in the queue to the companies array
             for(const company of companies) {
                 const queue = Queue.findOne({ eventId: req.payload.eventId, companyId: company._id })
-                company.queuePosition = queue.members.indexOf(req.payload._id)
+                const queuePosition = queue.members.indexOf(req.payload._id)
+                company.queuePosition = queuePosition
+                company.isQueued = queuePosition != -1
             }
             // respond with the companies if failure did not occur
             return res.status(200).json(companies)
