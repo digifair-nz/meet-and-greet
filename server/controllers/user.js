@@ -35,6 +35,11 @@ module.exports = function(wsInstance) {
             if(!companies) {
                 return res.status(404).json({ message: 'Companies attending the event could not be found' })
             }
+            // add the position of the user in the queue to the companies array
+            for(const company of companies) {
+                const queue = Queue.findOne({ eventId: req.payload.eventId, companyId: company._id })
+                company.queuePosition = queue.members.indexOf(req.payload._id)
+            }
             // respond with the companies if failure did not occur
             return res.status(200).json(companies)
         }
@@ -71,7 +76,6 @@ module.exports = function(wsInstance) {
             if(queue.blacklist.includes(req.payload._id)) {
                 return res.status(403).json({ message: 'Failed to enqueue as user has previously had session with room.' })
             }
-    
             // add the user to the queue
             queue.members.push(req.payload._id)
             await queue.save()
