@@ -1,6 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
+// NOTE: RENAME TO STUDENT not studentAuth
 const initialState = {
   token: null,
 
@@ -18,10 +19,11 @@ const initialState = {
   credentials: {
     apiKey: "46721402",
     sessionId:
-      "2_MX40NjcyMTQwMn5-MTU5MDE5MDk0OTg1M35MR3VKdXdwREMzd09zZHZpenlIL01iQkZ-fg",
+      "1_MX40NjcyMTQwMn5-MTU5MDYyNzc1MzE5NH5XL0lzaXExNDZJYUtjUVNiOWZSd3lCUWt-fg",
     token:
-      "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9NDFlMGMwMWE3YzFjYWQwYjM4N2M1NzQ5ZTk2NjA1MjNlYjAxYWExMTpzZXNzaW9uX2lkPTJfTVg0ME5qY3lNVFF3TW41LU1UVTVNREU1TURrME9UZzFNMzVNUjNWS2RYZHdSRU16ZDA5elpIWnBlbmxJTDAxaVFrWi1mZyZjcmVhdGVfdGltZT0xNTkwMTkwOTQ5JnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTAxOTA5NDkuODYxNTM1MDE0MjAxOA==",
+      "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9ZWJkZWM4ZTc2NTI3YjY0YTQ5OWJlZjFjZmZkMDgxZDk2Zjc5YzFkYzpzZXNzaW9uX2lkPTFfTVg0ME5qY3lNVFF3TW41LU1UVTVNRFl5TnpjMU16RTVOSDVYTDBsemFYRXhORFpKWVV0alVWTmlPV1pTZDNsQ1VXdC1mZyZjcmVhdGVfdGltZT0xNTkwNjI3NzUzJnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTA2Mjc3NTMuMjE2NTE3NTcxNTQ3NTQ=",
   },
+  // credentials: null, // this is for vonage API
 };
 
 const studentAuthStart = (state, action) => {
@@ -52,6 +54,19 @@ const setStudentAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });
 };
 
+const studentJoinChatroomStart = (state, action) => {
+  return state;
+  // return updateObject(state, { authRedirectPath: action.path });
+};
+
+const studentJoinChatroomSuccess = (state, action) => {
+  return updateObject(state, { credentials: action.credentials });
+};
+
+const studentJoinChatroomFail = (state, action) => {
+  return updateObject(state, { error: action.error });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.STUDENT_AUTH_START:
@@ -64,6 +79,12 @@ const reducer = (state = initialState, action) => {
       return studentAuthLogout(state, action);
     case actionTypes.SET_STUDENT_AUTH_REDIRECT_PATH:
       return setStudentAuthRedirectPath(state, action);
+    case actionTypes.STUDENT_AUTH_START:
+      return studentJoinChatroomStart(state, action);
+    case actionTypes.STUDENT_JOIN_CHATROOM_SUCCESS:
+      return studentJoinChatroomSuccess(state, action);
+    case actionTypes.STUDENT_JOIN_CHATROOM_FAIL:
+      return studentJoinChatroomFail(state, action);
     default:
       return state;
   }

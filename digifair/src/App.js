@@ -69,8 +69,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.studentAuth.token !== null, // Change later to cater for all the companies
-    token: state.studentAuth.token,
+    isAuthenticated: state.student.token !== null, // Change later to cater for all the companies
+    token: state.student.token,
   };
 };
 

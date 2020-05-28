@@ -51,6 +51,12 @@ class StudentAuth extends Component {
     if (this.props.authRedirectPath !== "/") {
       this.props.onSetAuthRedirectPath();
     }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode === 13) {
+        this.submitHandler(e);
+      }
+    });
   }
 
   inputChangedHandler = (event, controlName) => {
@@ -178,11 +184,11 @@ class StudentAuth extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    loading: state.studentAuth.loading,
-    error: state.studentAuth.error,
-    authenticated: state.studentAuth.token != null,
-    authRedirectPath: state.studentAuth.authRedirectPath,
-    token: state.studentAuth.token,
+    loading: state.student.loading,
+    error: state.student.error,
+    authenticated: state.student.token != null,
+    authRedirectPath: state.student.authRedirectPath,
+    token: state.student.token,
   };
 };
 

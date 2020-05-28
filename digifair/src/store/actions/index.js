@@ -7,3 +7,5 @@ export {
   studentAuthCheckState,
 } from "./studentAuth";
 export { updateQueuePosition } from "./queuePosition";
+
+export { studentJoinChatroom } from "./studentJoinChatroom";
