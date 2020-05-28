@@ -40,7 +40,8 @@ class CompanyCard extends Component {
       nextProps.queuing !== this.props.queuing ||
       nextProps.logo !== this.props.logo ||
       nextProps.isQueued !== this.props.isQueued ||
-      nextState.showInfoPopup !== this.state.showInfoPopup
+      nextState.showInfoPopup !== this.state.showInfoPopup ||
+      nextProps.queuePosition !== this.props.queuePosition
     );
   }
 

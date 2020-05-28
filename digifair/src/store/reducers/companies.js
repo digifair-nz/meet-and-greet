@@ -53,6 +53,13 @@ const fetchCompaniesFail = (state, action) => {
 QUEUE/DEQUEUE STUDENT 
 ********************/
 // Queue
+
+/**
+ * UpdateCompanyQueuing allows to reduce duplicate code and is used by reducer functions.
+ * @param {Object} state
+ * @param {int} index the position of the company in the company list
+ * @param {boolean} queueStatus indicates whether the company is now queuing or not
+ */
 const updateCompanyQueuing = (state, index, queueStatus) => {
   // Returns an updated company queue status
   let updatedCompanies = [...state.companies]; // shallow copy of the state array
@@ -122,9 +129,11 @@ UPDATE QUEUE POSITION
 ********************/
 const updateQueuePosition = (state, action) => {
   // given companyId and queuePos, update the current position of the student for a specific company
-  let updatedCompanies = [...state.companies];
-  let updatedCompany;
 
+  let updatedCompanies = [...state.companies];
+
+  let updatedCompany;
+  console.log(action);
   // Find a specific company
   for (let i = 0; i < updatedCompanies.length; i++) {
     if (updatedCompanies[i]._id === action.companyId) {
@@ -136,7 +145,7 @@ const updateQueuePosition = (state, action) => {
       break;
     }
   }
-
+  console.log(updatedCompanies);
   return updateObject(state, { companies: updatedCompanies });
 };
 

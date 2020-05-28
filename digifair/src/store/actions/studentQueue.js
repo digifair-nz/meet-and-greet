@@ -8,6 +8,11 @@ QUEUE STUDENT TO A COMPANY
 
 */
 
+/**
+ * initialize queue to a specific comapny
+ * @param {string} companyId
+ * @param {int} index which is the position of the company in the array
+ */
 export const queueInit = (companyId, index) => {
   return {
     type: actionTypes.QUEUE_INIT,
@@ -55,32 +60,6 @@ export const queueStudent = (companyId, index) => {
         // Get the companies from state
         const companies = getState().companies.companies;
 
-        // This array will contain objects where each object is the company's status
-        // let companiesStatus = [];
-
-        // // Properties of interest for filtering
-        // const status = ["_id", "hadSession", "isQueued"];
-
-        // // Go through the companies state array
-        // for (let i = 0; i < companies.length; i++) {
-        //   // Extract the company with specific properties filtered
-
-        //   companiesStatus.push(
-        //     Object.keys(companies[i])
-        //       .filter((key) => status.includes(key))
-        //       .reduce((obj, key) => {
-        //         obj[key] = companies[i][key];
-        //         return obj;
-        //       }, {})
-        //   );
-        // }
-
-        // // Update the company that is queued
-        // companiesStatus[index].isQueued = true;
-
-        // Save the company statuses
-        // localStorage.setItem("companiesStatus", companiesStatus);
-
         dispatch(queueSuccess(companyId, index));
       })
       .catch((error) => {
@@ -121,7 +100,7 @@ export const dequeueFail = (companyId, index, error) => {
 };
 
 export const dequeueStudent = (companyId, index) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
@@ -130,34 +109,7 @@ export const dequeueStudent = (companyId, index) => {
 
       .then((res) => {
         // console.log(res);
-        let response = res.data; // This is where I get my initial queue position?
-
-        // const companies = getState().companies.companies;
-
-        // // This array will contain objects where each object is the company's status
-        // let companiesStatus = [];
-
-        // // Properties of interest for filtering
-        // const status = ["_id", "hadSession", "isQueued"];
-
-        // // Go through the companies state array
-        // for (let i = 0; i < companies.length; i++) {
-        //   // Extract the company with specific properties filtered
-        //   companiesStatus.push(
-        //     Object.keys(companies[i])
-        //       .filter((key) => status.includes(key))
-        //       .reduce((obj, key) => {
-        //         obj[key] = companies[i][key];
-        //         return obj;
-        //       }, {})
-        //   );
-        // }
-
-        // // Update the company that is queued
-        // companiesStatus[index].isQueued = true;
-
-        // // Save the company statuses
-        // localStorage.setItem("companiesStatus", companiesStatus);
+        let response = res.data;
 
         dispatch(dequeueSuccess(companyId, index));
       })
