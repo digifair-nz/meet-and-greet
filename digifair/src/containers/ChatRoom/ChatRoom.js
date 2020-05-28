@@ -43,7 +43,7 @@ class ChatRoom extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    credentials: state.studentAuth.credentials,
+    credentials: state.student.credentials,
   };
 };
 

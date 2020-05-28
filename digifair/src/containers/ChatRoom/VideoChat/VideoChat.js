@@ -91,7 +91,14 @@ class VideoChat extends Component {
     options.credentials = this.props.credentials;
 
     otCore = new AccCore(options);
-    otCore.connect().then(() => this.setState({ connected: true }));
+    otCore.connect().then(() => {
+      console.log("Hellow");
+      this.setState({ connected: true });
+
+      if (this.state.connected && !this.state.active) {
+        this.startCall();
+      }
+    });
     otCore.on("sessionDisconnected", function (event) {
       alert("The session disconnected. " + event.reason);
     });
@@ -110,13 +117,20 @@ class VideoChat extends Component {
         this.setState({ publishers, subscribers, meta });
       })
     );
+
+    console.log(this.state.connected + " " + !this.state.active);
   }
 
   startCall() {
     otCore
       .startCall()
       .then(({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta, active: true });
+        if (!this.state.active) {
+          console.log(subscribers);
+          console.log(otCore.session);
+          console.log("Hello");
+          this.setState({ publishers, subscribers, meta, active: true });
+        }
       })
       .catch((error) => console.log(error));
   }
@@ -154,7 +168,7 @@ class VideoChat extends Component {
         <div className="App-video-container">
           {!connected && connectingMask()}
 
-          {connected && !active && startCallMask(this.startCall)}
+          {/* {connected && !active && startCallMask(this.startCall)} */}
           <div id="cameraPublisherContainer" className={cameraPublisherClass} />
           <div id="screenPublisherContainer" className={screenPublisherClass} />
           <div

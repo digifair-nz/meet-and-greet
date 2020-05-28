@@ -48,14 +48,9 @@ class TextChat extends Component {
         conversation.setParticipant(me);
         conversation.setParticipant(other);
 
-        this.inbox = window.talkSession.createInbox({
-          selected: conversation,
-          showFeedHeader: false,
+        this.inbox = window.talkSession.createChatbox(conversation);
 
-          // showChatHeader: false,
-        });
-
-        this.inbox.setFeedFilter();
+        // this.inbox.setFeedFilter();
         this.inbox.mount(this.container);
       })
       .catch((e) => console.error(e));
