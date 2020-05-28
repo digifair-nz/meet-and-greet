@@ -5,6 +5,7 @@ const User = mongoose.model('User')
 const Company = mongoose.model('Company')
 const Event = mongoose.model('Event')
 const Room = mongoose.model('Room')
+const Queue = mongoose.model('Queue')
 
 async function removeAllCollections () {
     const collections = Object.keys(mongoose.connection.collections)
@@ -79,6 +80,26 @@ async function seedDatabase(opentok = false) {
         companyId: company1._id,
         name: 'Room 3' 
     })
+    const queue1 = new Queue({
+        eventId: event._id,
+        companyId: company1._id
+    })
+    const queue2 = new Queue({
+        eventId: event._id,
+        companyId: company2._id
+    })
+    const queue3 = new Queue({
+        eventId: event._id,
+        companyId: company3._id
+    })
+    const queue4 = new Queue({
+        eventId: event._id,
+        companyId: company4._id
+    })
+    const queue5 = new Queue({
+        eventId: event._id,
+        companyId: company5._id
+    })
 
     try {
         await user1.save()
@@ -99,6 +120,11 @@ async function seedDatabase(opentok = false) {
             await room2.save()
             await room3.save()
         }
+        await queue1.save()
+        await queue2.save()
+        await queue3.save()
+        await queue4.save()
+        await queue5.save()
         
         event.companiesAttending = [company1._id, company2._id, company3._id, company4._id, company5._id]
         await event.save()
