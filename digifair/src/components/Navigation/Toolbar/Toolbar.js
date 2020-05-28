@@ -25,6 +25,17 @@ class Toolbar extends Component {
     active: false, // When the menu is clicked
   };
 
+  componentDidMount() {
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode === 27) {
+        this.setState({
+          active: false,
+          menuClass: "ToggleMenu",
+        });
+      }
+    });
+  }
+
   // Refractor toggle button
   onMenuClick = () => {
     let className = "ToggleMenu";
