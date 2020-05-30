@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
 import classes from "./Toolbar.module.css";
-import Logo from "../../../assets/company_logos/digifair-white.png";
-import LogoIcon from "../../../assets/company_logos/digifair_icon_notification.png";
+import Logo from "../../../assets/company_logos/digifair-caps-cropped-full.png";
+import LogoIcon from "../../../assets/company_logos/digifair-icon-full.png";
 
 import Backdrop from "../../UI/Backdrop/Backdrop";
 import "./ToggleMenu.css";
@@ -49,6 +49,15 @@ class Toolbar extends Component {
       active: !this.state.active,
     });
   };
+
+  closeMenu = () => {
+
+
+  }
+
+  
+
+
   render() {
     // If the toolbar is minimized than logo is replaced with the icon
 
@@ -80,7 +89,7 @@ class Toolbar extends Component {
       <Aux>
         <header className={toolbarClass}>
           {logo}
-          <div className={this.state.menuClass} onClick={this.onMenuClick}>
+          <div className={this.state.menuClass} onClick={this.onMenuClick} >
             <span></span>
           </div>
 
@@ -94,8 +103,8 @@ class Toolbar extends Component {
           </div>
           <span className={classes.CreditsTitle}>Credits</span>
         </header>
-        {/* Dim the background when the menu opens */}
-        <Backdrop show={this.state.active} />
+        {/* Dim the background when the menu opens and close the menu when background is clicked*/}
+        <Backdrop show={this.state.active} clicked={this.onMenuClick}/>
       </Aux>
     );
   }

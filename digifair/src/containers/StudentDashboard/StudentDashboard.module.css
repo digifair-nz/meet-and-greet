@@ -117,6 +117,7 @@ MOBILE and TABLET
       grid-template-columns: 35% 35%;
       grid-auto-rows: 115px;
       grid-row-gap: 6%;
+      margin-left: 20px;
     }
   }
 
@@ -128,6 +129,7 @@ MOBILE and TABLET
       grid-template-columns: 70%;
       grid-auto-rows: 150px;
       grid-row-gap: 6%;
+      margin-left: auto;
     }
   }
   @media (max-width: 375px) {
@@ -135,7 +137,6 @@ MOBILE and TABLET
       grid-template-columns: 70%;
       grid-auto-rows: 150px;
       grid-row-gap: 6%;
-      margin-left: auto;
       margin-top: 70px;
     }
   }

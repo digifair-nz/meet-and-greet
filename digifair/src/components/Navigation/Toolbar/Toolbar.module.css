@@ -1,12 +1,53 @@
 /*Minimized tool bar only shows logo icon, toggle menu and credits*/
-.ToolbarMin {
+/* .ToolbarMin {
   height: 100%;
-  width: 5%;
+  width: 75px;
   background-color: #e2508b;
   background-image: url("../../../assets/screen-images/background-fluids.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center left;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 110;
+  transition: 0.5s;
+} */
+
+.ToolbarMin {
+  margin-left: -225px;
+  height: 100%;
+  width: 300px;
+  background-color: #e2508b;
+  background-image: url("../../../assets/screen-images/background-fluids-full.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 225px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 110;
+  transition: 0.5s;
+}
+
+
+/* Opened Toolbar */
+.ToolbarOpen {
+  height: 100%;
+  width: 300px;
+  background-color: #e2508b;
+  background-image: url("../../../assets/screen-images/background-fluids-full.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
@@ -23,34 +64,16 @@
   padding-top: 10%;
   padding-bottom: 10%;
 }
-/* .LogoIcon {
-} */
+
+.LogoIcon {
+  padding-top: 10%;
+  width: 17%;
+  margin-left: 225px;
+}
 
 .CreditsTitle {
   margin-top: auto;
   padding-bottom: 5%;
-}
-
-/* Opened Toolbar */
-.ToolbarOpen {
-  height: 100%;
-
-  /* width: 15%; */
-  width: 17%;
-  background-color: #e2508b;
-  background-image: url("../../../assets/screen-images/background-fluids-full.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 20px;
-  position: fixed;
-  box-sizing: border-box;
-  z-index: 110;
-  transition: 0.5s;
 }
 
 /* This is where control buttons go*/
@@ -88,40 +111,112 @@
   /* padding: 10%; */
 }
 
-/*  Mobile Menu */
+.ControlsContainerMin {
+  display: none;
+}
+
+
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+  .ToolbarMin{
+    margin-left: -315px;
+    width: 400px;
+    background-position: 315px;
+  }
+  .ToolbarOpen{
+    width: 400px;
+  }
+  .LogoIcon {
+    margin-left: 315px;
+  }
+  
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+  .ToolbarMin{
+    margin-left: -465px;
+    width: 600px;
+    background-position: 465px;
+  }
+  .ToolbarOpen{
+    width: 600px;
+  }
+  .LogoIcon {
+    margin-left: 465px;
+  }
+}
+
+@media (max-width: 1600px){
+  .ToolbarMin{
+    margin-left: -195px;
+    width: 250px;
+    background-position: 195px;
+  }
+  .ToolbarOpen{
+    width: 250px;
+  }
+  .LogoIcon {
+    margin-left: 195px;
+  }
+}
+
 /*
 --------------
 MOBILE and TABLET
 ---------------
 */
-.ControlsContainerMin {
-  display: none;
-}
+
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
+    .ToolbarMin{
+      margin-left: -255px;
+      width: 330px;
+      background-position: 255px;
+    }
+    .ToolbarOpen{
+      width: 330px;
+    }
+    .LogoIcon {
+      margin-left: 255px;
+    }
   }
+  
   @media (max-width: 768px) {
+    .ToolbarMin{
+      margin-left: -200px;
+      width: 250px;
+      background-position: 200px;
+    }
+    .ToolbarOpen{
+      width: 250px;
+    }
+    .LogoIcon {
+      margin-left: 200px;
+    }
   }
 
-  @media (max-width: 640px) {
-  }
-  @media (max-width: 414px) {
-  }
-  @media (max-width: 375px) {
+
+  /* for mobiles */
+  @media (max-width: 481px) {
     .ToolbarMin {
+      position: fixed;
       width: 100%;
-      height: 5%;
+      height: 45px;
       transition: 0ms;
     }
     .LogoIcon {
-      height: 100%;
+      height: 65%;
       position: absolute;
+      margin-top: 8px;
+      margin-left: 8px;
       left: 0;
       transition: 0;
     }
 
     .Logo {
-      width: 50%;
+      width: 40%;
       padding-bottom: 0%;
       padding-top: 2%;
       position: absolute;
@@ -143,10 +238,49 @@ MOBILE and TABLET
 }
 
 @media only screen and (orientation: landscape) {
+
+
   @media (max-width: 1366px) {
+    .ToolbarMin{
+      margin-left: -195px;
+      width: 250px;
+      background-position: 195px;
+    }
+    .ToolbarOpen{
+      width: 250px;
+    }
+    .LogoIcon {
+      margin-left: 195px;
+    }
   }
 
+  @media (max-width: 1152px) {
+    .ToolbarMin{
+      margin-left: -175px;
+      width: 250px;
+      background-position: 175px;
+    }
+    .ToolbarOpen{
+      width: 250px;
+    }
+    .LogoIcon {
+      margin-left: 175px;
+    }
+  }
+
+
   @media (max-width: 1024px) {
+    .ToolbarMin{
+      margin-left: -195px;
+      width: 250px;
+      background-position: 195px;
+    }
+    .ToolbarOpen{
+      width: 250px;
+    }
+    .LogoIcon {
+      margin-left: 195px;
+    }
   }
   @media (max-width: 896px) {
   }
