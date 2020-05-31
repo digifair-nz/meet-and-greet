@@ -1,7 +1,14 @@
 import * as actionTypes from "./actionTypes";
 
-import axios from "../../axios-instance";
-// import axios from "axios";
+import axios from "axios";
+
+const token = localStorage.getItem("token");
+
+const axiosInstance = axios.create({
+  headers: {
+    "auth-token": token,
+  },
+});
 /*
 
 QUEUE STUDENT TO A COMPANY 
@@ -13,6 +20,7 @@ QUEUE STUDENT TO A COMPANY
  * @param {string} companyId
  * @param {int} index which is the position of the company in the array
  */
+
 export const queueInit = (companyId, index) => {
   return {
     type: actionTypes.QUEUE_INIT,
@@ -45,28 +53,11 @@ export const queueStudent = (companyId, index) => {
 
   return (dispatch) => {
     dispatch(queueInit(companyId, index));
-    // const token = localStorage.getItem("token");
-    // var xhr = new XMLHttpRequest();
 
-    // xhr.open("POST", "/user/enqueue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // //console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   //console.timeEnd();
-    //   dispatch(queueSuccess(companyId, index, 0));
-    //   console.log(xhr.responseText);
-    // };
-    console.time();
-    axios
-      .post("/user/test" /*+ companyId*/)
+    axiosInstance
+      .post("/user/enqueue/" + companyId)
 
       .then((res) => {
-        console.log(res);
-        //
-        console.timeEnd();
-
         dispatch(queueSuccess(companyId, index, res.data.queuePosition));
       })
       .catch((error) => {
@@ -111,26 +102,10 @@ export const dequeueStudent = (companyId, index) => {
     // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
-    // var xhr = new XMLHttpRequest();
-    // const token = localStorage.getItem("token");
-
-    // xhr.open("POST", "/user/dequeue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   console.timeEnd();
-    //   dispatch(dequeueSuccess(companyId, index));
-    //   console.log(xhr.responseText);
-    // };
-    axios
-      .post("/user/test" /*+ companyId*/)
+    axiosInstance
+      .post("/user/dequeue/" + companyId)
 
       .then((res) => {
-        // console.log(res);
-        //let response = res.data;
-
         dispatch(dequeueSuccess(companyId, index));
       })
       .catch((error) => {
