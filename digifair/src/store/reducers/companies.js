@@ -28,9 +28,9 @@ const fetchCompaniesSuccess = (state, action) => {
   // later this will not be needed as I am getting isQueued and hadSession from fetching companies
   action.companies.map((company) => {
     company.hadSession = false;
-    company.isQueued = false;
+    // company.isQueued = false;
     company.queuing = false;
-    company.queuePos = null;
+    // company.queuePosition = null;
   });
 
   // console.log(action.companies);
@@ -86,7 +86,7 @@ const queueSuccess = (state, action) => {
   let updatedCompany = { ...updatedCompanies[action.index] };
 
   updatedCompany.isQueued = true;
-
+  updatedCompany.queuePosition = action.queuePosition;
   updatedCompany.queuing = false;
   updatedCompanies[action.index] = updatedCompany;
 
@@ -145,7 +145,7 @@ const updateQueuePosition = (state, action) => {
       break;
     }
   }
-  console.log(updatedCompanies);
+
   return updateObject(state, { companies: updatedCompanies });
 };
 

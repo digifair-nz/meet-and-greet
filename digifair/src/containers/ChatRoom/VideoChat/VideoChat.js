@@ -66,7 +66,7 @@ const connectingMask = () => (
   </div>
 );
 
-const startCallMask = (start) => <div className="App-mask">{start()}</div>;
+// const startCallMask = (start) => <div className="App-mask">{start()}</div>;
 
 class VideoChat extends Component {
   constructor(props) {
@@ -92,7 +92,6 @@ class VideoChat extends Component {
 
     otCore = new AccCore(options);
     otCore.connect().then(() => {
-      console.log("Hellow");
       this.setState({ connected: true });
 
       if (this.state.connected && !this.state.active) {
@@ -126,9 +125,6 @@ class VideoChat extends Component {
       .startCall()
       .then(({ publishers, subscribers, meta }) => {
         if (!this.state.active) {
-          console.log(subscribers);
-          console.log(otCore.session);
-          console.log("Hello");
           this.setState({ publishers, subscribers, meta, active: true });
         }
       })
