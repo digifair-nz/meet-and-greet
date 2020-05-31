@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
+const instance = axios.create({});
 
- const instance = axios.create({
-  headers: {
-    "auth-token": token,
-  },
-  timeout: 10000,
-});
+(function () {
+  const token = localStorage.getItem("token");
+  if (token) {
+    instance.defaults.headers.common["auth-token"] = token;
+  }
+})();
 
 export default instance;

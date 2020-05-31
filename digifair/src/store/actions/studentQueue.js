@@ -1,6 +1,17 @@
 import * as actionTypes from "./actionTypes";
 
-import axios from "../../axios-instance";
+// import axios from "../../axios-instance";
+import axios from "axios";
+const instance = axios.create({});
+
+(function () {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    instance.defaults.headers.common["auth-token"] = token;
+  }
+})();
+
 // import axios from "axios";
 /*
 
@@ -45,22 +56,9 @@ export const queueStudent = (companyId, index) => {
 
   return (dispatch) => {
     dispatch(queueInit(companyId, index));
-    // const token = localStorage.getItem("token");
-    // var xhr = new XMLHttpRequest();
 
-    // xhr.open("POST", "/user/enqueue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // //console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   //console.timeEnd();
-    //   dispatch(queueSuccess(companyId, index, 0));
-    //   console.log(xhr.responseText);
-    // };
-    console.time();
-    axios
-      .post("/user/test" /*+ companyId*/)
+    instance
+      .post("/user/enqueue/" + companyId)
 
       .then((res) => {
         console.log(res);
@@ -111,21 +109,8 @@ export const dequeueStudent = (companyId, index) => {
     // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
-    // var xhr = new XMLHttpRequest();
-    // const token = localStorage.getItem("token");
-
-    // xhr.open("POST", "/user/dequeue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   console.timeEnd();
-    //   dispatch(dequeueSuccess(companyId, index));
-    //   console.log(xhr.responseText);
-    // };
-    axios
-      .post("/user/test" /*+ companyId*/)
+    instance
+      .post("/user/dequeue/" + companyId)
 
       .then((res) => {
         // console.log(res);
