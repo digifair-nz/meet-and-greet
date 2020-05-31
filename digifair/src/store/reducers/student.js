@@ -8,22 +8,22 @@ const initialState = {
   error: null,
   loading: false,
   authRedirectPath: "/",
-  // companiesQueue: [
-  //   {
-  //     _id: "Company Id",
-  //     hadSession: false,
-  //     isQueued: false,
-  //     queuePos: null,
-  //   },
-  // ],
-  // credentials: {
-  //   apiKey: "46721402",
-  //   sessionId:
-  //     "1_MX40NjcyMTQwMn5-MTU5MDYyNzc1MzE5NH5XL0lzaXExNDZJYUtjUVNiOWZSd3lCUWt-fg",
-  //   token:
-  //     "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9ZWJkZWM4ZTc2NTI3YjY0YTQ5OWJlZjFjZmZkMDgxZDk2Zjc5YzFkYzpzZXNzaW9uX2lkPTFfTVg0ME5qY3lNVFF3TW41LU1UVTVNRFl5TnpjMU16RTVOSDVYTDBsemFYRXhORFpKWVV0alVWTmlPV1pTZDNsQ1VXdC1mZyZjcmVhdGVfdGltZT0xNTkwNjI3NzUzJnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTA2Mjc3NTMuMjE2NTE3NTcxNTQ3NTQ=",
-  // },
-  credentials: null, // this is for vonage API
+  companiesQueue: [
+    {
+      _id: "Company Id",
+      hadSession: false,
+      isQueued: false,
+      queuePos: null,
+    },
+  ],
+  credentials: {
+    apiKey: "46721402",
+    sessionId:
+      "1_MX40NjcyMTQwMn5-MTU5MDYyNzc1MzE5NH5XL0lzaXExNDZJYUtjUVNiOWZSd3lCUWt-fg",
+    token:
+      "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9ZWJkZWM4ZTc2NTI3YjY0YTQ5OWJlZjFjZmZkMDgxZDk2Zjc5YzFkYzpzZXNzaW9uX2lkPTFfTVg0ME5qY3lNVFF3TW41LU1UVTVNRFl5TnpjMU16RTVOSDVYTDBsemFYRXhORFpKWVV0alVWTmlPV1pTZDNsQ1VXdC1mZyZjcmVhdGVfdGltZT0xNTkwNjI3NzUzJnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTA2Mjc3NTMuMjE2NTE3NTcxNTQ3NTQ=",
+  },
+  // credentials: null, // this is for vonage API
 };
 
 const studentAuthStart = (state, action) => {

@@ -1,13 +1,13 @@
 import * as actionTypes from "./actionTypes";
 
-import axios from "../../axios-instance";
-// import axios from "axios";
+import axios from "../../axios-orders";
+
 /*
 
 QUEUE STUDENT TO A COMPANY 
 
 */
-//axios.defaults.header.common[Auth_Token] = token
+
 /**
  * initialize queue to a specific comapny
  * @param {string} companyId
@@ -21,12 +21,11 @@ export const queueInit = (companyId, index) => {
   };
 };
 
-export const queueSuccess = (companyId, index, queuePosition) => {
+export const queueSuccess = (companyId, index) => {
   return {
     type: actionTypes.QUEUE_SUCCESS,
     companyId: companyId,
     index: index,
-    queuePosition: queuePosition,
   };
 };
 
@@ -43,31 +42,25 @@ export const queueStudent = (companyId, index) => {
   // Company id will be an alphanumeric string used for making a request to an appropriate endpoint
   // index refers to the position in the state array (companies)
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    // We also store the companies' states in local storage
+
     dispatch(queueInit(companyId, index));
-    // const token = localStorage.getItem("token");
-    // var xhr = new XMLHttpRequest();
 
-    // xhr.open("POST", "/user/enqueue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // //console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   //console.timeEnd();
-    //   dispatch(queueSuccess(companyId, index, 0));
-    //   console.log(xhr.responseText);
-    // };
-    console.time();
     axios
-      .post("/user/test" /*+ companyId*/)
+      .post("/user/enqueue/" + companyId)
 
       .then((res) => {
-        console.log(res);
-        //
-        console.timeEnd();
+        // console.log(res);
+        let response = res.data; // This is where I get my initial queue position?
 
-        dispatch(queueSuccess(companyId, index, res.data.queuePosition));
+        // Consider alternative approach where we only push queued things into the state
+        // We push company ids into the array simply.
+
+        // Get the companies from state
+        const companies = getState().companies.companies;
+
+        dispatch(queueSuccess(companyId, index));
       })
       .catch((error) => {
         dispatch(queueFail(companyId, index, error));
@@ -111,25 +104,12 @@ export const dequeueStudent = (companyId, index) => {
     // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
-    // var xhr = new XMLHttpRequest();
-    // const token = localStorage.getItem("token");
-
-    // xhr.open("POST", "/user/dequeue/" + companyId, true);
-    // xhr.setRequestHeader("auth-token", token);
-    // console.time();
-    // xhr.send();
-
-    // xhr.onload = function () {
-    //   console.timeEnd();
-    //   dispatch(dequeueSuccess(companyId, index));
-    //   console.log(xhr.responseText);
-    // };
     axios
-      .post("/user/test" /*+ companyId*/)
+      .post("/user/dequeue/" + companyId)
 
       .then((res) => {
         // console.log(res);
-        //let response = res.data;
+        let response = res.data;
 
         dispatch(dequeueSuccess(companyId, index));
       })
