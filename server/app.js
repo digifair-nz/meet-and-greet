@@ -37,7 +37,6 @@ app.ws('/', function(ws, req) {
 })
 
 const userRouter = require('./routes/user')(wsInstance)
-const companyRouter = require('./routes/company')(wsInstance)
 const clubRouter = require('./routes/club')
 
 app.use(logger('dev'))
@@ -46,7 +45,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 app.use('/user', userRouter)
-app.use('/company', companyRouter)
 app.use('/club', clubRouter)
 
 // catch 404 and forward to error handler

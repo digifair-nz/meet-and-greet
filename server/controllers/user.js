@@ -1,7 +1,6 @@
 // controllers for all endpoints which may be accessed by standard users of the application (i.e. users who are not companies nor clubs)
 module.exports = function(wsInstance) {
     const validate = require('./validation')
-    const company = require('./company')(wsInstance)
     const OpenTok = require('opentok')
     const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
     
@@ -32,7 +31,7 @@ module.exports = function(wsInstance) {
                 '_id': {
                     $in: event.companiesAttending
                 }
-            }).select('name description logoURL _id').lean()
+            }).select('name description logoURL _id')
             if(!companies) {
                 return res.status(404).json({ message: 'Companies attending the event could not be found' })
             }
@@ -47,7 +46,6 @@ module.exports = function(wsInstance) {
             return res.status(200).json(companies)
         }
         catch (error) {
-            console.log('SREEEE', error)
             res.status(500).json({ message: error })
         }
     }
@@ -83,14 +81,7 @@ module.exports = function(wsInstance) {
             // add the user to the queue
             queue.members.push(req.payload._id)
             await queue.save()
-            // if they are eligible, send a notification that the user may join the session
-            if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
-                const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
-                const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || value.inSession, false)
-                if(atLeastOneRoomIsFree) {
-                    company.findAndNotifyEligibleUser(queue)
-                }
-            }
+    
             return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
         }
         catch (error) {
@@ -175,12 +166,26 @@ module.exports = function(wsInstance) {
             const index = queue.members.indexOf(req.payload._id)
             // fail if the user is not in the queue
             if(index == -1) {
-                return res.status(403).json({ message: 'Failed to join session as user is not queued.' })
+                return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue.' })
             }
             // if the user is not at the front of the queue, check if the users ahead of them in the queue are occupied
             // if they are, then we can proceed as if they were at the front of the queue
-            if(!await userIsEligibleToJoinSession(queue, index)) {
-                return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
+            if(index != 0) {
+                // get the users earlier in the queue
+                const userIdsEarlierInQueue = queue.members.slice(0, index)
+                const usersEarlierInQueue = await User.find({
+                    '_id': {
+                        $in: userIdsEarlierInQueue
+                    }
+                })
+                if(!usersEarlierInQueue) {
+                    throw new Error('Unexpected error joining session')
+                }
+                // fail if the user is not the first non-occupied user in the queue
+                const isFirstNonOccupied = usersEarlierInQueue.reduce((total, value) => total && value.inSession, true)
+                if(!isFirstNonOccupied) {
+                    return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
+                }
             }
             // at this point we know that the user is in first position to join any available room, so we check for an available room
             for(const room of rooms) {
@@ -217,31 +222,11 @@ module.exports = function(wsInstance) {
             }
             // if we are here then we know that there is no available room
             return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
+    
         }
         catch (error) {
             return res.status(500).json({ message: error })
         }
-    }
-
-    async function userIsEligibleToJoinSession(queue, index) {
-        if(index != 0) {
-            // get the users earlier in the queue
-            const userIdsEarlierInQueue = queue.members.slice(0, index)
-            const usersEarlierInQueue = await User.find({
-                '_id': {
-                    $in: userIdsEarlierInQueue
-                }
-            })
-            if(!usersEarlierInQueue) {
-                throw new Error('Unexpected error joining session')
-            }
-            // fail if the user is not the first non-occupied user in the queue
-            const isFirstNonOccupied = usersEarlierInQueue.reduce((total, value) => total && value.inSession, true)
-            if(!isFirstNonOccupied) {
-                return false
-            }
-        }
-        return true
     }
     
     /**

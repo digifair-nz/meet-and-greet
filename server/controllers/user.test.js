@@ -72,7 +72,6 @@ describe('Get companies tests', function() {
         const eventId = await setup.seedDatabase()
         const token = (await request.post('/user/login/' + eventId).send({ email: 'Peter@gmail.com'})).headers['auth-token']
         const companies = (await request.get('/user/').set('auth-token', token)).body
-        console.log('BEEEEEE', companies)
         const event = await Event.findById(eventId)
         const expected = event.companiesAttending.map(i => i.toString())
     
@@ -248,10 +247,7 @@ describe('Session tests', function() {
             const queue = await Queue.findOne({ companyId, eventId })
             
             expect(response.status).toBe(200)
-            expect(response.body).toHaveProperty('credentials')
-            expect(response.body.credentials).toHaveProperty('apiKey')
-            expect(response.body.credentials).toHaveProperty('token')
-            expect(response.body.credentials).toHaveProperty('sessionId')
+            expect(response.body).toHaveProperty('vonageToken')
             expect(user.inSession).toBe(true)
             expect(room.inSession).toBe(true)
             expect(queue.members.length).toBe(0)
@@ -276,10 +272,7 @@ describe('Session tests', function() {
             const otherRooms = await Room.find({ name: { $ne: 'Room 1' } })
     
             expect(response.status).toBe(200)
-            expect(response.body).toHaveProperty('credentials')
-            expect(response.body.credentials).toHaveProperty('apiKey')
-            expect(response.body.credentials).toHaveProperty('token')
-            expect(response.body.credentials).toHaveProperty('sessionId')
+            expect(response.body).toHaveProperty('vonageToken')
             expect(user2.inSession).toBe(true)
             expect(room.inSession).toBe(true)
             expect(room.sessionPartner.toString()).toEqual(user2._id.toString())
@@ -300,7 +293,7 @@ describe('Session tests', function() {
             const queue = await Queue.findOne({ companyId, eventId })
     
             expect(response.status).toBe(403)
-            expect(response.body).not.toHaveProperty('credentials')
+            expect(response.body).not.toHaveProperty('vonageToken')
             expect(user2.inSession).toBe(false)
             expect(room.inSession).toBe(false)
             expect(queue.members.length).toBe(2)
@@ -319,7 +312,7 @@ describe('Session tests', function() {
             const room = await Room.findOne({ name: 'Room 1' })
             
             expect(response.status).toBe(403)
-            expect(response.body).not.toHaveProperty('credentials')
+            expect(response.body).not.toHaveProperty('vonageToken')
             expect(room.inSession).toBe(false)
         })
         test('Attempt to join occupied session which the user is at the front of the queue for', async function() {
@@ -337,7 +330,7 @@ describe('Session tests', function() {
             const user = await User.findOne({ email: 'Peter@gmail.com' })
             
             expect(response.status).toBe(403)
-            expect(response.body).not.toHaveProperty('credentials')
+            expect(response.body).not.toHaveProperty('vonageToken')
             expect(user.inSession).toBe(false)
         })
     })

@@ -101,7 +101,10 @@ module.exports = function(wsInstance) {
             room.searching = true
             await room.save()
             // notify the next user that they may join
-            await findAndNotifyEligibleUser(queue)
+            let foundUser = await findAndNotifyEligibleUser(queue)
+            while(!foundUser) {
+                foundUser = await findAndNotifyEligibleUser(queue)
+            }
             room.searching = false
             await room.save()
         }
@@ -189,24 +192,13 @@ module.exports = function(wsInstance) {
             }
             // if the user has already been notified previously then skip over them
             // this might happen if two rooms are looking for new students at the same time
-            let client
-            for(const c in wsInstance.getWss().clients) {
-                if(client.payload._id == user._id) {
-                    client = c
-                    break
-                }
-            }
-            if(!client) {
-                continue
-            }
-            if(client.hasBeenNotified && client.hasBeenNotified[queue.companyId]) {
+            const client = wsInstance.getWss().clients.find(client => client.payload._id == user._id)
+            if(client.hasBeenNotified[queue.companyId]) {
                 continue
             }
             // make sure the client is marked as having been notified
-            if(!client.hasBeenNotified) {
-                client.hasBeenNotified = {}
-            }
             client.hasBeenNotified[queue.companyId] = true
+
             // at this point we know that the client is eligible to join the session, so notify them that they must make a request within 10 seconds
             client.send(JSON.stringify({
                 messageType: 'ready',
@@ -241,7 +233,6 @@ module.exports = function(wsInstance) {
     return {
         createRoom,
         kickStudent,
-        getNextStudent,
-        findAndNotifyEligibleUser
+        getNextStudent
     }
 }
