@@ -93,10 +93,6 @@ class CompanyCard extends Component {
       statusCircle += " " + classes.RedCircle; // Change to red if the user had a session
     }
 
-    let logoDisplay = "block"; // While the user is sending the request, hide the logo to show the spinner.
-    if (this.props.queuing | (this.props.logo == null)) {
-      logoDisplay = "none";
-    }
     return (
       // 4 main visual elements
       <Aux>
@@ -143,17 +139,15 @@ class CompanyCard extends Component {
 
           {/* Show a spinner instead of the company logo to indicate queue request */}
 
-          {
-            this.props.queuing | (this.props.logo == null) ? (
-              <Spinner />
-            ) : null /* Show the spinner while the use sends a queue/dequeue request */
-          }
-          <img
-            src={this.props.logo}
-            className={classes.CompanyLogo}
-            style={{ display: logoDisplay }}
-            alt="Company Logo"
-          />
+          {this.props.queuing | (this.props.logo == null) ? (
+            <Spinner />
+          ) : (
+            <img
+              src={this.props.logo}
+              className={classes.CompanyLogo}
+              alt="Company Logo"
+            />
+          )}
         </div>
       </Aux>
     );

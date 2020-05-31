@@ -58,9 +58,9 @@ class App extends Component {
     return (
       <div className="App">
         <Layout>
-          {/* <Route path="/chat-room" component={ChatRoom} />
-          <Redirect to="/chat-room" /> */}
-          {routes}
+          <Route path="/chat-room" component={ChatRoom} />
+          <Redirect to="/chat-room" />
+          {/* {routes} */}
         </Layout>
       </div>
     );
