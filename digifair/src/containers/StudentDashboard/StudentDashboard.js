@@ -70,7 +70,6 @@ class StudentDashboard extends Component {
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
         // dispatch update queue position
-        console.log(message);
         const packet = JSON.parse(message.data);
         //console.log(packet.messageType);
         if (this.props.companies !== null && packet.companyId !== null) {
