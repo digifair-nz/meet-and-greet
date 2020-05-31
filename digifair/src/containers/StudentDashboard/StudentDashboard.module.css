@@ -109,14 +109,6 @@ MOBILE and TABLET
       grid-row-gap: 6%;
     }
   }
-  
-  @media (max-width: 1280px) {
-    .CompanyCardContainer {
-      grid-template-columns: 30% 30%;
-      grid-auto-rows: 23%;
-      grid-row-gap: 6%;
-    }
-  }
 
   @media (max-width: 1024px) {
     .CompanyCardContainer {

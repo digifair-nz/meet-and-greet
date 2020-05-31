@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import Button from "../UI/Button/Button";
 import classes from "./ReadyCheckPrompt.module.css";
 
-import { Redirect} from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
@@ -60,8 +60,8 @@ class ReadyCheckPrompt extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    credentials: state.student.credentials,
-    error: state.student.error,
+    credentials: state.studentAuth.credentials,
+    error: state.studentAuth.error,
   };
 };
 

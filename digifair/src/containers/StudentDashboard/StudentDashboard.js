@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
-import axios from "../../axios-instance";
+import axios from "../../axios-orders";
 
 // Higher Order Components
 import Aux from "../../hoc/Auxiliary";
@@ -37,6 +37,8 @@ class StudentDashboard extends Component {
   */
 
   state = {
+    q: [12, 13, 5, 3, 5],
+
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
   };
@@ -55,7 +57,7 @@ class StudentDashboard extends Component {
 
     this.props.fetchCompanies();
 
-    //console.log("[STUDENT DASHBOARD] Mounted");
+    console.log("[STUDENT DASHBOARD] Mounted");
 
     document.title = "Dashboard";
 
@@ -71,7 +73,6 @@ class StudentDashboard extends Component {
       ws.onmessage = (message) => {
         // dispatch update queue position
         const packet = JSON.parse(message.data);
-        //console.log(packet.messageType);
         if (this.props.companies !== null && packet.companyId !== null) {
           // console.log(packet.companyId);
 
@@ -105,9 +106,31 @@ class StudentDashboard extends Component {
           }
         }
 
-        //console.log(message);
+        console.log(message);
       };
     }
+
+    // Notification
+    // let notificationGranted;
+    // Notification.requestPermission().then(function (result) {
+    //   notificationGranted = result;
+    // });
+
+    // // Maybe if they click on the notification it treats it as accept?
+
+    // // ****READY POP UP*****
+    // setTimeout(() => {
+    //   if (notificationGranted) {
+    //     // Notification
+    //     const title = "Your Queue is Ready!";
+    //     const body = "Google is ready for you. Accept or decline your queue";
+    //     sendNotification(title, body);
+    //   }
+    //   this.setState({
+    //     showReadyPromptPopUp: true,
+    //   });
+    // }, 10000);
+    // Company cards
   }
 
   // If the student declines the queue he will be ejected from the queue and close the pop up
