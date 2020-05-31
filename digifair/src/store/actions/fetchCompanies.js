@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes";
-import axios from "../../axios-orders";
+import axios from "../../axios-instance";
 
 export const fetchCompaniesStart = () => {
   return {
@@ -23,8 +23,10 @@ export const fetchCompaniesSuccess = (fetchedCompanies) => {
 export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
+    const token = localStorage.getItem("token");
+
     axios
-      .get("/user/")
+      .get("/user/", { headers: { "auth-token": token } })
       .then((response) => {
         dispatch(fetchCompaniesSuccess(response.data));
       })
