@@ -7,19 +7,12 @@ import userIcon from "../../../assets/icons/white-user.png";
 const input = (props) => {
   const inputClasses = [classes.InputElement];
 
-  let autoCompleteType = "email";
-
-  if (props.elementConfig.type === "password") {
-    autoCompleteType = "current-password";
-  }
-
   let inputElement = (
     <input
       className={inputClasses.join(" ")}
       {...props.elementConfig}
       value={props.value}
       onChange={props.changed}
-      autoComplete={autoCompleteType}
     />
   );
 
