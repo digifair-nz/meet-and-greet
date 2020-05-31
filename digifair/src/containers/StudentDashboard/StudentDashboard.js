@@ -47,14 +47,13 @@ class StudentDashboard extends Component {
   // Change back to default
 
   componentDidMount() {
-    this.props.fetchCompanies();
-
     // Notification for ready check
-
     let notificationGranted;
     Notification.requestPermission().then(function (result) {
       notificationGranted = result;
     });
+
+    this.props.fetchCompanies();
 
     //console.log("[STUDENT DASHBOARD] Mounted");
 
