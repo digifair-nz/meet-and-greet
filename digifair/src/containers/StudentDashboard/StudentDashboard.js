@@ -13,6 +13,7 @@ import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt
 import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
+import jwt from "jwt-decode"; // import dependency
 
 // import logoutIcon from "../../assets/icons/logout.png";
 // CSS
@@ -65,8 +66,9 @@ class StudentDashboard extends Component {
     // Open a socket connection
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
+      const port = jwt(token).port
       const ws = new WebSocket(
-        "ws://localhost:3000/?token=" + this.props.token
+        `ws://localhost:${port}/?token=${this.props.token}`
       );
 
       // console.log("Socket Connection Opened!");
