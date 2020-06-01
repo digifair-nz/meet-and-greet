@@ -27,7 +27,7 @@ const fetchCompaniesSuccess = (state, action) => {
   // Initialize
   // later this will not be needed as I am getting isQueued and hadSession from fetching companies
   action.companies.map((company) => {
-    company.hadSession = false;
+    // company.hadSession = false;
     // company.isQueued = false;
     company.queuing = false;
     // company.queuePosition = null;
