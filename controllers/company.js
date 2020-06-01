@@ -192,8 +192,9 @@ module.exports = function(wsInstance) {
             // if the user has already been notified previously then skip over them
             // this might happen if two rooms are looking for new students at the same time
             let client
-            console.log(wsInstance.getWss().clients)
+            console.log(JSON.stringify(wsInstance.getWss().clients))
             for(const c of wsInstance.getWss().clients) {
+                console.log('is a client')
                 if(c.jwt._id == user._id) {
                     console.log('5', c)
                     client = c
