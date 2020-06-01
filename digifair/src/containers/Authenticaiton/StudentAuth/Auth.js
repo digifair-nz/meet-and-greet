@@ -8,6 +8,7 @@ import digifairLogo from "../../../assets/company_logos/digifair-logo-inverse.pn
 import Button from "../../../components/UI/Button/Button";
 import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
+import Spinner from "../../../components/UI/Spinner/Spinner";
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
 
@@ -189,12 +190,16 @@ class StudentAuth extends Component {
 
             {form}
           </form>
-          <Button
-            clicked={(event) => this.submitHandler(event)}
-            btnType="Accept"
-          >
-            Sign in
-          </Button>
+          {this.props.loading ? (
+            <Spinner />
+          ) : (
+            <Button
+              clicked={(event) => this.submitHandler(event)}
+              btnType="Accept"
+            >
+              Sign in
+            </Button>
+          )}
         </div>
         <div className={classes.BackgroundIllustration}></div>
       </div>

@@ -7,9 +7,47 @@
 
 .VideoChatContainer {
   background-color: gray;
-  margin-left: 7%;
+  padding-left: 7%;
 }
 
 .TextChatContainer {
   background-color: yellow;
+}
+
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+    /*Ipad Pro */
+  }
+
+  @media (max-width: 768px) {
+    /*Ipad */
+  }
+  @media (max-width: 640px) {
+  }
+
+  @media (max-width: 560px){
+
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px){
+    .ChatRoomContainer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .VideoChatContainer {
+      margin-top: 40px;
+      padding-left: 0px;
+    }
+
+    .TextChatContainer {
+      flex-grow: 1;
+    }
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+  }
 }

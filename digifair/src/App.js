@@ -16,8 +16,8 @@ import "./App.css";
 class App extends Component {
   componentDidMount() {
     // check users local storage for a token and try to sign them in automatically
+    // Also check credentials for a room session and redirect to the room if credentials are found
     this.props.onTryAutoSignUp();
-    this.props.onTryAutoJoinChatroom();
   }
 
   render() {
@@ -70,14 +70,13 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.user.token !== null, // Change later to cater for all the companies
     token: state.user.token,
-    hasCredentials: state.user.credentials != null,
+    hasCredentials: state.user.credentials !== null,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onTryAutoSignUp: () => dispatch(actions.authCheckState()),
-    onTryAutoJoinChatroom: () => dispatch(actions.checkCredentials()),
   };
 };
 

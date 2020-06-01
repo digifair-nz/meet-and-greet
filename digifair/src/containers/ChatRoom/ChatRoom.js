@@ -16,6 +16,9 @@ import TextChat from "./TextChat/TextChat";
 import VideoChat from "./VideoChat/VideoChat";
 
 class ChatRoom extends Component {
+  // state = {
+  //   disconnect: false,
+  // };
   kickStudentHandler = () => {
     this.props.kickStudent();
   };
@@ -34,7 +37,11 @@ class ChatRoom extends Component {
           <Button clicked={this.kickStudentHandler} btnType="Danger">
             End Current Session
           </Button>
-          <Button iconType="Logout" btnType="Logout">
+          <Button
+            clicked={this.props.logout}
+            iconType="Logout"
+            btnType="Logout"
+          >
             Leave event
           </Button>
         </Toolbar>
@@ -58,6 +65,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     kickStudent: () => dispatch(actions.studentLeaveSession()),
+    logout: () => dispatch(actions.logout()),
   };
 };
 

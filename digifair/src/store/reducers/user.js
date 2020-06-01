@@ -27,6 +27,7 @@ const authStart = (state, action) => {
 const studentAuthSuccess = (state, action) => {
   return updateObject(state, {
     token: action.idToken,
+    credentials: action.credentials,
     isStudent: false,
     error: null,
     loading: false,
@@ -41,13 +42,12 @@ const authFail = (state, action) => {
   });
 };
 const recruiterAuthSuccess = (state, action) => {
-  //console.log(credentials);
   return updateObject(state, {
     token: action.token,
     credentials: action.credentials,
+    isStudent: false,
     loading: false,
     error: null,
-    isStudent: false,
     authRedirectPath: "/chat-room",
   });
 };

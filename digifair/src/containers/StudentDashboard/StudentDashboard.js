@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
-import axios from "../../axios-instance";
 
 // Higher Order Components
 import Aux from "../../hoc/Auxiliary";
-import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 // Components
 import Button from "../../components/UI/Button/Button";
@@ -46,8 +44,12 @@ class StudentDashboard extends Component {
   // Get push notifications here
   // Change back to default
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return nextProps.token != this.props.token;
+  // }
+
   componentDidMount() {
-    console.log("What the hell!");
+    console.log("[STUDENT DASHBOARD] Mounted");
     // Notification for ready check
     let notificationGranted;
     Notification.requestPermission().then(function (result) {
