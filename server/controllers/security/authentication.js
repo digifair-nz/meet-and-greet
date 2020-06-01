@@ -81,7 +81,7 @@ async function companyLogin(req, res) {
         credentials: {
             apiKey: process.env.VONAGE_API_KEY,
             sessionId,
-            vonageToken
+            token: vonageToken
         }
     })
 }
