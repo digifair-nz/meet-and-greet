@@ -66,7 +66,7 @@ class StudentDashboard extends Component {
     // Open a socket connection
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
-      const port = jwt(token).port
+      const port = jwt(this.props.token).port
       const ws = new WebSocket(
         `ws://localhost:${port}/?token=${this.props.token}`
       );
