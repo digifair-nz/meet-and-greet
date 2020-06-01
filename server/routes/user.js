@@ -21,7 +21,11 @@ module.exports = function(wsInstance) {
     router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
 
     const temp = require('../test-setup')
-    router.post('/setup', (req, res) => temp.seedDatabase(true))
+    router.post('/setup', async (req, res) => {
+        await temp.dropAllCollections()
+        const eventId = await temp.seedDatabase(true)
+        return res.status(200).json({ message: 'Success.', eventId })
+    })
 
     return router
 }

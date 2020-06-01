@@ -155,5 +155,6 @@ module.exports = {
             await mongoose.connection.close()
         })
     },
-    seedDatabase
+    seedDatabase,
+    dropAllCollections
 }

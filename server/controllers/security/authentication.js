@@ -2,9 +2,12 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Event = mongoose.model('Event')
 const Club = mongoose.model('Club')
+const Room = mongoose.model('Room')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const validate = require('../validation')
+const OpenTok = require('opentok')
+const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
 
 /**
  * Login a user and respond with a jwt if their login details are correct
@@ -66,7 +69,21 @@ async function companyLogin(req, res) {
         companyId: room.companyId
     }, process.env.TOKEN_SECRET)
 
-    return res.header('auth-token', token).send(token)
+    // generate a new sessionId for the company
+    const sessionId = await room.newSessionId()
+    // get the new token for the company
+    const vonageToken = opentok.generateToken(room.sessionId, {
+        expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+        role: 'moderator'
+    })
+
+    return res.header('auth-token', token).send({
+        credentials: {
+            apiKey: process.env.VONAGE_API_KEY,
+            sessionId,
+            vonageToken
+        }
+    })
 }
 
 /**
@@ -105,5 +122,6 @@ async function registerAdmin(req, res) {
 module.exports = {
     adminLogin,
     studentLogin,
+    companyLogin,
     registerAdmin
 }
