@@ -1,11 +1,5 @@
 // Log in students
-export {
-  auth,
-  logout,
-  setAuthRedirectPath,
-  authCheckState,
-  checkCredentials,
-} from "./auth";
+export { auth, logout, setAuthRedirectPath, authCheckState } from "./auth";
 
 // Log in recruiters
 

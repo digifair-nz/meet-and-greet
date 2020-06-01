@@ -119,8 +119,6 @@ class VideoChat extends Component {
         this.setState({ publishers, subscribers, meta });
       })
     );
-
-    console.log(this.state.connected + " " + !this.state.active);
   }
 
   startCall() {

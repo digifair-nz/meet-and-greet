@@ -1,6 +1,7 @@
 import axios from "../../axios-instance";
 
 import * as actionTypes from "./actionTypes";
+import jwt from "jwt-decode"; // import dependency
 
 // NOTE: Possibly refractor if there is easy reusability between student,company and club authentication process
 export const authStart = () => {
@@ -9,10 +10,11 @@ export const authStart = () => {
   };
 };
 
-export const studentAuthSuccess = (token) => {
+export const studentAuthSuccess = (token, credentials) => {
   return {
     type: actionTypes.STUDENT_AUTH_SUCCESS,
     idToken: token,
+    credentials: credentials,
   };
 };
 
@@ -70,7 +72,7 @@ export const auth = (email, password, isStudent) => {
           // localStorage.setItem("expirationDate", expirationDate);
 
           //axios.defaults.headers.common["auth-token"] = token; // for all requests
-          dispatch(studentAuthSuccess(token));
+          dispatch(studentAuthSuccess(token, null));
           // dispatch(studentCheckAuthTimeout(response.data.expiresIn));
         })
         .catch((err) => {
@@ -81,11 +83,11 @@ export const auth = (email, password, isStudent) => {
       axios
         .post("/company/login/5ed46d7bf762a24afc4654a2", authData)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           const token = response.headers["auth-token"];
 
           const credentials = response.data.credentials;
-          localStorage.setItem("credentials", credentials);
+          localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
 
           dispatch(recruiterAuthSuccess(token, credentials));
@@ -110,35 +112,29 @@ export const setAuthRedirectPath = (path) => {
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
+
+    let isStudent = true;
+
+    if (token != null) {
+      isStudent = jwt(token).accountType === "student";
+      // console.log(decodedToken);
+    }
+
+    const credentials = localStorage.getItem("credentials");
+    const creds = JSON.parse(credentials);
+    // console.log(creds);
+
     if (token) {
-      dispatch(studentAuthSuccess(token));
-      // dispatch(
-      //   studentCheckAuthTimeout(
-      //     (expirationDate.getTime() - new Date().getTime()) / 1000
-      //   )
-      // );
-      // dispatch(studentLogout());
-    } //else {
-    // const expirationDate = new Date(localStorage.getItem("expirationDate"));
-    // if (expirationDate <= new Date()) {
-    //   // dispatch(studentLogout());
-    // } else {
-    //   const userId = localStorage.getItem("userId");
-    //   dispatch(studentAuthSuccess(token, userId));
-    //   dispatch(
-    //     studentCheckAuthTimeout(
-    //       (expirationDate.getTime() - new Date().getTime()) / 1000
-    //     )
-    //   );
-    // }
-    //}
-  };
-};
-export const checkCredentials = () => {
-  return (dispatch) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(studentAuthSuccess(token));
+      if (credentials != null) {
+        if (isStudent) {
+          dispatch(studentAuthSuccess(token, creds));
+        } else {
+          dispatch(recruiterAuthSuccess(token, creds));
+        }
+      } else {
+        dispatch(studentAuthSuccess(token, null)); // only student can have no credentials at any point. Recruiter user will always be in sessions
+      }
+
       // dispatch(
       //   studentCheckAuthTimeout(
       //     (expirationDate.getTime() - new Date().getTime()) / 1000

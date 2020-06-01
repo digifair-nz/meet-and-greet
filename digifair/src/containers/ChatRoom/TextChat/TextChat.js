@@ -9,6 +9,9 @@ class TextChat extends Component {
     this.inbox = undefined;
   }
 
+  // shouldComponentUpdate() {
+
+  // }
   componentDidMount() {
     // Promise can be `then`ed multiple times
     Talk.ready
