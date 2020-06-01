@@ -122,14 +122,15 @@ class VideoChat extends Component {
   }
 
   startCall() {
-    otCore
-      .startCall()
-      .then(({ publishers, subscribers, meta }) => {
-        if (!this.state.active) {
-          this.setState({ publishers, subscribers, meta, active: true });
-        }
-      })
-      .catch((error) => console.log(error));
+    // otCore
+    //   .startCall()
+    //   .then(({ publishers, subscribers, meta }) => {
+    //     if (!this.state.active) {
+    //       this.setState({ publishers, subscribers, meta, active: true });
+    //     }
+    //   })
+    //   .catch((error) => console.log(error));
+    otCore.getPublushers;
   }
 
   endCall() {
