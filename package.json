@@ -7,7 +7,7 @@
     "devStart": "nodemon ./bin/www",
     "test": "jest --watch --runInBand",
     "test:watch": "jest --watch",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm install --prefix digifair && npm run build --prefix digifair && npm start"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix digifair && npm run build --prefix digifair"
   },
   "jest": {
     "testEnvironment": "node"
