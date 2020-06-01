@@ -1,6 +1,6 @@
 {
   "name": "digifair",
-  "proxy": "https://digifair-test.herokuapp.com/",
+  "homepage": "https://digifair-test.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

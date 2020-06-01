@@ -50,14 +50,15 @@ app.use('/user', userRouter)
 app.use('/company', companyRouter)
 app.use('/club', clubRouter)
 
+app.get('/*', (req, res) => {
+    return res.sendFile(path.join(__dirname + '/digifair/build/index.html'))
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404))
 })
 
-app.get('/', (req, res) => {
-    return res.sendFile(path.join(__dirname + '/digifair/build/index.html'))
-})
 
 // error handler
 app.use(function(err, req, res, next) {
