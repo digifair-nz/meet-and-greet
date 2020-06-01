@@ -21,11 +21,17 @@ class App extends Component {
   }
 
   render() {
+    let urlWithEventId = "/sign-in";
+
+    if (this.props.eventId !== null) {
+      urlWithEventId += "/" + this.props.eventId;
+    }
+
     let routes = (
       <Switch>
-        <Route path="/sign-in" component={Auth} />
+        <Route path="/sign-in/:id" component={Auth} />
         {/* <Route path="/" component={StudentDashboard} exact /> */}
-        <Redirect to="/sign-in" />
+        <Redirect to={urlWithEventId} />
       </Switch>
     );
 
@@ -71,6 +77,7 @@ const mapStateToProps = (state) => {
     isAuthenticated: state.user.token !== null, // Change later to cater for all the companies
     token: state.user.token,
     hasCredentials: state.user.credentials !== null,
+    eventId: state.user.eventId,
   };
 };
 

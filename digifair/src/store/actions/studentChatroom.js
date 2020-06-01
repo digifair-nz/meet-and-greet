@@ -40,7 +40,7 @@ export const studentJoinChatroom = (companyId) => {
       .then((response) => {
         //console.log(response);
         const credentials = response.data.credentials;
-        console.log(credentials);
+        // console.log(credentials);
         // Save credentials to local storage
         localStorage.setItem("credentials", credentials);
         dispatch(studentJoinChatroomSuccess(credentials));

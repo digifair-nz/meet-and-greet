@@ -18,10 +18,15 @@ const initialState = {
   // },
   credentials: null, // this is for vonage API
   isStudent: true,
+  eventId: null,
 };
 
 const authStart = (state, action) => {
-  return updateObject(state, { error: null, loading: true });
+  return updateObject(state, {
+    error: null,
+    eventId: action.eventId,
+    loading: true,
+  });
 };
 
 const studentAuthSuccess = (state, action) => {

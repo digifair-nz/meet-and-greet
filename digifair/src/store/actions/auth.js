@@ -4,9 +4,10 @@ import * as actionTypes from "./actionTypes";
 import jwt from "jwt-decode"; // import dependency
 
 // NOTE: Possibly refractor if there is easy reusability between student,company and club authentication process
-export const authStart = () => {
+export const authStart = (eventId) => {
   return {
     type: actionTypes.AUTH_START,
+    eventId: eventId,
   };
 };
 
@@ -52,9 +53,9 @@ export const checkAuthTimeout = (expirationTime) => {
   };
 };
 
-export const auth = (email, password, isStudent) => {
+export const auth = (eventId, email, password, isStudent) => {
   return (dispatch) => {
-    dispatch(authStart());
+    dispatch(authStart(eventId));
 
     const authData = {
       email: email,
@@ -62,7 +63,7 @@ export const auth = (email, password, isStudent) => {
 
     if (isStudent) {
       axios
-        .post("/user/login/5ed46d7bf762a24afc4654a2", authData)
+        .post("/user/login/" + eventId, authData)
         .then((response) => {
           // const expirationDate = new Date(
           //   new Date().getTime() + response.data.expiresIn * 1000

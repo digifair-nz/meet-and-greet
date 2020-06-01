@@ -33,7 +33,7 @@ export const kickStudent = () => {
     axios
       .get("/company/kick/")
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(kickStudentSuccess());
       })
       .catch((err) => {

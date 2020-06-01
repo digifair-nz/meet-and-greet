@@ -47,9 +47,14 @@ class StudentAuth extends Component {
     },
     invalidForm: false,
     isStudent: true,
+    eventId: null,
   };
 
   componentDidMount() {
+    const eventId = this.props.match.params.id;
+    this.setState({
+      eventId: eventId,
+    });
     // Redirect the user to the root if he has authenticated
     if (this.props.authRedirectPath !== "/") {
       let path = this.props.isStudent ? "/" : "/chat-room";
@@ -111,6 +116,7 @@ class StudentAuth extends Component {
 
       // Dispatch auth action
       this.props.onAuth(
+        this.state.eventId,
         this.state.controls.email.value,
         this.state.controls.password.value,
         this.state.isStudent
@@ -218,8 +224,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (email, password, isStudent) =>
-      dispatch(actions.auth(email, password, isStudent)),
+    onAuth: (eventId, email, password, isStudent) =>
+      dispatch(actions.auth(eventId, email, password, isStudent)),
     // onRecruiterAuth: (email, password) =>
     //   dispatch(actions.recruiterAuth(email, password)),
     onSetAuthRedirectPath: (path) =>
