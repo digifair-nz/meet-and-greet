@@ -20,5 +20,8 @@ module.exports = function(wsInstance) {
     router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
     router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
 
+    const temp = require('../test-setup')
+    router.post('/setup', (req, res) => temp.seedDatabase(true))
+
     return router
 }
