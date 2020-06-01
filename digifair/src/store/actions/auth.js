@@ -82,7 +82,7 @@ export const auth = (eventId, email, password, isStudent) => {
         });
     } else {
       axios
-        .post("/company/login/5ed46d7bf762a24afc4654a2", authData)
+        .post("/company/login/" + eventId, authData)
         .then((response) => {
           // console.log(response);
           const token = response.headers["auth-token"];

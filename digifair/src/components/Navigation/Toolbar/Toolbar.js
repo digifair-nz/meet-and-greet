@@ -87,12 +87,13 @@ class Toolbar extends Component {
     }
     return (
       <Aux>
+         
+
         <header className={toolbarClass}>
           {logo}
           <div className={this.state.menuClass} onClick={this.onMenuClick} >
             <span></span>
           </div>
-
           <div className={classes.ControlsContainer + " " + add}>
             {/*Make this a child prop to allow for different buttons? */}
             {
@@ -102,9 +103,12 @@ class Toolbar extends Component {
             }
           </div>
           <span className={classes.CreditsTitle}>Credits</span>
+          
         </header>
+        
         {/* Dim the background when the menu opens and close the menu when background is clicked*/}
         <Backdrop show={this.state.active} clicked={this.onMenuClick}/>
+        
       </Aux>
     );
   }
