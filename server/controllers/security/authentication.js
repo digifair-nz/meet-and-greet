@@ -4,7 +4,7 @@ const Event = mongoose.model('Event')
 const Club = mongoose.model('Club')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const validate = require('./validation')
+const validate = require('../validation')
 
 /**
  * Login a user and respond with a jwt if their login details are correct
@@ -26,20 +26,19 @@ async function adminLogin(req, res) {
     res.header('auth-token', token).send(token)
 }
 
-async function defaultLogin(req, res) {
-    const { error } = validate.asUser(req.body)
-    if(error) return res.status(400).json(error.details[0].message)
-
-    {
-        const { error } = validate.asId(req.params)
-        if(error) return res.status(400).json(error.details[0].message)
+async function studentLogin(req, res) {
+    if(!validate.isEmail(req.body)) {
+        return
+    }
+    if(!validate.isId(req.params)) {
+        return
     }
 
     const event = await Event.findById(req.params._id)
     if(!event) return res.status(400).json({ message: 'Bad link.' })
 
     const user = await User.findOne({ email: req.body.email })
-    if(!user) return res.status(404).json({ message: 'Email not found' })
+    if(!user) return res.status(404).json({ message: 'Email not found.' })
 
     const token = jwt.sign({ _id: user._id, accountType: user.accountType, eventId: req.params._id }, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send(token)
@@ -80,6 +79,6 @@ async function registerAdmin(req, res) {
 
 module.exports = {
     adminLogin,
-    defaultLogin,
+    studentLogin,
     registerAdmin
 }

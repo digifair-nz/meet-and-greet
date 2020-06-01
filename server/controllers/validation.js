@@ -39,10 +39,19 @@ const idSchema = Joi.object({
 const stringSchema = Joi.object({
     string: Joi.string()
 })
+const emailSchema = Joi.object({
+    email: Joi.string().required().email(),
+})
+const companySchema = Joi.object({
+    email: Joi.string().required().email(),
+    name: Joi.string()
+})
 
 module.exports = {
     isEvent: isValid(eventSchema),
     isId: isValid(idSchema),
     isString: isValid(stringSchema),
-    isIdArray: isValidArray(idSchema)
+    isIdArray: isValidArray(idSchema),
+    isEmail: isValid(emailSchema),
+    isCompany: isValid(companySchema)
 }
