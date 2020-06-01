@@ -40,7 +40,7 @@ module.exports = function(wsInstance) {
             for(const company of companies) {
                 const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: company._id })
                 const queuePosition = queue.members.indexOf(req.payload._id)
-                company.queuePosition = queuePosition
+                company.queuePosition = queuePosition + 1
                 company.isQueued = queuePosition != -1
             }
             // respond with the companies if failure did not occur
