@@ -143,13 +143,20 @@ MOBILE and TABLET
 }
 
 @media only screen and (orientation: landscape) {
-  /* @media (max-width: 1366px) {
+  @media (min-width: 2560px) {
+    .CompanyCardContainer {
+      grid-template-columns: 15% 15% 15% 15%;
+      grid-auto-rows: 15%;
+    }
+  }
+
+  @media (max-width: 1366px) {
     .CompanyCardContainer {
       grid-template-columns: 30% 30%;
       grid-auto-rows: 20%;
       grid-row-gap: 6%;
     }
-  } */
+  } 
 
   @media (max-width: 1600px) {
     .CompanyCardContainer {
@@ -168,6 +175,14 @@ MOBILE and TABLET
   @media (max-width: 1152px) {
     .CompanyCardContainer {
       grid-auto-rows: 130px;
+      grid-row-gap: 6%;
+    }
+  }
+
+  @media (max-width: 1280px) {
+    .CompanyCardContainer {
+      grid-template-columns: 30% 30%;
+      grid-auto-rows: 23%;
       grid-row-gap: 6%;
     }
   }

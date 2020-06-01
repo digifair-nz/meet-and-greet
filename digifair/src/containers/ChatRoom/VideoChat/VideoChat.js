@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import Spinner from "../../../components/UI/Spinner/Spinner";
 
+import { connect } from "react-redux";
 // VONAGE
 import classNames from "classnames";
 import AccCore from "opentok-accelerator-core";
@@ -9,6 +10,7 @@ import "opentok-solutions-css";
 import * as otCoreOptions from "./otCoreOptions";
 import "./VideoChat.css";
 
+import * as actions from "../../../store/actions/index";
 const OT = require("@opentok/client");
 let otCore;
 
@@ -66,7 +68,7 @@ const connectingMask = () => (
   </div>
 );
 
-const startCallMask = (start) => <div className="App-mask">{start()}</div>;
+// const startCallMask = (start) => <div className="App-mask">{start()}</div>;
 
 class VideoChat extends Component {
   constructor(props) {
@@ -92,7 +94,6 @@ class VideoChat extends Component {
 
     otCore = new AccCore(options);
     otCore.connect().then(() => {
-      console.log("Hellow");
       this.setState({ connected: true });
 
       if (this.state.connected && !this.state.active) {
@@ -101,6 +102,7 @@ class VideoChat extends Component {
     });
     otCore.on("sessionDisconnected", function (event) {
       alert("The session disconnected. " + event.reason);
+      this.props.studentLeaveSession();
     });
     // otCore.disconnect()
     const events = [
@@ -126,9 +128,6 @@ class VideoChat extends Component {
       .startCall()
       .then(({ publishers, subscribers, meta }) => {
         if (!this.state.active) {
-          console.log(subscribers);
-          console.log(otCore.session);
-          console.log("Hello");
           this.setState({ publishers, subscribers, meta, active: true });
         }
       })
@@ -168,7 +167,6 @@ class VideoChat extends Component {
         <div className="App-video-container">
           {!connected && connectingMask()}
 
-          {/* {connected && !active && startCallMask(this.startCall)} */}
           <div id="cameraPublisherContainer" className={cameraPublisherClass} />
           <div id="screenPublisherContainer" className={screenPublisherClass} />
           <div
@@ -182,7 +180,6 @@ class VideoChat extends Component {
           <div id="controls" className={controlClass}>
             <div className={localAudioClass} onClick={this.toggleLocalAudio} />
             <div className={localVideoClass} onClick={this.toggleLocalVideo} />
-            {/* <div className={localCallClass} onClick={this.endCall} /> */}
           </div>
         </div>
       </div>
@@ -190,4 +187,10 @@ class VideoChat extends Component {
   }
 }
 
-export default VideoChat;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(VideoChat);

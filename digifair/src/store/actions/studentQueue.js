@@ -1,13 +1,41 @@
 import * as actionTypes from "./actionTypes";
 
-import axios from "../../axios-orders";
+import instance from "../../axios-instance";
+// import axios from "axios";
+
+// const instance = axios.create({});
+
+// (function () {
+//   const token = localStorage.getItem("token");
+//   if (token) {
+//     instance.defaults.headers.common["auth-token"] = token;
+//   } else {
+//     instance.defaults.headers.common["auth-token"] = null;
+//   }
+// })();
+
+// instance.interceptors.request.use(function (config) {
+//   const token = localStorage.getItem("token");
+//   config.headers.common["auth-token"] = token;
+
+//   return config;
+// });
+// const instance = axios.create({});
+
+// (function () {
+//   const token = localStorage.getItem("token");
+
+//   if (token) {
+//     instance.defaults.headers.common["auth-token"] = token;
+//   }
+// })();
 
 /*
 
 QUEUE STUDENT TO A COMPANY 
 
 */
-
+//axios.defaults.header.common[Auth_Token] = token
 /**
  * initialize queue to a specific comapny
  * @param {string} companyId
@@ -21,11 +49,12 @@ export const queueInit = (companyId, index) => {
   };
 };
 
-export const queueSuccess = (companyId, index) => {
+export const queueSuccess = (companyId, index, queuePosition) => {
   return {
     type: actionTypes.QUEUE_SUCCESS,
     companyId: companyId,
     index: index,
+    queuePosition: queuePosition,
   };
 };
 
@@ -42,25 +71,14 @@ export const queueStudent = (companyId, index) => {
   // Company id will be an alphanumeric string used for making a request to an appropriate endpoint
   // index refers to the position in the state array (companies)
 
-  return (dispatch, getState) => {
-    // We also store the companies' states in local storage
-
+  return (dispatch) => {
     dispatch(queueInit(companyId, index));
 
-    axios
+    instance
       .post("/user/enqueue/" + companyId)
 
       .then((res) => {
-        // console.log(res);
-        let response = res.data; // This is where I get my initial queue position?
-
-        // Consider alternative approach where we only push queued things into the state
-        // We push company ids into the array simply.
-
-        // Get the companies from state
-        const companies = getState().companies.companies;
-
-        dispatch(queueSuccess(companyId, index));
+        dispatch(queueSuccess(companyId, index, res.data.queuePosition));
       })
       .catch((error) => {
         dispatch(queueFail(companyId, index, error));
@@ -101,15 +119,13 @@ export const dequeueFail = (companyId, index, error) => {
 
 export const dequeueStudent = (companyId, index) => {
   return (dispatch) => {
-    // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
-    axios
+    instance
       .post("/user/dequeue/" + companyId)
 
       .then((res) => {
         // console.log(res);
-        let response = res.data;
 
         dispatch(dequeueSuccess(companyId, index));
       })

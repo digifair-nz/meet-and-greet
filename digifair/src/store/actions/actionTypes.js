@@ -1,13 +1,17 @@
 // Authentication for Companies
 
 // Authentication for students
-export const STUDENT_AUTH_START = "STUDENT_AUTH_START";
+export const AUTH_START = "AUTH_START";
 export const STUDENT_AUTH_SUCCESS = "STUDENT_AUTH_SUCCESS";
-export const STUDENT_AUTH_FAIL = "STUDENT_AUTH_FAIL";
-export const STUDENT_AUTH_LOGOUT = "STUDENT_AUTH_LOGOUT";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
+
+// Authentication for recruiters
+
+export const RECRUITER_AUTH_SUCCESS = "RECRUITER_AUTH_SUCCESS";
 
 // Redirected if logged in
-export const SET_STUDENT_AUTH_REDIRECT_PATH = "SET_STUDENT_AUTH_REDIRECT_PATH";
+export const SET_AUTH_REDIRECT_PATH = "SET_AUTH_REDIRECT_PATH";
 
 // Fetch Companies for student dashboard
 export const FETCH_COMPANIES_START = "FETCH_COMPANIES_START";
@@ -34,3 +38,16 @@ export const DEQUEUE_FAIL = "DEQUEUE_FAIL";
 export const STUDENT_JOIN_CHATROOM_START = "STUDENT_JOIN_CHATROOM_START";
 export const STUDENT_JOIN_CHATROOM_SUCCESS = "STUDENT_JOIN_CHATROOM_SUCCESS";
 export const STUDENT_JOIN_CHATROOM_FAIL = "STUDENT_JOIN_CHATROOM_FAIL";
+
+// Company Kick student from the session
+export const COMPANY_KICK_STUDENT_START = "COMPANY_KICK_STUDENT_START";
+export const COMPANY_KICK_STUDENT_SUCCESS = "COMPANY_KICK_STUDENT_SUCCESS";
+export const COMPANY_KICK_STUDENT_FAIL = "COMPANY_KICK_STUDENT_FAIL";
+
+// Student Leave Session
+export const STUDENT_LEAVE_SESSION = "STUDENT_LEAVE_SESSION";
+//export const STUDENT_LEAVE_SESSION_SUCCESS = "STUDENT_LEAVE_SESSION_SUCCESS";
+//export const STUDENT_LEAVE_SESSION_FAIL = "STUDENT_LEAVE_SESSION_FAIL";
+
+// Clear error
+export const CLEAR_ERROR = "CLEAR_ERROR";

@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes";
-import axios from "../../axios-orders";
+import axios from "../../axios-instance";
 
 export const fetchCompaniesStart = () => {
   return {
@@ -23,6 +23,7 @@ export const fetchCompaniesSuccess = (fetchedCompanies) => {
 export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
+
     axios
       .get("/user/")
       .then((response) => {

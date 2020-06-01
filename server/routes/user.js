@@ -5,7 +5,7 @@ module.exports = function(wsInstance) {
     const authCtrl = require('../controllers/security/authorisation')
     
     // login
-    router.post('/login/:_id', loginCtrl.defaultLogin)
+    router.post('/login/:_id', loginCtrl.studentLogin)
     
     // endpoint to get the companies attending the event
     router.get('/', authCtrl.asStudent, userCtrl.getCompaniesForEvent)
@@ -19,6 +19,13 @@ module.exports = function(wsInstance) {
     // endpoints for joining and leaving sessions
     router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
     router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
+
+    const temp = require('../test-setup')
+    router.post('/setup', async (req, res) => {
+        await temp.dropAllCollections()
+        const eventId = await temp.seedDatabase(true)
+        return res.status(200).json({ message: 'Success.', eventId })
+    })
 
     return router
 }

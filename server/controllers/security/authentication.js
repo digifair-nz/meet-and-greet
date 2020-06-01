@@ -2,9 +2,12 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Event = mongoose.model('Event')
 const Club = mongoose.model('Club')
+const Room = mongoose.model('Room')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const validate = require('./validation')
+const validate = require('../validation')
+const OpenTok = require('opentok')
+const opentok = new OpenTok(process.env.VONAGE_API_KEY, process.env.VONAGE_SECRET)
 
 /**
  * Login a user and respond with a jwt if their login details are correct
@@ -26,23 +29,61 @@ async function adminLogin(req, res) {
     res.header('auth-token', token).send(token)
 }
 
-async function defaultLogin(req, res) {
-    const { error } = validate.asUser(req.body)
-    if(error) return res.status(400).json(error.details[0].message)
-
-    {
-        const { error } = validate.asId(req.params)
-        if(error) return res.status(400).json(error.details[0].message)
+async function studentLogin(req, res) {
+    if(!validate.isEmail(req.body)) {
+        return
+    }
+    if(!validate.isId(req.params)) {
+        return
     }
 
     const event = await Event.findById(req.params._id)
     if(!event) return res.status(400).json({ message: 'Bad link.' })
 
     const user = await User.findOne({ email: req.body.email })
-    if(!user) return res.status(404).json({ message: 'Email not found' })
+    if(!user) return res.status(404).json({ message: 'Email not found.' })
 
     const token = jwt.sign({ _id: user._id, accountType: user.accountType, eventId: req.params._id }, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send(token)
+}
+
+async function companyLogin(req, res) {
+    if(!validate.isEmail(req.body)) {
+        return
+    }
+    if(!validate.isId(req.params)) {
+        return
+    }
+
+    const event = await Event.findById(req.params._id)
+    if(!event) return res.status(400).json({ message: 'Bad link.' })
+
+    const room = await Room.findOne({ email: req.body.email })
+    if(!room) return res.status(404).json({ message: 'Email not found.' })
+
+    const token = jwt.sign({
+        _id: room._id,
+        accountType: 'company',
+        eventId: req.params._id,
+        name: room.name,
+        companyId: room.companyId
+    }, process.env.TOKEN_SECRET)
+
+    // generate a new sessionId for the company
+    const sessionId = await room.newSessionId()
+    // get the new token for the company
+    const vonageToken = opentok.generateToken(room.sessionId, {
+        expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+        role: 'moderator'
+    })
+
+    return res.header('auth-token', token).send({
+        credentials: {
+            apiKey: process.env.VONAGE_API_KEY,
+            sessionId,
+            token: vonageToken
+        }
+    })
 }
 
 /**
@@ -80,6 +121,7 @@ async function registerAdmin(req, res) {
 
 module.exports = {
     adminLogin,
-    defaultLogin,
+    studentLogin,
+    companyLogin,
     registerAdmin
 }

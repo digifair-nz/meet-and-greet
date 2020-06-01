@@ -190,8 +190,8 @@ module.exports = function(wsInstance) {
             // if the user has already been notified previously then skip over them
             // this might happen if two rooms are looking for new students at the same time
             let client
-            for(const c in wsInstance.getWss().clients) {
-                if(client.payload._id == user._id) {
+            for(const c of wsInstance.getWss().clients) {
+                if(c.jwt._id == user._id) {
                     client = c
                     break
                 }
@@ -224,7 +224,11 @@ module.exports = function(wsInstance) {
                 // remove from queue and add to blacklist
                 queue.blacklist.push(...queue.members.splice(i, 1))          
                 await queue.save()
-                user.previousSessions[client.payload.eventID][queue.companyId] = true
+                
+                if(!user.previousSessions[client.jwt.eventId]) {
+                    user.previousSessions[client.jwt.eventId] = {}
+                }
+                user.previousSessions[client.jwt.eventId][queue.companyId] = true
                 await user.save()
             }
             catch (error) {

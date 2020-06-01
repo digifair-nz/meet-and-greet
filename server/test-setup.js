@@ -68,17 +68,20 @@ async function seedDatabase(opentok = false) {
     const room1 = new Room({
         eventId: event._id,
         companyId: company1._id,
-        name: 'Room 1' 
+        name: 'Room 1',
+        email: '1@gmail.com'
     })
     const room2 = new Room({
         eventId: event._id,
         companyId: company1._id,
-        name: 'Room 2' 
+        name: 'Room 2',
+        email: '2@gmail.com'
     })
     const room3 = new Room({
         eventId: event._id,
         companyId: company1._id,
-        name: 'Room 3' 
+        name: 'Room 3',
+        email: '3@gmail.com'
     })
     const queue1 = new Queue({
         eventId: event._id,
@@ -152,5 +155,6 @@ module.exports = {
             await mongoose.connection.close()
         })
     },
-    seedDatabase
+    seedDatabase,
+    dropAllCollections
 }
