@@ -47,7 +47,6 @@ module.exports = function(wsInstance) {
             return res.status(200).json(companies)
         }
         catch (error) {
-            console.log('SREEEE', error)
             res.status(500).json({ message: error })
         }
     }
@@ -86,7 +85,7 @@ module.exports = function(wsInstance) {
             // if they are eligible, send a notification that the user may join the session
             if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
                 const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
-                const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || value.inSession, false)
+                const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || !value.inSession, false)
                 if(atLeastOneRoomIsFree) {
                     company.findAndNotifyEligibleUser(queue)
                 }
