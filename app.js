@@ -51,6 +51,7 @@ app.use('/company', companyRouter)
 app.use('/club', clubRouter)
 
 app.get('/*', (req, res) => {
+    console.log('test')
     return res.sendFile(path.join(__dirname + '/digifair/build/index.html'))
 })
 
