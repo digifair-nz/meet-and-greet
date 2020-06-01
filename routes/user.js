@@ -22,7 +22,7 @@ module.exports = function(wsInstance) {
 
     const temp = require('../test-setup')
     router.post('/setup', async (req, res) => {
-        await temp.dropAllCollections()
+        await temp.removeAllCollections()
         const eventId = await temp.seedDatabase(true)
         return res.status(200).json({ message: 'Success.', eventId })
     })

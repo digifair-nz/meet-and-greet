@@ -156,5 +156,6 @@ module.exports = {
         })
     },
     seedDatabase,
-    dropAllCollections
+    dropAllCollections,
+    removeAllCollections
 }
