@@ -44,6 +44,7 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'digifair/build')))
 
 app.use('/user', userRouter)
 app.use('/company', companyRouter)
@@ -52,6 +53,10 @@ app.use('/club', clubRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404))
+})
+
+app.get('/', (req, res) => {
+    return res.sendFile(path.join(__dirname + '/digifair/build/index.html'))
 })
 
 // error handler
