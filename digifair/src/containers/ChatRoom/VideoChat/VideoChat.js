@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import Spinner from "../../../components/UI/Spinner/Spinner";
 
+import { connect } from "react-redux";
 // VONAGE
 import classNames from "classnames";
 import AccCore from "opentok-accelerator-core";
@@ -9,6 +10,7 @@ import "opentok-solutions-css";
 import * as otCoreOptions from "./otCoreOptions";
 import "./VideoChat.css";
 
+import * as actions from "../../../store/actions/index";
 const OT = require("@opentok/client");
 let otCore;
 
@@ -100,6 +102,7 @@ class VideoChat extends Component {
     });
     otCore.on("sessionDisconnected", function (event) {
       alert("The session disconnected. " + event.reason);
+      this.props.studentLeaveSession();
     });
     // otCore.disconnect()
     const events = [
@@ -164,7 +167,6 @@ class VideoChat extends Component {
         <div className="App-video-container">
           {!connected && connectingMask()}
 
-          {/* {connected && !active && startCallMask(this.startCall)} */}
           <div id="cameraPublisherContainer" className={cameraPublisherClass} />
           <div id="screenPublisherContainer" className={screenPublisherClass} />
           <div
@@ -178,7 +180,6 @@ class VideoChat extends Component {
           <div id="controls" className={controlClass}>
             <div className={localAudioClass} onClick={this.toggleLocalAudio} />
             <div className={localVideoClass} onClick={this.toggleLocalVideo} />
-            {/* <div className={localCallClass} onClick={this.endCall} /> */}
           </div>
         </div>
       </div>
@@ -186,4 +187,10 @@ class VideoChat extends Component {
   }
 }
 
-export default VideoChat;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(VideoChat);
