@@ -7,6 +7,7 @@ import classes from "./StudentAuth.module.css";
 import digifairLogo from "../../../assets/company_logos/digifair-logo-inverse.png";
 import Button from "../../../components/UI/Button/Button";
 import Input from "../../../components/UI/Input/Input";
+import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
 
@@ -44,17 +45,20 @@ class StudentAuth extends Component {
       },
     },
     invalidForm: false,
+    isStudent: true,
   };
 
   componentDidMount() {
     // Redirect the user to the root if he has authenticated
     if (this.props.authRedirectPath !== "/") {
-      this.props.onSetAuthRedirectPath();
+      let path = this.props.isStudent ? "/" : "/chat-room";
+      this.props.onSetAuthRedirectPath(path);
     }
 
     window.addEventListener("keydown", (e) => {
       if (e.keyCode === 13) {
-        this.submitHandler(e);
+        e.preventDefault();
+        this.submitHandler(e); // Submit on pressing enter
       }
     });
   }
@@ -107,11 +111,16 @@ class StudentAuth extends Component {
       // Dispatch auth action
       this.props.onAuth(
         this.state.controls.email.value,
-        this.state.controls.password.value
+        this.state.controls.password.value,
+        this.state.isStudent
       );
     }
   };
-
+  userTypeSwitch = () => {
+    this.setState((prevState) => ({
+      isStudent: !prevState.isStudent,
+    }));
+  };
   render() {
     const formElementsArray = [];
     for (let key in this.state.controls) {
@@ -149,6 +158,10 @@ class StudentAuth extends Component {
       errorMessage = "Please enter your email and password";
     }
 
+    if (this.props.error) {
+      errorMessage = this.props.error.message;
+    }
+
     return (
       <div className={classes.AuthContainer}>
         {
@@ -166,6 +179,12 @@ class StudentAuth extends Component {
             onSubmit={(event) => this.submitHandler(event)}
           >
             <h2 className={classes.FormTitle}>Sign in</h2>
+
+            {/* Toggle company and studet */}
+            <SwitchButton
+              switchUser={this.userTypeSwitch}
+              isStudent={this.state.isStudent}
+            />
             <span className={classes.ErrorMessage}>{errorMessage}</span>
 
             {form}
@@ -184,19 +203,22 @@ class StudentAuth extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    loading: state.student.loading,
-    error: state.student.error,
-    authenticated: state.student.token != null,
-    authRedirectPath: state.student.authRedirectPath,
-    token: state.student.token,
+    loading: state.user.loading,
+    error: state.user.error,
+    authenticated: state.user.token != null,
+    authRedirectPath: state.user.authRedirectPath,
+    isStudent: state.user.isStudent,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (email, password) => dispatch(actions.studentAuth(email, password)),
-    onSetAuthRedirectPath: () =>
-      dispatch(actions.setStudentAuthRedirectPath("/")),
+    onAuth: (email, password, isStudent) =>
+      dispatch(actions.auth(email, password, isStudent)),
+    // onRecruiterAuth: (email, password) =>
+    //   dispatch(actions.recruiterAuth(email, password)),
+    onSetAuthRedirectPath: (path) =>
+      dispatch(actions.setAuthRedirectPath(path)),
   };
 };
 

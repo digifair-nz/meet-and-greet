@@ -38,10 +38,12 @@ export const studentJoinChatroom = (companyId) => {
     axios
       .post("/user/accept/" + companyId)
       .then((response) => {
-        console.log(response);
-        // localStorage.setItem("token", token);
-        // console.log(response.data);
-        dispatch(studentJoinChatroomSuccess(response.data.credentials));
+        //console.log(response);
+        const credentials = response.data.credentials;
+        console.log(credentials);
+        // Save credentials to local storage
+        localStorage.setItem("credentials", credentials);
+        dispatch(studentJoinChatroomSuccess(credentials));
       })
       .catch((err) => {
         console.log(err);
@@ -50,5 +52,25 @@ export const studentJoinChatroom = (companyId) => {
           studentJoinChatroomFail("Could not connect to the company room")
         );
       });
+  };
+};
+
+export const studentLeaveSession = () => {
+  // Clear credentials
+  localStorage.removeItem("credentials");
+
+  return {
+    type: actionTypes.STUDENT_LEAVE_SESSION,
+  };
+};
+
+// export const studentChatRoomRedirect
+// Check if student users have chat room credentials in case they refrehsed the page or closed the tab
+export const studentCheckCredentials = () => {
+  return (dispatch) => {
+    const credentials = localStorage.getItem("credentials");
+    if (credentials) {
+      dispatch(studentJoinChatroomSuccess(credentials));
+    }
   };
 };

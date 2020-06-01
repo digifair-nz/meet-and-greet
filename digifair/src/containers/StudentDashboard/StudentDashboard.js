@@ -47,6 +47,7 @@ class StudentDashboard extends Component {
   // Change back to default
 
   componentDidMount() {
+    console.log("What the hell!");
     // Notification for ready check
     let notificationGranted;
     Notification.requestPermission().then(function (result) {
@@ -65,18 +66,18 @@ class StudentDashboard extends Component {
       const ws = new WebSocket(
         "ws://localhost:3000/?token=" + this.props.token
       );
-      // console.log(ws);
 
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
         // dispatch update queue position
+        console.log(message);
         const packet = JSON.parse(message.data);
         //console.log(packet.messageType);
         if (this.props.companies !== null && packet.companyId !== null) {
           // console.log(packet.companyId);
 
           // Once the student reaches his turn
-          if (packet.queuePosition === 1) {
+          if (packet.messageType === "ready") {
             // Find the company that is ready to chat and set the pop up
             for (let i = 0; i < this.props.companies.length; i++) {
               if (this.props.companies[i]._id === packet.companyId) {
@@ -118,6 +119,9 @@ class StudentDashboard extends Component {
     });
   };
 
+  errorConfirmedHandler = () => {
+    this.props.clearError();
+  };
   // Fetch companies logic and spinner
   render() {
     let companyCards;
@@ -164,13 +168,19 @@ class StudentDashboard extends Component {
       }
     }
 
-    if (this.props.error) {
-      companyCards = (
-        <h1 className={classes.ErrorMessage}>{this.props.error}</h1>
-      );
-    }
+    // if (this.props.error) {
+    //   companyCards = (
+    //     <h1 className={classes.ErrorMessage}>{this.props.error.message}</h1>
+    //   );
+    // }
+
     return (
       <Aux>
+        <Modal show={this.props.error} modalClosed={this.errorConfirmedHandler}>
+          <h1 style={{ textAlign: "center" }}>
+            {this.props.error ? this.props.error.message : null}
+          </h1>
+        </Modal>
         <Toolbar
           isAuth={true}
           drawerToggleClicked={false}
@@ -178,7 +188,11 @@ class StudentDashboard extends Component {
         >
           <Button btnType="Control">Queue All</Button>
           <Button btnType="Control">Dequeue All</Button>
-          <Button iconType="Logout" btnType="Logout">
+          <Button
+            clicked={this.props.logout}
+            iconType="Logout"
+            btnType="Logout"
+          >
             Logout
           </Button>
         </Toolbar>
@@ -199,7 +213,7 @@ const mapStateToProps = (state) => {
   return {
     companies: state.companies.companies,
     error: state.companies.error,
-    token: state.student.token,
+    token: state.user.token,
   };
 };
 
@@ -208,10 +222,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
     updateQueuePosition: (companyId, queuePosition) =>
       dispatch(actions.updateQueuePosition(companyId, queuePosition)),
+    logout: () => dispatch(actions.logout()),
+    clearError: () => dispatch(actions.clearError()),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withErrorHandler(StudentDashboard, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(StudentDashboard);

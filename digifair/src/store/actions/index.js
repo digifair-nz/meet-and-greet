@@ -1,11 +1,26 @@
-export { queueStudent, dequeueStudent } from "./studentQueue";
-export { fetchCompanies } from "./fetchCompanies";
+// Log in students
 export {
-  studentAuth,
-  studentLogout,
-  setStudentAuthRedirectPath,
-  studentAuthCheckState,
-} from "./studentAuth";
+  auth,
+  logout,
+  setAuthRedirectPath,
+  authCheckState,
+  checkCredentials,
+} from "./auth";
+
+// Log in recruiters
+
+// Fetch recruiter companies for student dashboard
+
+export { fetchCompanies } from "./fetchCompanies";
+
+// Queue or dequeue student
+export { queueStudent, dequeueStudent } from "./studentQueue";
+
+// Update student's position in queue for a specific company
 export { updateQueuePosition } from "./queuePosition";
 
-export { studentJoinChatroom } from "./studentJoinChatroom";
+// Join student to chatroom
+export { studentJoinChatroom, studentLeaveSession } from "./studentChatroom";
+
+// Clear any errors in the state
+export { clearError } from "./clearError";

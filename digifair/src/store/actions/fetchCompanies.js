@@ -23,10 +23,9 @@ export const fetchCompaniesSuccess = (fetchedCompanies) => {
 export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
-    const token = localStorage.getItem("token");
 
     axios
-      .get("/user/", { headers: { "auth-token": token } })
+      .get("/user/")
       .then((response) => {
         dispatch(fetchCompaniesSuccess(response.data));
       })

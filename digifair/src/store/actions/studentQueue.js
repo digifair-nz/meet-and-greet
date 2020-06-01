@@ -1,18 +1,35 @@
 import * as actionTypes from "./actionTypes";
 
-// import axios from "../../axios-instance";
-import axios from "axios";
-const instance = axios.create({});
-
-(function () {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    instance.defaults.headers.common["auth-token"] = token;
-  }
-})();
-
+import instance from "../../axios-instance";
 // import axios from "axios";
+
+// const instance = axios.create({});
+
+// (function () {
+//   const token = localStorage.getItem("token");
+//   if (token) {
+//     instance.defaults.headers.common["auth-token"] = token;
+//   } else {
+//     instance.defaults.headers.common["auth-token"] = null;
+//   }
+// })();
+
+// instance.interceptors.request.use(function (config) {
+//   const token = localStorage.getItem("token");
+//   config.headers.common["auth-token"] = token;
+
+//   return config;
+// });
+// const instance = axios.create({});
+
+// (function () {
+//   const token = localStorage.getItem("token");
+
+//   if (token) {
+//     instance.defaults.headers.common["auth-token"] = token;
+//   }
+// })();
+
 /*
 
 QUEUE STUDENT TO A COMPANY 
@@ -61,10 +78,6 @@ export const queueStudent = (companyId, index) => {
       .post("/user/enqueue/" + companyId)
 
       .then((res) => {
-        console.log(res);
-        //
-        console.timeEnd();
-
         dispatch(queueSuccess(companyId, index, res.data.queuePosition));
       })
       .catch((error) => {
@@ -106,7 +119,6 @@ export const dequeueFail = (companyId, index, error) => {
 
 export const dequeueStudent = (companyId, index) => {
   return (dispatch) => {
-    // console.log(companyId);
     dispatch(dequeueInit(companyId, index));
 
     instance
@@ -114,7 +126,6 @@ export const dequeueStudent = (companyId, index) => {
 
       .then((res) => {
         // console.log(res);
-        //let response = res.data;
 
         dispatch(dequeueSuccess(companyId, index));
       })
