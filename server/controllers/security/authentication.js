@@ -44,6 +44,31 @@ async function studentLogin(req, res) {
     res.header('auth-token', token).send(token)
 }
 
+async function companyLogin(req, res) {
+    if(!validate.isEmail(req.body)) {
+        return
+    }
+    if(!validate.isId(req.params)) {
+        return
+    }
+
+    const event = await Event.findById(req.params._id)
+    if(!event) return res.status(400).json({ message: 'Bad link.' })
+
+    const room = await Room.findOne({ email: req.body.email })
+    if(!room) return res.status(404).json({ message: 'Email not found.' })
+
+    const token = jwt.sign({
+        _id: room._id,
+        accountType: 'company',
+        eventId: req.params._id,
+        name: room.name,
+        companyId: room.companyId
+    }, process.env.TOKEN_SECRET)
+
+    return res.header('auth-token', token).send(token)
+}
+
 /**
  * Register a user with the details provided and respond with a jwt if the registration succeeds
  * @param {Object} req The request object
