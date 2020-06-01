@@ -18,7 +18,7 @@ export const studentAuthSuccess = (token, credentials) => {
     credentials: credentials,
   };
 };
-
+//
 export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,

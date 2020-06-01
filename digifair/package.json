@@ -1,6 +1,7 @@
 {
   "name": "digifair",
-  "proxy": "http://localhost:3000",
+  "proxy": "https://localhost:3000",
+  "homepage": "https://digifair-test.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,9 +14,11 @@
     "jwt-decode": "^2.2.0",
     "opentok-accelerator-core": "^2.0.15",
     "opentok-annotation": "^2.0.59",
+    "opentok-archiving": "^1.0.19",
     "opentok-react": "^0.10.0",
     "opentok-screen-sharing": "^1.0.33",
     "opentok-solutions-css": "0.0.43",
+    "opentok-text-chat": "^1.0.30",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
