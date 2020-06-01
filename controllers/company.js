@@ -180,11 +180,13 @@ module.exports = function(wsInstance) {
      * @param {Document} queue The mongoose queue document to use
      */
     async function findAndNotifyEligibleUser(queue) {
+        console.log('3')
         // loop through all of the members of the queue to find someone to join the session
         for(let i = 0; i < queue.members.length; i++) {
             const user = await User.findById(queue.members[i])
             // if the user is busy then skip over them
             if(user.inSession) {
+                console.log('4')
                 continue
             }
             // if the user has already been notified previously then skip over them
@@ -192,14 +194,18 @@ module.exports = function(wsInstance) {
             let client
             for(const c of wsInstance.getWss().clients) {
                 if(c.jwt._id == user._id) {
+                    console.log('5', c)
                     client = c
                     break
                 }
             }
             if(!client) {
+                console.log('6', client)
                 continue
             }
+            console.log(queue.companyId, client.hasBeenNotified)
             if(client.hasBeenNotified && client.hasBeenNotified[queue.companyId]) {
+                
                 continue
             }
             // make sure the client is marked as having been notified
@@ -222,12 +228,13 @@ module.exports = function(wsInstance) {
                     return true
                 }
                 // remove from queue and add to blacklist
-                queue.blacklist.push(...queue.members.splice(i, 1))          
+                console.log('blacklisting')
                 const updatedIndex = queue.members.indexOf(updatedUser._id)
                 if(updatedIndex != -1) {
                     queue.members.splice(updatedIndex, 1)
                 }
                 queue.blacklist.push(updatedUser._id)  
+                console.log('eee ', queue.id)   
                 await queue.save()
                 
                 if(!user.previousSessions[client.jwt.eventId]) {
