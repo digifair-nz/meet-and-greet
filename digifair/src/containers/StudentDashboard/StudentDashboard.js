@@ -13,7 +13,6 @@ import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt
 import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
-import jwt from "jwt-decode"; // import dependency
 
 // import logoutIcon from "../../assets/icons/logout.png";
 // CSS
@@ -66,10 +65,28 @@ class StudentDashboard extends Component {
     // Open a socket connection
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
-      // const port = jwt(this.props.token).port
       const ws = new WebSocket(
-        `ws://localhost:3000/?token=${this.props.token}`
+        "ws://localhost:3000/?token=" + this.props.token
       );
+
+      if (this.props.companies != null) {
+        for (let i = 0; i < this.props.companies.length; i++) {
+          if (this.props.companies[i].isQueued) {
+            this.setState({
+              readyCompanyIndex: i,
+              showReadyPromptPopUp: true,
+            });
+            // ****READY POP UP*****
+            if (notificationGranted) {
+              // Notification
+              const title = "Your Queue is Ready!";
+              const body =
+                "Google is ready for you. Accept or decline your queue";
+              sendNotification(title, body);
+            }
+          }
+        }
+      }
 
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
@@ -162,7 +179,7 @@ class StudentDashboard extends Component {
                 companyId={
                   this.props.companies[this.state.readyCompanyIndex]._id
                 }
-                onClick={this.onClickModal}
+                //onClick={this.onClickModal}
                 onDeclineHandler={this.onDeclineHandler}
                 index={this.state.readyCompanyIndex}
               />
