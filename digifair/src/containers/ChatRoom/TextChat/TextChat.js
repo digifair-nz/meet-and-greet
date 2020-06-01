@@ -17,7 +17,7 @@ class TextChat extends Component {
     Talk.ready
       .then(() => {
         const me = new Talk.User({
-          id: "123415231",
+          id: "123",
           name: "George Looney",
           role: "Student",
           email: "george@looney.net",
