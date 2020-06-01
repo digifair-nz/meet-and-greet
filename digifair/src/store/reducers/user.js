@@ -8,14 +8,7 @@ const initialState = {
   error: null,
   loading: false,
   authRedirectPath: "/",
-  // companiesQueue: [
-  //   {
-  //     _id: "Company Id",
-  //     hadSession: false,
-  //     isQueued: false,
-  //     queuePos: null,
-  //   },
-  // ],
+
   // credentials: {
   //   apiKey: "46721402",
   //   sessionId:
@@ -24,33 +17,45 @@ const initialState = {
   //     "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9ZWJkZWM4ZTc2NTI3YjY0YTQ5OWJlZjFjZmZkMDgxZDk2Zjc5YzFkYzpzZXNzaW9uX2lkPTFfTVg0ME5qY3lNVFF3TW41LU1UVTVNRFl5TnpjMU16RTVOSDVYTDBsemFYRXhORFpKWVV0alVWTmlPV1pTZDNsQ1VXdC1mZyZjcmVhdGVfdGltZT0xNTkwNjI3NzUzJnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTA2Mjc3NTMuMjE2NTE3NTcxNTQ3NTQ=",
   // },
   credentials: null, // this is for vonage API
+  isStudent: true,
 };
 
-const studentAuthStart = (state, action) => {
+const authStart = (state, action) => {
   return updateObject(state, { error: null, loading: true });
 };
 
 const studentAuthSuccess = (state, action) => {
   return updateObject(state, {
     token: action.idToken,
-
+    isStudent: false,
     error: null,
     loading: false,
   });
 };
 
-const studentAuthFail = (state, action) => {
+const authFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false,
+    isStudent: false,
   });
 };
-
-const studentAuthLogout = (state, action) => {
-  return updateObject(state, { token: null, userId: null });
+const recruiterAuthSuccess = (state, action) => {
+  //console.log(credentials);
+  return updateObject(state, {
+    token: action.token,
+    credentials: action.credentials,
+    loading: false,
+    error: null,
+    isStudent: false,
+    authRedirectPath: "/chat-room",
+  });
+};
+const authLogout = (state, action) => {
+  return updateObject(state, { token: null });
 };
 
-const setStudentAuthRedirectPath = (state, action) => {
+const setAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });
 };
 
@@ -69,22 +74,25 @@ const studentJoinChatroomFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.STUDENT_AUTH_START:
-      return studentAuthStart(state, action);
+    case actionTypes.AUTH_START:
+      return authStart(state, action);
     case actionTypes.STUDENT_AUTH_SUCCESS:
       return studentAuthSuccess(state, action);
-    case actionTypes.STUDENT_AUTH_FAIL:
-      return studentAuthFail(state, action);
-    case actionTypes.STUDENT_AUTH_LOGOUT:
-      return studentAuthLogout(state, action);
-    case actionTypes.SET_STUDENT_AUTH_REDIRECT_PATH:
-      return setStudentAuthRedirectPath(state, action);
-    case actionTypes.STUDENT_AUTH_START:
+    case actionTypes.RECRUITER_AUTH_SUCCESS:
+      return recruiterAuthSuccess(state, action);
+    case actionTypes.AUTH_FAIL:
+      return authFail(state, action);
+    case actionTypes.AUTH_LOGOUT:
+      return authLogout(state, action);
+    case actionTypes.SET_AUTH_REDIRECT_PATH:
+      return setAuthRedirectPath(state, action);
+    case actionTypes.STUDENT_JOIN_CHATROOM_START:
       return studentJoinChatroomStart(state, action);
     case actionTypes.STUDENT_JOIN_CHATROOM_SUCCESS:
       return studentJoinChatroomSuccess(state, action);
     case actionTypes.STUDENT_JOIN_CHATROOM_FAIL:
       return studentJoinChatroomFail(state, action);
+
     default:
       return state;
   }

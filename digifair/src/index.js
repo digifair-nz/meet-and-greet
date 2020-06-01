@@ -11,13 +11,13 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 
 import companiesReducer from "./store/reducers/companies";
-import studentReducer from "./store/reducers/student";
+import userReducer from "./store/reducers/user";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   companies: companiesReducer,
-  student: studentReducer,
+  user: userReducer,
 });
 
 const store = createStore(

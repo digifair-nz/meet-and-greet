@@ -28,7 +28,7 @@ const fetchCompaniesSuccess = (state, action) => {
   // later this will not be needed as I am getting isQueued and hadSession from fetching companies
   action.companies.map((company) => {
     company.hadSession = false;
-    // company.isQueued = false;
+    // company.isQueued = true;
     company.queuing = false;
     // company.queuePosition = null;
   });
@@ -96,7 +96,10 @@ const queueSuccess = (state, action) => {
 const queueFail = (state, action) => {
   let updatedCompanies = updateCompanyQueuing(state, action.index, false);
 
-  return updateObject(state, { companies: updatedCompanies });
+  return updateObject(state, {
+    companies: updatedCompanies,
+    error: action.error,
+  });
 };
 
 const dequeueInit = (state, action) => {
@@ -121,7 +124,10 @@ const dequeueSuccess = (state, action) => {
 
 const dequeueFail = (state, action) => {
   let updatedCompanies = updateCompanyQueuing(state, action.index, false);
-  return updateObject(state, { companies: updatedCompanies });
+  return updateObject(state, {
+    companies: updatedCompanies,
+    error: action.error,
+  });
 };
 
 /********************
@@ -133,7 +139,7 @@ const updateQueuePosition = (state, action) => {
   let updatedCompanies = [...state.companies];
 
   let updatedCompany;
-  console.log(action);
+  // console.log(action);
   // Find a specific company
   for (let i = 0; i < updatedCompanies.length; i++) {
     if (updatedCompanies[i]._id === action.companyId) {
@@ -174,6 +180,8 @@ const reducer = (state = initialState, action) => {
       return dequeueFail(state, action);
     case actionTypes.UPDATE_QUEUE_POSITION:
       return updateQueuePosition(state, action);
+    case actionTypes.CLEAR_ERROR:
+      return updateObject(state, { error: null });
     default:
       return state;
   }
