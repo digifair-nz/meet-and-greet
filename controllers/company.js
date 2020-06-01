@@ -223,6 +223,11 @@ module.exports = function(wsInstance) {
                 }
                 // remove from queue and add to blacklist
                 queue.blacklist.push(...queue.members.splice(i, 1))          
+                const updatedIndex = queue.members.indexOf(updatedUser._id)
+                if(updatedIndex != -1) {
+                    queue.members.splice(updatedIndex, 1)
+                }
+                queue.blacklist.push(updatedUser._id)  
                 await queue.save()
                 
                 if(!user.previousSessions[client.jwt.eventId]) {
