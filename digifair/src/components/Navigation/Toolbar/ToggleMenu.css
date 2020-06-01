@@ -2,8 +2,8 @@
 .ToggleMenu {
   font-size: 15px;
   position: absolute;
-  right: 14px;
-  top: 50px;
+  right: 23px;
+  top: 60px;
   display: inline-block;
   width: 2em;
   height: 4em;
@@ -78,31 +78,56 @@
 
 @media (min-width: 2049px) {
   .ToggleMenu {
-    /* margin-left: 315px; */
+    right: 25px;
+    top: 85px;
+    transform: scale(1.5);
+  }
+  .ToggleMenu.ActiveMenu{
+    transform: rotate(180deg) scale(1.5);
   }
 }
 
 @media (min-width: 3839px) {
   .ToggleMenu {
-    /* margin-left: 465px; */
+    right: 48px;
+    top: 145px;
+    transform: scale(2);
+  }
+  .ToggleMenu.ActiveMenu{
+    transform: rotate(180deg) scale(2);
   }
 }
 
 @media (max-width: 1600px){
-  .ToggleMenu{
-    /* margin-left: 195px; */
+  .ToggleMenu {
+    right: 13px;
+    top: 45px;
+    /* transform: scale(1.5); */
+  }
+  .ToggleMenu.ActiveMenu{
+    /* transform: rotate(180deg) scale(1.5); */
   }
 }
 
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
     .ToggleMenu {
-      /* margin-left: 255px; */
+      right: 21px;
+      top: 70px;
+      transform: scale(1.2);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(180deg) scale(1.2);
     }
   }
   @media (max-width: 768px) {
     .ToggleMenu {
-      /* margin-left: 200px; */
+      right: 9px;
+      top: 50px;
+      transform: scale(1);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(180deg) scale(1);
     }
   }
 
@@ -117,18 +142,33 @@
 @media only screen and (orientation: landscape) {
   @media (max-width: 1366px) {
     .ToggleMenu {
-      /* margin-left: 195px; */
+      right: 14px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
     }
   }
   @media (max-width: 1152px) {
-    .ToggleMenu{
-      /* margin-left: 175px; */
+    .ToggleMenu {
+      right: 24px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
     }
   }
 
   @media (max-width: 1024px) {
-    .ToggleMenu{
-      /* margin-left: 195px; */
+    .ToggleMenu {
+      right: 13px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
     }
   }
   @media (max-width: 896px) {

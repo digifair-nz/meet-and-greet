@@ -1,6 +1,6 @@
 {
   "name": "digifair",
-  "proxy": "https://localhost:3000",
+  "proxy": "http://localhost:3000",
   "homepage": "https://digifair-test.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
@@ -12,6 +12,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
+    "opentok": "^2.10.0",
     "opentok-accelerator-core": "^2.0.15",
     "opentok-annotation": "^2.0.59",
     "opentok-archiving": "^1.0.19",
