@@ -2,12 +2,15 @@ import React, { Component } from "react";
 
 import Button from "../UI/Button/Button";
 import classes from "./ReadyCheckPrompt.module.css";
+import CountdownTimer from './CountdownTimer/CountdownTimer';
 
 import { Redirect } from "react-router-dom";
 
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 class ReadyCheckPrompt extends Component {
+
+
   // If the student accepts the queue, he will be redirected to the video chat room with the recruiter
   onAcceptHandler = () => {
     document.title = "Dashboard";
@@ -22,6 +25,11 @@ class ReadyCheckPrompt extends Component {
     this.props.onDeclineHandler();
     this.props.dequeueFromComapany(this.props.companyId, this.props.index);
   };
+
+  timerExpireHandler = () => {
+    //do something
+    alert('Timer expired~')
+  }
 
   render() {
     let redirect = null;
@@ -38,7 +46,7 @@ class ReadyCheckPrompt extends Component {
         />
         <div className={classes.ContentContainer}>
           <span>The company is ready for you!</span>
-          <span>Timer</span>
+          <CountdownTimer onTimerEnd={this.timerExpireHandler}/>
           <span>Ready?</span>
         </div>
         <div className={classes.ButtonContainer}>
