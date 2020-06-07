@@ -15,6 +15,12 @@ app.server = require('http').createServer(app)
 
 const url = require('url')
 const jwt = require('jsonwebtoken')
+
+app.use(function(req, res, next) {
+    console.log('test')
+    next()
+})
+
 const wsInstance = expressWs(app, app.server, {
     wsOptions: {
         verifyClient: function({ req }, done) {
