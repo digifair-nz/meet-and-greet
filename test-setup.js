@@ -34,13 +34,16 @@ async function dropAllCollections () {
 
 async function seedDatabase(opentok = false) {
     const user1 = new User({
-        email: 'Peter@gmail.com'
+        email: 'Peter@gmail.com',
+        name: 'Peter'
     })
     const user2 = new User({
-        email: 'Michael@gmail.com'
+        email: 'Michael@gmail.com',
+        name: 'Michael'
     })
     const user3 = new User({
-        email: 'Jiaru@gmail.com'
+        email: 'Jiaru@gmail.com',
+        name: 'Jiaru'
     })
     const event = new Event({
         name: "Test event",
