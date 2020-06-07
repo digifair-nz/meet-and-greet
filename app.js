@@ -28,6 +28,7 @@ const wsInstance = expressWs(app, app.server, {
     
             try {
                 req.jwt = jwt.verify(token, process.env.TOKEN_SECRET)
+                console.log('verified')
                 done(true)
             }
             catch (err) {
@@ -40,6 +41,7 @@ app.ws('/', function(ws, req) {
     ws.jwt = req.jwt
     const user = User.findById(req.jwt._id)
     ws.hasBeenNotified = user.previousSessions || {}
+    console.log('sending connected')
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
