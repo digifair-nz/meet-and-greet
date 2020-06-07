@@ -23,7 +23,7 @@ class ReadyCheckPrompt extends Component {
   onDeclineHandler = () => {
     document.title = "Dashboard";
     this.props.onDeclineHandler();
-    this.props.dequeueFromComapany(this.props.companyId, this.props.index);
+    this.props.declineJoinChatroom(this.props.companyId, this.props.index);
   };
 
   timerExpireHandler = () => {
@@ -75,8 +75,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dequeueFromComapany: (companyId, index) =>
-      dispatch(actions.dequeueStudent(companyId, index)),
+    declineJoinChatroom: (companyId, index) =>
+      dispatch(actions.declineJoinChatroom(companyId, index)),
     studentJoinChatroom: (companyId) => {
       dispatch(actions.studentJoinChatroom(companyId));
     },
