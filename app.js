@@ -24,6 +24,7 @@ app.use(function(req, res, next) {
 const wsInstance = expressWs(app, app.server, {
     wsOptions: {
         verifyClient: function({ req }, done) {
+            console.log('attempt1')
             const { query: { token } } = url.parse(req.url, true)
     
             try {
@@ -38,6 +39,7 @@ const wsInstance = expressWs(app, app.server, {
     }
 })
 app.ws('/', function(ws, req) {
+    console.log('attempt2')
     ws.jwt = req.jwt
     const user = User.findById(req.jwt._id)
     ws.hasBeenNotified = user.previousSessions || {}
