@@ -51,6 +51,7 @@ module.exports = function(wsInstance) {
     async function getNextStudent(req, res) {
         try {
             // retrieve the required objects from the database and error if they can't be found
+            console.log(req.payload._id)
             const room = await Room.findById(req.payload._id)
             if(!room) {
                 return res.status(404).json({ message: 'Could not request next student as room could not be found.' })
@@ -174,13 +175,11 @@ module.exports = function(wsInstance) {
      * @param {Document} queue The mongoose queue document to use
      */
     async function findAndNotifyEligibleUser(queue) {
-        console.log('3')
         // loop through all of the members of the queue to find someone to join the session
         for(let i = 0; i < queue.members.length; i++) {
             const user = await User.findById(queue.members[i])
             // if the user is busy then skip over them
             if(user.inSession) {
-                console.log('4')
                 continue
             }
             // if the user has already been notified previously then skip over them
@@ -190,13 +189,11 @@ module.exports = function(wsInstance) {
             for(const c of wsInstance.getWss().clients) {
                 console.log('is a client')
                 if(c.jwt._id == user._id) {
-                    console.log('5', c)
                     client = c
                     break
                 }
             }
             if(!client) {
-                console.log('6', client)
                 continue
             }
             console.log(queue.companyId, client.hasBeenNotified)
@@ -224,13 +221,11 @@ module.exports = function(wsInstance) {
                     return true
                 }
                 // remove from queue and add to blacklist
-                console.log('blacklisting')
                 const updatedIndex = queue.members.indexOf(updatedUser._id)
                 if(updatedIndex != -1) {
                     queue.members.splice(updatedIndex, 1)
                 }
-                queue.blacklist.push(updatedUser._id)  
-                console.log('eee ', queue.id)   
+                queue.blacklist.push(updatedUser._id)    
                 await queue.save()
                 
                 if(!user.previousSessions[client.jwt.eventId]) {
