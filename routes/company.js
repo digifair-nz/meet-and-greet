@@ -10,8 +10,8 @@ module.exports = function(wsInstance) {
     
     router.post('/login/:_id', loginCtrl.companyLogin)
 
-    router.get('/next/:_id', companyCtrl.getNextStudent)
-    router.post('/kick/:_id', companyCtrl.kickStudent)
+    router.get('/next', companyCtrl.getNextStudent)
+    router.post('/kick', companyCtrl.kickStudent)
     // router.post('/end', companyCtrl.leaveRoom)
     
     return router
