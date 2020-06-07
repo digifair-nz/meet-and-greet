@@ -51,7 +51,7 @@ class TextChat extends Component {
         conversation.setParticipant(me);
         conversation.setParticipant(other);
 
-        this.inbox = window.talkSession.createChatbox(conversation);
+        this.inbox = window.talkSession.createPopup(conversation);
 
         // this.inbox.setFeedFilter();
         this.inbox.mount(this.container);
@@ -71,9 +71,7 @@ class TextChat extends Component {
         <div
           style={{ height: "100%", width: "100%" }}
           ref={(c) => (this.container = c)}
-        >
-          Loading...
-        </div>
+        ></div>
       </span>
     );
   }

@@ -2,18 +2,17 @@
   display: grid;
   height: 100%;
   width: 100%;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
 }
 
 .VideoChatContainer {
-  background-color: gray;
-  padding-left: 7%;
+  background-color: white;
 }
 
 .TextChatContainer {
-  background-color: yellow;
+  background-color: white;
 }
-
 
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
@@ -26,12 +25,11 @@
   @media (max-width: 640px) {
   }
 
-  @media (max-width: 560px){
-
+  @media (max-width: 560px) {
   }
 
   /*480px is max phone size*/
-  @media (max-width: 481px){
+  @media (max-width: 481px) {
     .ChatRoomContainer {
       display: flex;
       flex-direction: column;

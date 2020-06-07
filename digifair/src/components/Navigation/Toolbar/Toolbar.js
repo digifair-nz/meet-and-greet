@@ -50,13 +50,7 @@ class Toolbar extends Component {
     });
   };
 
-  closeMenu = () => {
-
-
-  }
-
-  
-
+  closeMenu = () => {};
 
   render() {
     // If the toolbar is minimized than logo is replaced with the icon
@@ -69,16 +63,15 @@ class Toolbar extends Component {
       add = classes.ChatRoom;
     }
 
-    // Toggle between an icon and a full logo for Digifair
-    let logo = !this.state.active ? (
-      <img
-        alt="Digifair White Icon"
-        className={classes.LogoIcon}
-        src={LogoIcon}
-      />
-    ) : (
-      <img alt="Digifair White logo" className={classes.Logo} src={Logo} />
-    );
+    // Toggle between an icon and a full logo for Digifair (by default show minimized logo)
+    let fullLogo = "none";
+
+    let logoIcon = "block";
+
+    if (this.state.active) {
+      logoIcon = "none";
+      fullLogo = "block";
+    }
 
     // Determines width and visability of children
     let toolbarClass = classes.ToolbarMin;
@@ -87,11 +80,20 @@ class Toolbar extends Component {
     }
     return (
       <Aux>
-         
-
         <header className={toolbarClass}>
-          {logo}
-          <div className={this.state.menuClass} onClick={this.onMenuClick} >
+          <img
+            style={{ display: logoIcon }}
+            alt="Digifair White Icon"
+            className={classes.LogoIcon}
+            src={LogoIcon}
+          />
+          <img
+            style={{ display: fullLogo }}
+            alt="Digifair White logo"
+            className={classes.Logo}
+            src={Logo}
+          />
+          <div className={this.state.menuClass} onClick={this.onMenuClick}>
             <span></span>
           </div>
           <div className={classes.ControlsContainer + " " + add}>
@@ -103,12 +105,10 @@ class Toolbar extends Component {
             }
           </div>
           <span className={classes.CreditsTitle}>Credits</span>
-          
         </header>
-        
+
         {/* Dim the background when the menu opens and close the menu when background is clicked*/}
-        <Backdrop show={this.state.active} clicked={this.onMenuClick}/>
-        
+        <Backdrop show={this.state.active} clicked={this.onMenuClick} />
       </Aux>
     );
   }

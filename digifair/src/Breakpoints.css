@@ -8,13 +8,16 @@ Handy to Copy paste this into new stylesheets and optimize for each.
 
 /* 2K+ resolution */
 @media (min-width: 2049px) {
-
 }
 
 /* 4K+ resolution */
 @media (min-width: 3839px) {
-
 }
+
+/*
+
+16:9 aspect ratio resolutions: 1024×576, 1152×648, 1280×720, 1366×768, 1600×900, 1920×1080, 2560×1440 and 3840×2160
+*/
 
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
@@ -27,13 +30,11 @@ Handy to Copy paste this into new stylesheets and optimize for each.
   @media (max-width: 640px) {
   }
 
-  @media (max-width: 560px){
-
+  @media (max-width: 560px) {
   }
 
   /*480px is max phone size*/
-  @media (max-width: 481px){
-    
+  @media (max-width: 481px) {
   }
 
   @media (max-width: 375px) {
@@ -42,16 +43,24 @@ Handy to Copy paste this into new stylesheets and optimize for each.
 }
 
 @media only screen and (orientation: landscape) {
-  @media (max-width: 1600px) {
+  @media (max-width: 2560px) {
+  }
 
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 1920px) {
+  }
+
+  @media (max-width: 1600px) {
   }
 
   @media (max-width: 1366px) {
-
+  }
+  @media (max-width: 1280px) {
   }
 
   @media (max-width: 1152px) {
-
   }
 
   @media (max-width: 1024px) {
@@ -64,12 +73,10 @@ Handy to Copy paste this into new stylesheets and optimize for each.
 
   @media (max-width: 823px) {
   }
-  
+
   @media (max-width: 812px) {
   }
 
   @media (max-width: 736px) {
   }
 }
-
-
