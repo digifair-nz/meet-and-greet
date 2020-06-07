@@ -34,6 +34,7 @@ async function studentLogin(req, res) {
     if(!validate.isEmail(req.body)) {
         return
     }
+    console.log('hmm')
     if(!validate.isId(req.params)) {
         return
     }

@@ -217,7 +217,6 @@ module.exports = function(wsInstance) {
                             name: room.name,
                             id: room._id,
                             appId: process.env.TALKJS_APP_ID
-
                         }
                     })
                 }
