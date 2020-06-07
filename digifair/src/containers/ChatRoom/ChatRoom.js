@@ -180,6 +180,10 @@ class ChatRoom extends Component {
     );
   }
 
+  // componentDidUpdate(){
+
+  // }
+
   startCall() {
     this.setState({
       loading: false,
@@ -208,8 +212,9 @@ class ChatRoom extends Component {
             connections: connections,
             allowNextUser: true,
           });
+
+          this.forceUpdate();
           this.props.kickStudent();
-          this.props.history.push("/chat-room");
         });
       }
     }
