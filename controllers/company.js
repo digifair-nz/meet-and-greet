@@ -180,25 +180,24 @@ module.exports = function(wsInstance) {
             const user = await User.findById(queue.members[i])
             // if the user is busy then skip over them
             if(user.inSession) {
+                console.log('1')
                 continue
             }
             // if the user has already been notified previously then skip over them
             // this might happen if two rooms are looking for new students at the same time
             let client
-            console.log(JSON.stringify(wsInstance.getWss().clients))
             for(const c of wsInstance.getWss().clients) {
-                console.log('is a client')
                 if(c.jwt._id == user._id) {
                     client = c
                     break
                 }
             }
             if(!client) {
+                console.log('2')
                 continue
             }
-            console.log(queue.companyId, client.hasBeenNotified)
             if(client.hasBeenNotified && client.hasBeenNotified[queue.companyId]) {
-                
+                console.log('3')   
                 continue
             }
             // make sure the client is marked as having been notified
