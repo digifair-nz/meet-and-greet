@@ -79,7 +79,7 @@ async function companyLogin(req, res) {
     const sessionId = await room.newSessionId()
     // get the new token for the company
     const vonageToken = opentok.generateToken(room.sessionId, {
-        expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+        expireTime: (new Date().getTime()/ 1000) + 300 * 60,
         role: 'moderator'
     })
 

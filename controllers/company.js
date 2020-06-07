@@ -82,7 +82,7 @@ module.exports = function(wsInstance) {
                 const sessionId = await room.newSessionId()
                 // get the new token for the company
                 const token = opentok.generateToken(room.sessionId, {
-                    expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+                    expireTime: (new Date().getTime()/ 1000) + 300 * 60,
                     role: 'moderator'
                 })
                 // send the new session id and token back to the company
@@ -150,7 +150,7 @@ module.exports = function(wsInstance) {
             room.kickedStudent = true
             const sessionId = await room.newSessionId()
             const token = opentok.generateToken(room.sessionId, {
-                expireTime: (new Date().getTime()/ 1000) + 5 * 60,
+                expireTime: (new Date().getTime()/ 1000) + 300 * 60,
                 role: 'moderator'
             })
             return res.status(200).json({

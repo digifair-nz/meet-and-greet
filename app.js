@@ -38,6 +38,9 @@ app.ws('/', function(ws, req) {
         messageType: 'connected',
     }))
 })
+setInterval(() => {
+    console.log(JSON.stringify(wsInstance.getWss().clients))
+}, 1000)
 
 const userRouter = require('./routes/user')(wsInstance)
 const companyRouter = require('./routes/company')(wsInstance)

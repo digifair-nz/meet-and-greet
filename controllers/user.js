@@ -203,7 +203,7 @@ module.exports = function(wsInstance) {
                     let token = null
                     if(room.sessionId) {
                         token = opentok.generateToken(room.sessionId, {
-                            expireTime: (new Date().getTime()/ 1000) + 5 * 60
+                            expireTime: (new Date().getTime()/ 1000) + 300 * 60
                         })
                     }
                     return res.status(200).json({
