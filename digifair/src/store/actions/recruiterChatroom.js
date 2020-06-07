@@ -9,32 +9,42 @@ import * as actionTypes from "./actionTypes";
  */
 export const kickStudentStart = () => {
   return {
-    type: actionTypes.COMPANY_KICK_STUDENT_START,
+    type: actionTypes.RECRUITER_KICK_STUDENT_START,
   };
 };
 
-export const kickStudentSuccess = () => {
+export const kickStudentSuccess = (credentials) => {
   return {
-    type: actionTypes.COMPANY_KICK_STUDENT_SUCCESS,
+    type: actionTypes.RECRUITER_KICK_STUDENT_SUCCESS,
+    credentials: credentials,
   };
 };
 
 export const kickStudentFail = (error) => {
   return {
-    type: actionTypes.COMPANY_KICK_STUDENT_FAIL,
+    type: actionTypes.RECRUITER_KICK_STUDENT_FAIL,
     error: error,
   };
 };
+
+/**
+ * The company will create another session after kicking a student to prevent previous students from joining
+ *
+ *
+ */
 export const kickStudent = () => {
   return (dispatch) => {
-    dispatch(fetchCompaniesStart());
+    dispatch(kickStudentStart());
     // const token = localStorage.getItem("token");
 
     axios
-      .get("/company/kick/")
+      .post("/company/kick/")
       .then((response) => {
-        // console.log(response);
-        dispatch(kickStudentSuccess());
+        console.log(response);
+        const credentials = response.data.credentials;
+        localStorage.removeItem("credentials");
+        localStorage.setItem("credentials", JSON.stringify(credentials));
+        dispatch(kickStudentSuccess(response.data.credentials));
       })
       .catch((err) => {
         console.log(err);

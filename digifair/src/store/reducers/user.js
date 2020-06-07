@@ -22,10 +22,11 @@ const initialState = {
 };
 
 const authStart = (state, action) => {
+  // console.log(action.eventId);
   return updateObject(state, {
     error: null,
     eventId: action.eventId,
-    loading: true,
+    loading: action.loading,
   });
 };
 
@@ -33,7 +34,7 @@ const studentAuthSuccess = (state, action) => {
   return updateObject(state, {
     token: action.idToken,
     credentials: action.credentials,
-    isStudent: false,
+    isStudent: true,
     error: null,
     loading: false,
   });
@@ -43,7 +44,7 @@ const authFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false,
-    isStudent: false,
+    //isStudent: false,
   });
 };
 const recruiterAuthSuccess = (state, action) => {
@@ -57,7 +58,7 @@ const recruiterAuthSuccess = (state, action) => {
   });
 };
 const authLogout = (state, action) => {
-  return updateObject(state, { token: null });
+  return updateObject(state, { token: null, credentials: null });
 };
 
 const setAuthRedirectPath = (state, action) => {
@@ -75,6 +76,27 @@ const studentJoinChatroomSuccess = (state, action) => {
 
 const studentJoinChatroomFail = (state, action) => {
   return updateObject(state, { error: action.error });
+};
+
+const studentLeaveSession = (state, action) => {
+  return updateObject(state, { credentials: null });
+};
+
+const recruiterKickStudentStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const recruiterKickStudentSuccess = (state, action) => {
+  return updateObject(state, {
+    credentials: action.credentials,
+    loading: false,
+  });
+};
+
+const recruiterKickStudentFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+  });
 };
 
 const reducer = (state = initialState, action) => {
@@ -97,7 +119,14 @@ const reducer = (state = initialState, action) => {
       return studentJoinChatroomSuccess(state, action);
     case actionTypes.STUDENT_JOIN_CHATROOM_FAIL:
       return studentJoinChatroomFail(state, action);
-
+    case actionTypes.STUDENT_LEAVE_SESSION:
+      return studentLeaveSession(state, action);
+    case actionTypes.RECRUITER_KICK_STUDENT_START:
+      return recruiterKickStudentStart(state, action);
+    case actionTypes.RECRUITER_KICK_STUDENT_SUCCESS:
+      return recruiterKickStudentSuccess(state, action);
+    case actionTypes.RECRUITER_KICK_STUDENT_FAIL:
+      return recruiterKickStudentFail(state, action);
     default:
       return state;
   }

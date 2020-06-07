@@ -4,10 +4,11 @@ import * as actionTypes from "./actionTypes";
 import jwt from "jwt-decode"; // import dependency
 
 // NOTE: Possibly refractor if there is easy reusability between student,company and club authentication process
-export const authStart = (eventId) => {
+export const authStart = (eventId, loading) => {
   return {
     type: actionTypes.AUTH_START,
     eventId: eventId,
+    loading: loading,
   };
 };
 
@@ -55,7 +56,7 @@ export const checkAuthTimeout = (expirationTime) => {
 
 export const auth = (eventId, email, password, isStudent) => {
   return (dispatch) => {
-    dispatch(authStart(eventId));
+    dispatch(authStart(eventId, true));
 
     const authData = {
       email: email,
@@ -69,6 +70,8 @@ export const auth = (eventId, email, password, isStudent) => {
           //   new Date().getTime() + response.data.expiresIn * 1000
           // );
           const token = response.headers["auth-token"];
+
+          localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
           // localStorage.setItem("expirationDate", expirationDate);
 
@@ -88,6 +91,8 @@ export const auth = (eventId, email, password, isStudent) => {
           const token = response.headers["auth-token"];
 
           const credentials = response.data.credentials;
+
+          localStorage.setItem("eventId", eventId);
           localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
 
@@ -113,6 +118,20 @@ export const setAuthRedirectPath = (path) => {
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
+    const eventId = localStorage.getItem("eventId");
+    const credentials = localStorage.getItem("credentials");
+
+    let creds = null;
+    if (credentials != null) {
+      console.log(creds);
+      creds = JSON.parse(credentials);
+      console.log(creds);
+    }
+
+    // Get event id from local storage and save it to state if have any
+    if (eventId != null) {
+      dispatch(authStart(eventId, false));
+    }
 
     let isStudent = true;
 
@@ -121,8 +140,6 @@ export const authCheckState = () => {
       // console.log(decodedToken);
     }
 
-    const credentials = localStorage.getItem("credentials");
-    const creds = JSON.parse(credentials);
     // console.log(creds);
 
     if (token) {

@@ -30,8 +30,6 @@ export const fetchCompanies = () => {
         dispatch(fetchCompaniesSuccess(response.data));
       })
       .catch((err) => {
-        console.log(err);
-
         dispatch(fetchCompaniesFail("Companies could not be fetched."));
       });
   };

@@ -134,3 +134,10 @@ export const dequeueStudent = (companyId, index) => {
       });
   };
 };
+
+export const declineJoinChatroom = (companyId, index) => {
+  return (dispatch) => {
+    dispatch(dequeueInit(companyId, index));
+    dispatch(dequeueSuccess(companyId, index));
+  };
+};

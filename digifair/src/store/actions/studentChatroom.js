@@ -42,7 +42,9 @@ export const studentJoinChatroom = (companyId) => {
         const credentials = response.data.credentials;
         // console.log(credentials);
         // Save credentials to local storage
-        localStorage.setItem("credentials", credentials);
+
+        localStorage.setItem("credentials", JSON.stringify(credentials));
+
         dispatch(studentJoinChatroomSuccess(credentials));
       })
       .catch((err) => {
@@ -66,11 +68,11 @@ export const studentLeaveSession = () => {
 
 // export const studentChatRoomRedirect
 // Check if student users have chat room credentials in case they refrehsed the page or closed the tab
-export const studentCheckCredentials = () => {
-  return (dispatch) => {
-    const credentials = localStorage.getItem("credentials");
-    if (credentials) {
-      dispatch(studentJoinChatroomSuccess(credentials));
-    }
-  };
-};
+// export const studentCheckCredentials = () => {
+//   return (dispatch) => {
+//     const credentials = localStorage.getItem("credentials");
+//     if (credentials) {
+//       dispatch(studentJoinChatroomSuccess(credentials));
+//     }
+//   };
+// };
