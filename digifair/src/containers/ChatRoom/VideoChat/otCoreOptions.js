@@ -12,10 +12,12 @@ export const otCoreOptions = {
       publisher: {
         camera: "#cameraPublisherContainer",
         screen: "#screenPublisherContainer",
+        name: "Michael",
       },
       subscriber: {
         camera: "#cameraSubscriberContainer",
         screen: "#screenSubscriberContainer",
+        name: "Michael",
       },
     }[pubSub][type];
   },

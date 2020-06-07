@@ -9,7 +9,7 @@ import AccCore from "opentok-accelerator-core";
 import "opentok-solutions-css";
 import * as otCoreOptions from "./otCoreOptions";
 import "./VideoChat.css";
-
+import { withRouter } from "react-router-dom";
 import * as actions from "../../../store/actions/index";
 const OT = require("@opentok/client");
 let otCore;
@@ -81,14 +81,18 @@ class VideoChat extends Component {
       meta: null,
       localAudioEnabled: true,
       localVideoEnabled: true,
+      connectionId: null,
+      connections: [],
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
     this.toggleLocalAudio = this.toggleLocalAudio.bind(this);
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
+    this.kickStudent = this.kickStudent.bind(this);
   }
 
   componentDidMount() {
+    console.log(this.props.isStudent);
     const options = otCoreOptions.otCoreOptions;
     options.credentials = this.props.credentials;
 
@@ -100,9 +104,56 @@ class VideoChat extends Component {
         this.startCall();
       }
     });
-    otCore.on("sessionDisconnected", function (event) {
-      alert("The session disconnected. " + event.reason);
-      this.props.studentLeaveSession();
+
+    // otCore.on({
+    //   connectionCreated: function (event) {
+    //     console.log(otCore);
+    //     if (event.connection.connectionId != this.state.connectionId) {
+    //       console.log("Another client connected.");
+    //       console.log(event);
+    //       let connections = [...this.state.connections];
+    //       connections.push(event.connection);
+    //       this.setState({
+    //         connectionId: event.connection.connectionId,
+    //         connections: connections,
+    //       });
+    //     }
+    //   },
+    // });
+
+    otCore.on("connectionCreated", (event) => {
+      console.log(this.state);
+
+      if (event.connection.connectionId != this.state.connectionId) {
+        console.log("Another client connected.");
+        if (this.state.connectionId != null) {
+          this.setState({
+            connectionId: event.connection.connectionId,
+          });
+        }
+        let connections = [...this.state.connections];
+        connections.push(event.connection);
+        this.setState({
+          connections: connections,
+        });
+      }
+
+      // otCore.on("sessionDisconnected", function (event) {
+      //   alert("The session disconnected. " + event.reason);
+      //   //this.props.studentLeaveSession();
+      // });
+      // Student Client Kicked
+      if (this.props.isStudent) {
+        otCore.on("sessionDisconnected", (event) => {
+          // Clear students' credentials
+          // Move them back to to the dashboard
+          console.log("I got kicked :( ");
+
+          this.props.studentLeaveSession();
+
+          this.props.history.push("/");
+        });
+      }
     });
     // otCore.disconnect()
     const events = [
@@ -130,6 +181,25 @@ class VideoChat extends Component {
         }
       })
       .catch((error) => console.log(error));
+  }
+
+  kickStudent() {
+    if (!this.props.isStudent) {
+      // How do I kick a specific student..?
+      if (this.state.connections.length < 2) {
+        this.props.kickStudent();
+      } else {
+        otCore.forceDisconnect(this.state.connections[1]).then(() => {
+          console.log("Kicked!!");
+          let connections = [...this.state.connections];
+          connections.pop();
+          this.setState({
+            connections: connections,
+          });
+          this.props.kickStudent();
+        });
+      }
+    }
   }
 
   endCall() {
@@ -178,6 +248,7 @@ class VideoChat extends Component {
           <div id="controls" className={controlClass}>
             <div className={localAudioClass} onClick={this.toggleLocalAudio} />
             <div className={localVideoClass} onClick={this.toggleLocalVideo} />
+            <div onClick={this.kickStudent}>Kick Student</div>
           </div>
         </div>
       </div>
@@ -188,7 +259,8 @@ class VideoChat extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
+    kickStudent: () => dispatch(actions.kickStudent()),
   };
 };
 
-export default connect(null, mapDispatchToProps)(VideoChat);
+export default withRouter(connect(null, mapDispatchToProps)(VideoChat));

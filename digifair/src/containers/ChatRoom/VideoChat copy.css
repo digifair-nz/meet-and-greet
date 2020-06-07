@@ -2,14 +2,15 @@
   display: grid;
   height: 100%;
   width: 100%;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
 }
 
 .VideoChatContainer {
-  background-color: gray;
+  background-color: white;
   margin-left: 7%;
 }
 
 .TextChatContainer {
-  background-color: yellow;
+  background-color: white;
 }

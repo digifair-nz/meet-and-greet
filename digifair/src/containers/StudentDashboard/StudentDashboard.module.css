@@ -10,7 +10,7 @@
   justify-content: center;
   padding-top: 5%;
   grid-auto-rows: 220px;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
   /* margin-left: 10%; */
 }
 /* Event container encapsulates company cards, event title, and event statistics*/
