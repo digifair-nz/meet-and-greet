@@ -49,12 +49,9 @@ module.exports = function(wsInstance) {
      * @param {Object} res The response object
      */
     async function getNextStudent(req, res) {
-        if(!validate.isId(req.params, res)) {
-            return
-        }
         try {
             // retrieve the required objects from the database and error if they can't be found
-            const room = await Room.findById(req.params._id)
+            const room = await Room.findById(req.payload._id)
             if(!room) {
                 return res.status(404).json({ message: 'Could not request next student as room could not be found.' })
             }
@@ -122,12 +119,9 @@ module.exports = function(wsInstance) {
      * @param {Object} res The response object
      */
     async function kickStudent(req, res) {
-        if(!validate.isId(req.params, res)) {
-            return
-        }
         try {
             // retrieve the required objects from the database and error if they can't be found
-            const room = await Room.findById(req.params._id)
+            const room = await Room.findById(req.payload._id)
             if(!room) {
                 return res.status(404).json({ message: 'Could not kick student as room could not be found.' })
             }
