@@ -53,6 +53,8 @@ class StudentAuth extends Component {
 
   componentDidMount() {
     const eventId = this.props.match.params.id;
+
+    console.log(this.props.creds);
     this.setState({
       eventId: eventId,
     });
@@ -235,6 +237,7 @@ const mapStateToProps = (state) => {
     authenticated: state.user.token != null,
     authRedirectPath: state.user.authRedirectPath,
     isStudent: state.user.isStudent,
+    creds: state.user.credentials,
   };
 };
 

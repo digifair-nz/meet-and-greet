@@ -20,6 +20,8 @@ const initialState = {
   isStudent: true,
   eventId: null,
   allowNextUser: null,
+  name: null,
+  talkJSData: null,
 };
 
 const authStart = (state, action) => {
@@ -38,6 +40,7 @@ const studentAuthSuccess = (state, action) => {
     isStudent: true,
     error: null,
     loading: false,
+    name: action.name,
   });
 };
 
@@ -56,10 +59,12 @@ const recruiterAuthSuccess = (state, action) => {
     loading: false,
     error: null,
     authRedirectPath: "/chat-room",
+    name: action.name,
   });
 };
 const authLogout = (state, action) => {
-  return updateObject(state, { token: null, credentials: null });
+  console.log(state);
+  return updateObject(state, { credentials: null, token: null });
 };
 
 const setAuthRedirectPath = (state, action) => {
@@ -144,17 +149,17 @@ const reducer = (state = initialState, action) => {
       return studentJoinChatroomFail(state, action);
     case actionTypes.STUDENT_LEAVE_SESSION:
       return studentLeaveSession(state, action);
-    case actionTypes.RECRUITER_KICK_STUDENT_START:
+    case actionTypes.KICK_STUDENT_START:
       return recruiterKickStudentStart(state, action);
-    case actionTypes.RECRUITER_KICK_STUDENT_SUCCESS:
+    case actionTypes.KICK_STUDENT_SUCCESS:
       return recruiterKickStudentSuccess(state, action);
-    case actionTypes.RECRUITER_KICK_STUDENT_FAIL:
+    case actionTypes.KICK_STUDENT_FAIL:
       return recruiterKickStudentFail(state, action);
-    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_START:
+    case actionTypes.INVITE_NEXT_STUDENT_START:
       return recruiterInviteNextStart(state, action);
-    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_START:
+    case actionTypes.INVITE_NEXT_STUDENT_START:
       return recruiterInviteNextSuccess(state, action);
-    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_FAIL:
+    case actionTypes.INVITE_NEXT_STUDENT_FAIL:
       return recruiterInviteNextFail(state, action);
     default:
       return state;

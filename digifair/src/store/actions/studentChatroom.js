@@ -40,9 +40,15 @@ export const studentJoinChatroom = (companyId) => {
       .then((response) => {
         //console.log(response);
         const credentials = response.data.credentials;
+        console.log(credentials);
         // console.log(credentials);
         // Save credentials to local storage
 
+        // expect recruiter talkJS data
+
+        // extract talkJSdata and save the object in local storage
+
+        //Don't forget to retrieve data from auth check state
         localStorage.setItem("credentials", JSON.stringify(credentials));
 
         dispatch(studentJoinChatroomSuccess(credentials));

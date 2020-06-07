@@ -12,11 +12,12 @@ export const authStart = (eventId, loading) => {
   };
 };
 
-export const studentAuthSuccess = (token, credentials) => {
+export const studentAuthSuccess = (token, credentials, name) => {
   return {
     type: actionTypes.STUDENT_AUTH_SUCCESS,
     idToken: token,
     credentials: credentials,
+    name: name,
   };
 };
 //
@@ -38,11 +39,12 @@ export const logout = () => {
   };
 };
 
-export const recruiterAuthSuccess = (token, credentials) => {
+export const recruiterAuthSuccess = (token, credentials, name) => {
   return {
     type: actionTypes.RECRUITER_AUTH_SUCCESS,
     token: token,
     credentials: credentials,
+    name: name,
   };
 };
 
@@ -70,7 +72,9 @@ export const auth = (eventId, email, password, isStudent) => {
           //   new Date().getTime() + response.data.expiresIn * 1000
           // );
           const token = response.headers["auth-token"];
-
+          const name = jwt(token).name;
+          console.log(name);
+          localStorage.setItem("name", name);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
           // localStorage.setItem("expirationDate", expirationDate);
@@ -92,7 +96,9 @@ export const auth = (eventId, email, password, isStudent) => {
           const token = response.headers["auth-token"];
 
           const credentials = response.data.credentials;
-
+          const name = jwt(token).name;
+          console.log(name);
+          localStorage.setItem("name", name);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
@@ -102,7 +108,7 @@ export const auth = (eventId, email, password, isStudent) => {
         })
         .catch((err) => {
           // console.log(err.headers);
-        
+
           dispatch(authFail(err.response.data));
         });
     }
@@ -121,6 +127,8 @@ export const authCheckState = () => {
     const token = localStorage.getItem("token");
     const eventId = localStorage.getItem("eventId");
     const credentials = localStorage.getItem("credentials");
+
+    // get talk js data too
 
     let creds = null;
     if (credentials != null) {

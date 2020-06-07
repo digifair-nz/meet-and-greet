@@ -112,6 +112,7 @@ class ChatRoom extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props.credentials);
     console.log(this.props.isStudent);
     const options = otCoreOptions.otCoreOptions;
     options.credentials = this.props.credentials;
@@ -321,7 +322,7 @@ class ChatRoom extends Component {
           </div>
         </div>
         <div className={classes.TextChatContainer}>
-          <TextChat />
+          <TextChat name={this.props.myName} token={this.props.token} />
         </div>
       </div>
     );
@@ -332,6 +333,8 @@ const mapStateToProps = (state) => {
   return {
     credentials: state.user.credentials,
     isStudent: state.user.isStudent,
+    myName: state.user.name,
+    token: state.user.token,
     //allowNextUser: state.user.allowNextUser,
   };
 };
@@ -342,7 +345,7 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => dispatch(actions.logout()),
     studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
     kickStudent: () => dispatch(actions.kickStudent()),
-    inviteNextStudent: () => dispatch(actions.recruiterInviteNextStudent()),
+    inviteNextStudent: () => dispatch(actions.inviteNextStudent()),
   };
 };
 
