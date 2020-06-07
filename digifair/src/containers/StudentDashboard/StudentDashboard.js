@@ -69,25 +69,6 @@ class StudentDashboard extends Component {
         "ws://localhost:3000/?token=" + this.props.token
       );
 
-      if (this.props.companies != null) {
-        for (let i = 0; i < this.props.companies.length; i++) {
-          if (this.props.companies[i].isQueued) {
-            this.setState({
-              readyCompanyIndex: i,
-              showReadyPromptPopUp: true,
-            });
-            // ****READY POP UP*****
-            if (notificationGranted) {
-              // Notification
-              const title = "Your Queue is Ready!";
-              const body =
-                "Google is ready for you. Accept or decline your queue";
-              sendNotification(title, body);
-            }
-          }
-        }
-      }
-
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
         // dispatch update queue position
