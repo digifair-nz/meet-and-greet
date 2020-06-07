@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
     previousSessions: {
         type: {},
         default: {}
+    },
+    name: {
+        type: String,
+        required: true
     }
 })
 

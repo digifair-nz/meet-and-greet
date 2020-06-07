@@ -43,7 +43,13 @@ async function studentLogin(req, res) {
     const user = await User.findOne({ email: req.body.email })
     if(!user) return res.status(404).json({ message: 'Email not found.' })
 
-    const token = jwt.sign({ _id: user._id, accountType: user.accountType, eventId: req.params._id, port: process.env.PORT || 3000 }, process.env.TOKEN_SECRET)
+    const token = jwt.sign({
+        _id: user._id,
+        accountType: user.accountType,
+        eventId: req.params._id,
+        port: process.env.PORT || 3000,
+        name: user.name
+    }, process.env.TOKEN_SECRET)
     res.header('auth-token', token).send(token)
 }
 

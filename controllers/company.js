@@ -134,7 +134,7 @@ module.exports = function(wsInstance) {
                 return res.status(404).json({ message: 'Could not kick student as queue could not be found.' })
             }
             // add the user to the blacklist if they aren't already in it
-            if(!queue.blacklist.contains(room.sessionPartner)) {
+            if(!queue.blacklist.includes(room.sessionPartner)) {
                 queue.blacklist.push(room.sessionPartner)
                 await queue.save()
             }
