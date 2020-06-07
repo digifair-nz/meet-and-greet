@@ -209,6 +209,7 @@ class ChatRoom extends Component {
             allowNextUser: true,
           });
           this.props.kickStudent();
+          this.props.history.push("/chat-room");
         });
       }
     }
