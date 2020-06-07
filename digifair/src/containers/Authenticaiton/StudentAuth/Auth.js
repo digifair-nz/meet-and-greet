@@ -48,6 +48,7 @@ class StudentAuth extends Component {
     invalidForm: false,
     isStudent: true,
     eventId: null,
+    invalidFormMessage: null,
   };
 
   componentDidMount() {
@@ -86,28 +87,40 @@ class StudentAuth extends Component {
     this.setState({ controls: updatedControls });
   };
 
-  checkValidity(value, rules) {
+  checkValidity = (value, rules) => {
+    console.log(value);
     let isValid = true;
     if (rules.required) {
       isValid = value.trim() !== "" && isValid;
     }
 
-    // Better ux to let them finish typing and only show on submit
-    // if (rules.isEmail) {
-    //   console.log("here")
-    //   const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-    //   isValid = pattern.test(value) && isValid;
-    // }
+    //Better ux to let them finish typing and only show on submit
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      isValid = pattern.test(value) && isValid;
+    }
 
     return isValid;
-  }
+  };
 
   submitHandler = (event) => {
     event.preventDefault();
 
-    if (this.state.controls.email.value === "") {
+    // if (this.state.controls.email.value === "" && ) {
+    //   this.setState({
+    //     invalidForm: true,
+    //   });
+    // } else {
+    //   this.setState({
+    //     invalidForm: false,
+    //   });
+
+    if (
+      !this.checkValidity(this.state.controls.email.value, { isEmail: true })
+    ) {
       this.setState({
         invalidForm: true,
+        invalidFormMessage: "Invalid Email",
       });
     } else {
       this.setState({
@@ -115,12 +128,14 @@ class StudentAuth extends Component {
       });
 
       // Dispatch auth action
-      this.props.onAuth(
-        this.state.eventId,
-        this.state.controls.email.value,
-        this.state.controls.password.value,
-        this.state.isStudent
-      );
+      if (!this.state.invalidForm) {
+        this.props.onAuth(
+          this.state.eventId,
+          this.state.controls.email.value,
+          this.state.controls.password.value,
+          this.state.isStudent
+        );
+      }
     }
   };
   userTypeSwitch = () => {
@@ -162,10 +177,11 @@ class StudentAuth extends Component {
     //   errorMessage = this.props.error.message;
     // }
     if (this.state.invalidForm) {
-      errorMessage = "Please enter your email and password";
+      errorMessage = this.state.invalidFormMessage;
     }
 
     if (this.props.error) {
+      console.log(this.props.error.message);
       errorMessage = this.props.error.message;
     }
 

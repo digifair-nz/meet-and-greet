@@ -81,7 +81,8 @@ export const auth = (eventId, email, password, isStudent) => {
         })
         .catch((err) => {
           // console.log(err.headers);
-          dispatch(authFail(err));
+          console.log(err.response);
+          dispatch(authFail(err.response.data));
         });
     } else {
       axios
@@ -101,8 +102,8 @@ export const auth = (eventId, email, password, isStudent) => {
         })
         .catch((err) => {
           // console.log(err.headers);
-          console.log(err);
-          dispatch(authFail(err));
+        
+          dispatch(authFail(err.response.data));
         });
     }
   };
