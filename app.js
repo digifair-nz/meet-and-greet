@@ -43,7 +43,7 @@ app.ws('/', function(ws, req) {
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
-    console.log(JSON.stringify(wsInstance.getWss().clients))
+    console.log('b', JSON.stringify(wsInstance.getWss().clients))
 })
 setInterval(() => {
     console.log(JSON.stringify(wsInstance.getWss().clients))
@@ -71,7 +71,6 @@ app.get('/*', (req, res) => {
 app.use(function(req, res, next) {
     next(createError(404))
 })
-
 
 // error handler
 app.use(function(err, req, res, next) {

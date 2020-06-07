@@ -5,6 +5,12 @@ module.exports = function(wsInstance) {
     const authCtrl = require('../controllers/security/authorisation')
     
     // login
+
+    router.use(function(req, res, next) {
+        console.log('c')
+        next()
+    })
+
     router.post('/login/:_id', loginCtrl.studentLogin)
     
     // endpoint to get the companies attending the event

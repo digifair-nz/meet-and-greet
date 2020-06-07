@@ -30,6 +30,7 @@ async function adminLogin(req, res) {
 }
 
 async function studentLogin(req, res) {
+    console.log('a')
     if(!validate.isEmail(req.body)) {
         return
     }

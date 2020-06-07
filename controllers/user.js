@@ -212,6 +212,12 @@ module.exports = function(wsInstance) {
                             apiKey: process.env.VONAGE_API_KEY,
                             sessionId: room.sessionId || null,
                             token: token
+                        },
+                        talkJSData: {
+                            name: room.name,
+                            id: room._id,
+                            appId: process.env.TALKJS_APP_ID
+
                         }
                     })
                 }
