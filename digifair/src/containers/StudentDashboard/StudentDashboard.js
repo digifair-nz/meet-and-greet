@@ -66,7 +66,7 @@ class StudentDashboard extends Component {
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
       const ws = new WebSocket(
-        "wss://digifair-test.herokuapp.com:3000/?token=" + this.props.token
+        "wss://digifair-test.herokuapp.com/?token=" + this.props.token
       );
 
       // console.log("Socket Connection Opened!");
