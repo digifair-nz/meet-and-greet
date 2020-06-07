@@ -180,9 +180,76 @@ class ChatRoom extends Component {
     );
   }
 
-  // componentDidUpdate(){
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.credentials !== prevProps.credentials) {
+      console.log(this.props.credentials);
+      console.log(this.props.isStudent);
+      const options = otCoreOptions.otCoreOptions;
+      options.credentials = this.props.credentials;
 
-  // }
+      otCore = new AccCore(options);
+      // Connect the user to the session and start the call
+      otCore.connect().then(() => {
+        this.setState({ connected: true });
+
+        if (this.state.connected && !this.state.active) {
+          this.startCall();
+        }
+      });
+
+      // Event listener for client connecting to the session
+      otCore.on("connectionCreated", (event) => {
+        console.log(this.state);
+
+        if (event.connection.connectionId != this.state.connectionId) {
+          console.log("Another client connected.");
+          if (this.state.connectionId != null) {
+            if (this.state.connections.length < 2) {
+              this.setState({
+                allowNextUser: false,
+              });
+            }
+            this.setState({
+              connectionId: event.connection.connectionId,
+            });
+          }
+          let connections = [...this.state.connections];
+          connections.push(event.connection);
+          this.setState({
+            connections: connections,
+          });
+        }
+
+        // Student Client Kicked
+        if (this.props.isStudent) {
+          otCore.on("sessionDisconnected", (event) => {
+            // Clear students' credentials
+            // Move them back to to the dashboard
+            console.log("I got kicked :( ");
+
+            this.props.studentLeaveSession();
+
+            this.props.history.push("/");
+          });
+        }
+      });
+      // otCore.disconnect()
+      const events = [
+        "subscribeToCamera",
+        "unsubscribeFromCamera",
+        "subscribeToScreen",
+        "unsubscribeFromScreen",
+        "startScreenShare",
+        "endScreenShare",
+      ];
+
+      events.forEach((event) =>
+        otCore.on(event, ({ publishers, subscribers, meta }) => {
+          this.setState({ publishers, subscribers, meta });
+        })
+      );
+    }
+  }
 
   startCall() {
     this.setState({
@@ -213,7 +280,7 @@ class ChatRoom extends Component {
             allowNextUser: true,
           });
 
-          this.forceUpdate();
+          // this.forceUpdate();
           this.props.kickStudent();
         });
       }
