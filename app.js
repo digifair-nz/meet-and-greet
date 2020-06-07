@@ -37,6 +37,7 @@ app.ws('/', function(ws, req) {
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
+    console.log(JSON.stringify(wsInstance.getWss().clients))
 })
 setInterval(() => {
     console.log(JSON.stringify(wsInstance.getWss().clients))
