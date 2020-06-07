@@ -17,7 +17,7 @@ const url = require('url')
 const jwt = require('jsonwebtoken')
 
 app.use(function(req, res, next) {
-    console.log('test')
+    console.log(req.url)
     next()
 })
 
