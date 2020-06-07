@@ -50,6 +50,17 @@ class StudentDashboard extends Component {
 
   componentDidMount() {
     console.log("[STUDENT DASHBOARD] Mounted");
+
+    // Notification for mic and camera permission for the chatroom
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(function (stream) {
+        console.log("You let me use your mic!");
+      })
+      .catch(function (err) {
+        console.log("No mic for you!");
+      });
+
     // Notification for ready check
     let notificationGranted;
     Notification.requestPermission().then(function (result) {
