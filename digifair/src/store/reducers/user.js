@@ -64,7 +64,11 @@ const recruiterAuthSuccess = (state, action) => {
 };
 const authLogout = (state, action) => {
   console.log(state);
-  return updateObject(state, { credentials: null, token: null });
+  return updateObject(state, {
+    credentials: null,
+    token: null,
+    loading: false,
+  });
 };
 
 const setAuthRedirectPath = (state, action) => {
