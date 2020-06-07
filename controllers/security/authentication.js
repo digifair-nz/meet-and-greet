@@ -31,11 +31,11 @@ async function adminLogin(req, res) {
 
 async function studentLogin(req, res) {
     console.log('a')
-    if(!validate.isEmail(req.body)) {
+    if(!validate.isEmail(req.body, res)) {
         return
     }
     console.log('hmm')
-    if(!validate.isId(req.params)) {
+    if(!validate.isId(req.params, res)) {
         return
     }
     console.log('11')
