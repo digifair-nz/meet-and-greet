@@ -21,7 +21,7 @@ export { updateQueuePosition } from "./queuePosition";
 export { studentJoinChatroom, studentLeaveSession } from "./studentChatroom";
 
 // Kick student and move sessions
-export { kickStudent } from "./recruiterChatroom";
+export { kickStudent, recruiterInviteNextStudent } from "./recruiterChatroom";
 
 // Clear any errors in the state
 export { clearError } from "./clearError";

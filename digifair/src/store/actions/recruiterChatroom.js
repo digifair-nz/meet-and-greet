@@ -29,8 +29,7 @@ export const kickStudentFail = (error) => {
 
 /**
  * The company will create another session after kicking a student to prevent previous students from joining
- *
- *
+
  */
 export const kickStudent = () => {
   return (dispatch) => {
@@ -50,6 +49,45 @@ export const kickStudent = () => {
         console.log(err);
 
         dispatch(kickStudentFail(err));
+      });
+  };
+};
+
+export const recruiterInviteNextStudentStart = () => {
+  return {
+    type: actionTypes.RECRUITER_INVITE_NEXT_STUDENT_START,
+  };
+};
+
+export const recruiterInviteNextStudentSuccess = () => {
+  return {
+    type: actionTypes.RECRUITER_INVITE_NEXT_STUDENT_SUCCESS,
+  };
+};
+
+export const recruiterInviteNextStudentFail = (error) => {
+  return {
+    type: actionTypes.RECRUITER_INVITE_NEXT_STUDENT_FAIL,
+    error: error,
+  };
+};
+
+export const recruiterInviteNextStudent = () => {
+  return (dispatch) => {
+    dispatch(recruiterInviteNextStudentStart());
+    // const token = localStorage.getItem("token");
+
+    axios
+      .post("/company/next/")
+      .then((response) => {
+        console.log(response);
+
+        dispatch(recruiterInviteNextStudentSuccess());
+      })
+      .catch((err) => {
+        console.log(err);
+
+        dispatch(recruiterInviteNextStudentFail(err));
       });
   };
 };

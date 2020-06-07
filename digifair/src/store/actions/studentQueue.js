@@ -81,7 +81,7 @@ export const queueStudent = (companyId, index) => {
         dispatch(queueSuccess(companyId, index, res.data.queuePosition));
       })
       .catch((error) => {
-        dispatch(queueFail(companyId, index, error));
+        dispatch(queueFail(companyId, index, error.response.data));
       });
   };
 };
@@ -130,7 +130,7 @@ export const dequeueStudent = (companyId, index) => {
         dispatch(dequeueSuccess(companyId, index));
       })
       .catch((error) => {
-        dispatch(dequeueFail(companyId, index, error));
+        dispatch(dequeueFail(companyId, index, error.response.data));
       });
   };
 };

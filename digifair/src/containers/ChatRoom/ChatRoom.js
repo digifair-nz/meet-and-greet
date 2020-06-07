@@ -96,6 +96,7 @@ class ChatRoom extends Component {
       connectionId: null,
       connections: [],
       loading: true,
+      allowNextUser: true,
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -132,6 +133,11 @@ class ChatRoom extends Component {
       if (event.connection.connectionId != this.state.connectionId) {
         console.log("Another client connected.");
         if (this.state.connectionId != null) {
+          if (this.state.connections.length < 2) {
+            this.setState({
+              allowNextUser: false,
+            });
+          }
           this.setState({
             connectionId: event.connection.connectionId,
           });
@@ -199,6 +205,7 @@ class ChatRoom extends Component {
           connections.pop();
           this.setState({
             connections: connections,
+            allowNextUser: true,
           });
           this.props.kickStudent();
         });
@@ -255,11 +262,19 @@ class ChatRoom extends Component {
             </Aux>
           ) : this.props.isStudent ? null : (
             <Aux>
-              <Button btnType="Control">Open Queue</Button>
-              <Button btnType="Success">Invite Next User</Button>
-              <Button btnType="Control">Take a break</Button>
+              <Button btnType="Control">Tutorial</Button>
+              {
+                <Button
+                  clicked={this.props.inviteNextStudent}
+                  //disabled={this.state.allowNextUser}
+                  btnType="Success"
+                >
+                  Invite Next User
+                </Button>
+              }
+              {/* <Button btnType="Control">Take a break</Button> */}
               <Button clicked={this.kickStudent} btnType="Danger">
-                End Current Session
+                Disconnect Student
               </Button>
               <Button
                 clicked={this.leaveEvent}
@@ -317,6 +332,7 @@ const mapStateToProps = (state) => {
   return {
     credentials: state.user.credentials,
     isStudent: state.user.isStudent,
+    //allowNextUser: state.user.allowNextUser,
   };
 };
 
@@ -326,6 +342,7 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => dispatch(actions.logout()),
     studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
     kickStudent: () => dispatch(actions.kickStudent()),
+    inviteNextStudent: () => dispatch(actions.recruiterInviteNextStudent()),
   };
 };
 

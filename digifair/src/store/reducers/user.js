@@ -19,6 +19,7 @@ const initialState = {
   credentials: null, // this is for vonage API
   isStudent: true,
   eventId: null,
+  allowNextUser: null,
 };
 
 const authStart = (state, action) => {
@@ -90,12 +91,34 @@ const recruiterKickStudentSuccess = (state, action) => {
   return updateObject(state, {
     credentials: action.credentials,
     loading: false,
+    allowNextUser: true,
   });
 };
 
 const recruiterKickStudentFail = (state, action) => {
   return updateObject(state, {
     loading: false,
+    error: action.error,
+  });
+};
+
+const recruiterInviteNextStart = (state, action) => {
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const recruiterInviteNextSuccess = (state, action) => {
+  return updateObject(state, {
+    allowNextUser: true,
+    loading: false,
+  });
+};
+
+const recruiterInviteNextFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
   });
 };
 
@@ -127,6 +150,12 @@ const reducer = (state = initialState, action) => {
       return recruiterKickStudentSuccess(state, action);
     case actionTypes.RECRUITER_KICK_STUDENT_FAIL:
       return recruiterKickStudentFail(state, action);
+    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_START:
+      return recruiterInviteNextStart(state, action);
+    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_START:
+      return recruiterInviteNextSuccess(state, action);
+    case actionTypes.RECRUITER_INVITE_NEXT_STUDENT_FAIL:
+      return recruiterInviteNextFail(state, action);
     default:
       return state;
   }
