@@ -78,12 +78,14 @@ async function seedDatabase(opentok = false) {
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 2',
+        inSession: true,
         email: '2@gmail.com'
     })
     const room3 = new Room({
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 3',
+        inSession: true,
         email: '3@gmail.com'
     })
     const queue1 = new Queue({
