@@ -128,29 +128,56 @@ class ChatRoom extends Component {
     });
 
     // Event listener for client connecting to the session
-    otCore.on("connectionCreated", (event) => {
-      console.log(this.state);
+    // otCore.on("connectionCreated", (event) => {
+    //   console.log(this.state);
 
+    //   if (event.connection.connectionId != this.state.connectionId) {
+    //     console.log("Another client connected.");
+    //     if (this.state.connectionId != null) {
+    //       if (this.state.connections.length < 2) {
+    //         this.setState({
+    //           allowNextUser: false,
+    //         });
+    //       }
+    //     } else {
+    //       if (this.state.connections.length < 2) {
+    //         this.setState({
+    //           connectionId: event.connection.connectionId,
+    //         });
+    //       }
+    //     }
+    //     let connections = [...this.state.connections];
+    //     connections.push(event.connection);
+    //     this.setState({
+    //       connections: connections,
+    //     });
+    //   }
+    // });
+
+    otCore.on("connectionCreated", (event) => {
       if (event.connection.connectionId != this.state.connectionId) {
-        console.log("Another client connected.");
-        if (this.state.connectionId != null) {
-          if (this.state.connections.length < 2) {
+        // Check if this is an initial connection (for the recruiter)
+        if (this.state.connectionId === null) {
+          console.log("I have connected");
+          let connections = []; // Initially there are no connections
+          connections.push(event.connection); // push his connection
+
+          this.setState({
+            connectionId: event.connection.connectionId,
+            connections: connections,
+          });
+        } else {
+          // Recruiter has already joined
+          console.log("Another client connected.");
+          if (this.state.connections.length > 0) {
+            let connections = [...this.state.connections];
+            connections.push(event.connection);
             this.setState({
               allowNextUser: false,
-            });
-          }
-        } else {
-          if (this.state.connections.length < 2) {
-            this.setState({
-              connectionId: event.connection.connectionId,
+              connections: connections,
             });
           }
         }
-        let connections = [...this.state.connections];
-        connections.push(event.connection);
-        this.setState({
-          connections: connections,
-        });
       }
     });
     // Student Client Kicked
@@ -225,10 +252,6 @@ class ChatRoom extends Component {
           this.setState({ connected: true });
 
           this.startCall();
-          // if (this.state.connected && !this.state.active) {
-          //   console.log("Call started");
-          //   this.startCall();
-          // }
         });
 
         // Event listener for client connecting to the session
@@ -256,39 +279,7 @@ class ChatRoom extends Component {
                 });
               }
             }
-            // Check if the student is joining
-
-            // if (this.state.connectionId != null) {
-            //   if (this.state.connections.length < 2) {
-            //     this.setState({
-            //       allowNextUser: false,
-            //     });
-            //   }
-            //   this.setState({
-            //     connectionId: event.connection.connectionId,
-            //   });
-            // }
-            // let connections = [...this.state.connections];
-            // connections.push(event.connection);
-            // this.setState({
-            //   connections: connections,
-            // });
           }
-
-          // if (this.state.connectionId != null) {
-          //   if (this.state.connections != null) {
-          //     // If the user is connecting first (initially no connections)
-          //     let connections = [];
-          //     connections.push(event.connection); // this is the recruiter's connection
-          //     this.setState({
-          //       connections: connections,
-          //       connectionId: event.connection.connectionId,
-          //       allowNextUser: true
-          //     });
-          //   } else {
-
-          //   }
-          //   }
         });
         // otCore.disconnect()
         const events = [
@@ -424,7 +415,7 @@ class ChatRoom extends Component {
               {
                 <Button
                   clicked={this.props.inviteNextStudent}
-                  //disabled={this.state.allowNextUser}
+                  disabled={!this.state.allowNextUser}
                   btnType="Success"
                 >
                   Invite Next User
