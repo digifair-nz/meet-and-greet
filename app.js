@@ -16,20 +16,13 @@ app.server = require('http').createServer(app)
 const url = require('url')
 const jwt = require('jsonwebtoken')
 
-app.use(function(req, res, next) {
-    console.log(req.url)
-    next()
-})
-
 const wsInstance = expressWs(app, app.server, {
     wsOptions: {
         verifyClient: function({ req }, done) {
-            console.log('attempt1')
             const { query: { token } } = url.parse(req.url, true)
     
             try {
                 req.jwt = jwt.verify(token, process.env.TOKEN_SECRET)
-                console.log('verified')
                 done(true)
             }
             catch (err) {
@@ -39,19 +32,13 @@ const wsInstance = expressWs(app, app.server, {
     }
 })
 app.ws('/', function(ws, req) {
-    console.log('attempt2')
     ws.jwt = req.jwt
     const user = User.findById(req.jwt._id)
     ws.hasBeenNotified = user.previousSessions || {}
-    console.log('sending connected')
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
-    console.log('b', JSON.stringify(wsInstance.getWss().clients))
 })
-setInterval(() => {
-    console.log(JSON.stringify(wsInstance.getWss().clients))
-}, 1000)
 
 const userRouter = require('./routes/user')(wsInstance)
 const companyRouter = require('./routes/company')(wsInstance)

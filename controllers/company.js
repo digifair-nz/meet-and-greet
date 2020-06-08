@@ -244,10 +244,29 @@ module.exports = function(wsInstance) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
+    function getStudentTalkJSDetails(req, res) {
+        const room = Room.findById(req.payload._id)
+        if(!room) {
+            return res.status(404).json({ message: 'Room could not be found.' })
+        }
+        const user = User.findById(room.sessionPartner)
+        if(!user) {
+            return res.status(404).json({ message: 'User could not be found.' })
+        }
+        return res.status(200).json({
+            talkJSData: {
+                name: user.name,
+                id: user._id,
+                appId: process.env.TALKJS_APP_ID
+            }
+        })
+    }
+
     return {
         createRoom,
         kickStudent,
         getNextStudent,
-        findAndNotifyEligibleUser
+        findAndNotifyEligibleUser,
+        getStudentTalkJSDetails
     }
 }
