@@ -12,12 +12,28 @@ export const authStart = (eventId, loading) => {
   };
 };
 
-export const studentAuthSuccess = (token, credentials, name) => {
+/**
+ * studentAuthSuccess
+ * @param {JWT} token of the student user
+ * @param {String} name of the student user
+ * @param {String} id students id (will be used for text chat creation)
+ * @param {Object} credentials student's credentials for a particular session with recruiter (null if not in session)
+ * @param {Object} talkJSData used for TalkJS text chat (contains AppId, name of the recruiter and id of the recruiter)
+ */
+export const studentAuthSuccess = (
+  token,
+  name,
+  id,
+  credentials,
+  talkJSData
+) => {
   return {
     type: actionTypes.STUDENT_AUTH_SUCCESS,
     idToken: token,
     credentials: credentials,
     name: name,
+    id: id,
+    talkJSData: talkJSData,
   };
 };
 //
@@ -39,12 +55,20 @@ export const logout = () => {
   };
 };
 
-export const recruiterAuthSuccess = (token, credentials, name) => {
+export const recruiterAuthSuccess = (
+  token,
+  name,
+  id,
+  credentials,
+  talkJSData
+) => {
   return {
     type: actionTypes.RECRUITER_AUTH_SUCCESS,
     token: token,
-    credentials: credentials,
     name: name,
+    id: id,
+    credentials: credentials,
+    talkJSData: talkJSData,
   };
 };
 
@@ -73,14 +97,16 @@ export const auth = (eventId, email, password, isStudent) => {
           // );
           const token = response.headers["auth-token"];
           const name = jwt(token).name;
-          console.log(name);
+          const id = jwt(token)._id;
+
           localStorage.setItem("name", name);
+          localStorage.setItem("id", id);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
           // localStorage.setItem("expirationDate", expirationDate);
 
           //axios.defaults.headers.common["auth-token"] = token; // for all requests
-          dispatch(studentAuthSuccess(token, null));
+          dispatch(studentAuthSuccess(token, name, id, null, null));
           // dispatch(studentCheckAuthTimeout(response.data.expiresIn));
         })
         .catch((err) => {
@@ -97,13 +123,15 @@ export const auth = (eventId, email, password, isStudent) => {
 
           const credentials = response.data.credentials;
           const name = jwt(token).name;
-          console.log(name);
+          const id = jwt(token)._id;
+
+          localStorage.setItem("id", id);
           localStorage.setItem("name", name);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
 
-          dispatch(recruiterAuthSuccess(token, credentials));
+          dispatch(recruiterAuthSuccess(token, name, id, credentials, null));
           // dispatch(recruiterCheckAuthTimeout(response.data.expiresIn));
         })
         .catch((err) => {
@@ -124,19 +152,27 @@ export const setAuthRedirectPath = (path) => {
 
 export const authCheckState = () => {
   return (dispatch) => {
-    const token = localStorage.getItem("token");
     const eventId = localStorage.getItem("eventId");
+
+    const token = localStorage.getItem("token");
+    const name = localStorage.getItem("name");
+    const id = localStorage.getItem("id");
+
     const credentials = localStorage.getItem("credentials");
+    const talkJSData = localStorage.getItem("talkJSData");
 
     // get talk js data too
 
     let creds = null;
     if (credentials != null) {
-      console.log(creds);
+      //console.log(creds);
       creds = JSON.parse(credentials);
-      console.log(creds);
     }
 
+    let talkjsData = null;
+    if (talkJSData != null) {
+      talkjsData = talkJSData;
+    }
     // Get event id from local storage and save it to state if have any
     if (eventId != null) {
       dispatch(authStart(eventId, false));
@@ -154,12 +190,12 @@ export const authCheckState = () => {
     if (token) {
       if (credentials != null) {
         if (isStudent) {
-          dispatch(studentAuthSuccess(token, creds));
+          dispatch(studentAuthSuccess(token, name, id, creds, talkjsData));
         } else {
-          dispatch(recruiterAuthSuccess(token, creds));
+          dispatch(recruiterAuthSuccess(token, name, id, creds, talkjsData));
         }
       } else {
-        dispatch(studentAuthSuccess(token, null)); // only student can have no credentials at any point. Recruiter user will always be in sessions
+        dispatch(studentAuthSuccess(token, name, id, null, talkjsData)); // only student can have no credentials at any point. Recruiter user will always be in sessions
       }
 
       // dispatch(

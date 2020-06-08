@@ -19,8 +19,9 @@ const initialState = {
   credentials: null, // this is for vonage API
   isStudent: true,
   eventId: null,
-  allowNextUser: null,
+  //allowNextUser: null,
   name: null,
+  id: null,
   talkJSData: null,
 };
 
@@ -41,6 +42,8 @@ const studentAuthSuccess = (state, action) => {
     error: null,
     loading: false,
     name: action.name,
+    id: action.id,
+    talkJSData: action.talkJSData,
   });
 };
 
@@ -60,6 +63,8 @@ const recruiterAuthSuccess = (state, action) => {
     error: null,
     authRedirectPath: "/chat-room",
     name: action.name,
+    id: action.id,
+    talkJSData: action.talkJSData,
   });
 };
 const authLogout = (state, action) => {
@@ -81,7 +86,10 @@ const studentJoinChatroomStart = (state, action) => {
 };
 
 const studentJoinChatroomSuccess = (state, action) => {
-  return updateObject(state, { credentials: action.credentials });
+  return updateObject(state, {
+    credentials: action.credentials,
+    talkJSData: action.talkJSData,
+  });
 };
 
 const studentJoinChatroomFail = (state, action) => {

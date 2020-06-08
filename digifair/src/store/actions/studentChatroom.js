@@ -15,11 +15,12 @@ export const studentJoinChatroomStart = () => {
   };
 };
 
-export const studentJoinChatroomSuccess = (credentials) => {
+export const studentJoinChatroomSuccess = (credentials, talkJSData) => {
   // Expect to be called when a message is sent from the socket connection
   return {
     type: actionTypes.STUDENT_JOIN_CHATROOM_SUCCESS,
     credentials: credentials,
+    talkJSData: talkJSData,
   };
 };
 
@@ -43,15 +44,16 @@ export const studentJoinChatroom = (companyId) => {
         console.log(credentials);
         // console.log(credentials);
         // Save credentials to local storage
-
+        const talkJSData = response.data.talkJSData;
         // expect recruiter talkJS data
 
         // extract talkJSdata and save the object in local storage
-
+        localStorage.setItem("talkJSData", JSON.stringify(talkJSData));
         //Don't forget to retrieve data from auth check state
+
         localStorage.setItem("credentials", JSON.stringify(credentials));
 
-        dispatch(studentJoinChatroomSuccess(credentials));
+        dispatch(studentJoinChatroomSuccess(credentials, talkJSData));
       })
       .catch((err) => {
         console.log(err);
