@@ -9,11 +9,11 @@ import classes from "./NameCard.module.css";
 
 const nameCard = (props) => {
   let name;
-
+  console.log(props);
   let icon = <Spinner fontSize="20px" />;
   let userType = null;
   if (!props.searching) {
-    icon = props.isStudent ? (
+    icon = !props.isStudent ? (
       <img
         src={studentIcon}
         alt="black student hat"
