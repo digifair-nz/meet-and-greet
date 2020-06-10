@@ -211,7 +211,7 @@ class StudentAuth extends Component {
             onSubmit={(event) => this.submitHandler(event)}
           >
             <h2 className={classes.FormTitle}>Sign in</h2>
-            <span className={classes.IdentityToggle}>
+            <span>
               {/* Toggle company and studet */}
               <SwitchButton
                 switchUser={this.userTypeSwitch}

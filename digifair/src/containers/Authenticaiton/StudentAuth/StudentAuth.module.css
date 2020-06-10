@@ -56,11 +56,6 @@ Form - Contains the title, error message and input fields (not the button)
   text-align: center;
   padding-bottom: 3%;
 }
-/* .IdentityToggle{
-  width: 100%;
-  justify-content: center;
-} */
-
 
 
 
@@ -90,10 +85,6 @@ Form - Contains the title, error message and input fields (not the button)
   }
 }
 
-/*
-
-16:9 aspect ratio resolutions: 1024×576, 1152×648, 1280×720, 1366×768, 1600×900, 1920×1080, 2560×1440 and 3840×2160
-*/
 
 @media only screen and (orientation: portrait) {
 
@@ -102,19 +93,6 @@ Form - Contains the title, error message and input fields (not the button)
   }
   .Logo{
     width: 22%;
-  }
-
-
-  @media (min-width: 769px) {
-    /*Ipad */
-    /* *{
-      font-size: 102%;
-    } */
-  }
-  @media (max-width: 640px) {
-  }
-
-  @media (max-width: 560px) {
   }
 
   /*480px is max phone size*/
@@ -136,14 +114,6 @@ Form - Contains the title, error message and input fields (not the button)
 }
 
 @media only screen and (orientation: landscape) {
-  @media (max-width: 2560px) {
-  }
-
-  @media (max-width: 1920px) {
-  }
-
-  @media (max-width: 1600px) {
-  }
 
   @media (max-width: 1366px) {
     /*Ipad Pro */
@@ -151,12 +121,6 @@ Form - Contains the title, error message and input fields (not the button)
       width: 120%;
       justify-self: center;
     }
-    
-  }
-
-
-  @media (max-width: 1024px) {
-    /*Ipad */
   }
 
   @media (max-height: 481px) {
@@ -167,12 +131,4 @@ Form - Contains the title, error message and input fields (not the button)
 
   }
 
-  @media (max-width: 823px) {
-  }
-
-  @media (max-width: 812px) {
-  }
-
-  @media (max-width: 736px) {
-  }
 }
