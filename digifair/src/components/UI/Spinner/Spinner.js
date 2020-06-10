@@ -1,9 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import classes from './Spinner.module.css';
+import classes from "./Spinner.module.css";
 
-const spinner = () => (
-    <div className={classes.Loader}>Loading...</div>
-);
+const spinner = (props) => {
+  let spinnerColor =
+    props.spinnerColor === "White" ? classes.LoaderWhite : classes.LoaderPink;
 
+  return (
+    <div style={{ fontSize: props.fontSize }} className={spinnerColor}>
+      Loading...
+    </div>
+  );
+};
 export default spinner;
