@@ -52,9 +52,9 @@ class StudentAuth extends Component {
   };
 
   componentDidMount() {
+    console.log("AUTH CONTAINER MOUNTED");
     const eventId = this.props.match.params.id;
 
-    console.log(this.props.creds);
     this.setState({
       eventId: eventId,
     });
@@ -64,13 +64,20 @@ class StudentAuth extends Component {
       this.props.onSetAuthRedirectPath(path);
     }
 
-    window.addEventListener("keydown", (e) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        this.submitHandler(e); // Submit on pressing enter
-      }
-    });
+    window.addEventListener("keydown", this.onKeydown, false);
   }
+
+  onKeydown = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this.submitHandler(e); // Submit on pressing enter
+    }
+  };
+
+  UNSAFE_componentWillMount = () => {
+    console.log("Unmounted");
+    window.removeEventListener("keydown", this.onKeydown, false);
+  };
 
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
@@ -90,7 +97,6 @@ class StudentAuth extends Component {
   };
 
   checkValidity = (value, rules) => {
-    console.log(value);
     let isValid = true;
     if (rules.required) {
       isValid = value.trim() !== "" && isValid;

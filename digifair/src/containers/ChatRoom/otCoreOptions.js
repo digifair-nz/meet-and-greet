@@ -20,7 +20,7 @@ export const otCoreOptions = {
     }[pubSub][type];
   },
   controlsContainer: "#controls",
-  packages: ["screenSharing"],
+  packages: ["screenSharing", "annotation"],
 
   //https://www.npmjs.com/package/opentok-accelerator-core#communication-options
   communication: {
@@ -43,6 +43,14 @@ export const otCoreOptions = {
       },
       videoSource: "window",
       fitMode: "cover", // Using default
+    },
+  },
+  annotation: {
+    colors: ["red"],
+    items: null,
+    absoluteParent: {
+      publisher: ".App-video-container",
+      subscriber: ".App-video-container",
     },
   },
 };

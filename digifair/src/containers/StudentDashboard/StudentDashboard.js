@@ -37,6 +37,7 @@ class StudentDashboard extends Component {
   state = {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
+    permissionGranted: false,
   };
 
   // Set default tab title on mounting
@@ -55,10 +56,93 @@ class StudentDashboard extends Component {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(function (stream) {
-        console.log("You let me use your mic!");
+        stream.getTracks().forEach((track) => {
+          // Stop streaming after permission is granted
+
+          track.stop();
+        });
       })
       .catch(function (err) {
-        console.log("No mic for you!");
+        console.log(err);
+        alert(
+          "You need to grant microphone and camera permission for the interview if you want to participate."
+        );
+      });
+
+    // Make sure the user has given permission for microphone and camera
+    navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
+      switch (permissionStatus.state) {
+        case "denied":
+          console.log("denied");
+          this.setState({
+            permissionGranted: false,
+          });
+          break;
+        case "granted":
+          this.setState({
+            permissionGranted: true,
+          });
+          break;
+        case "prompt":
+          console.log("waiting...");
+      }
+      permissionStatus.onchange = (e) => {
+        // detecting if the event is a change
+        if (e.type === "change") {
+          // checking what the new permissionStatus state is
+          const newState = e.target.state;
+          if (newState === "denied") {
+            this.setState({
+              permissionGranted: false,
+            });
+          } else if (newState === "granted") {
+            this.setState({
+              permissionGranted: true,
+            });
+          } else {
+            console.log("Thanks for reverting things back to normal");
+          }
+        }
+      };
+    });
+
+    // Make sure the user has given permission for microphone and camera
+    navigator.permissions
+      .query({ name: "microphone" })
+      .then((permissionStatus) => {
+        switch (permissionStatus.state) {
+          case "denied":
+            console.log("denied");
+            this.setState({
+              permissionGranted: false,
+            });
+            break;
+          case "granted":
+            this.setState({
+              permissionGranted: true,
+            });
+            break;
+          case "prompt":
+            console.log("waiting...");
+        }
+        permissionStatus.onchange = (e) => {
+          // detecting if the event is a change
+          if (e.type === "change") {
+            // checking what the new permissionStatus state is
+            const newState = e.target.state;
+            if (newState === "denied") {
+              this.setState({
+                permissionGranted: false,
+              });
+            } else if (newState === "granted") {
+              this.setState({
+                permissionGranted: true,
+              });
+            } else {
+              console.log("Thanks for reverting things back to normal");
+            }
+          }
+        };
       });
 
     // Notification for ready check
@@ -77,8 +161,8 @@ class StudentDashboard extends Component {
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
       const ws = new WebSocket(
-        // "ws://localhost:3000/?token=" + this.props.token
-        "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+        "ws://localhost:3000/?token=" + this.props.token
+        // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
       );
 
       // console.log("Socket Connection Opened!");
@@ -99,6 +183,8 @@ class StudentDashboard extends Component {
                   readyCompanyIndex: i,
                   showReadyPromptPopUp: true,
                 });
+                // Wait 10 seconds before closing the pop up.
+
                 // ****READY POP UP*****
                 if (notificationGranted) {
                   // Notification
@@ -128,8 +214,12 @@ class StudentDashboard extends Component {
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
     document.title = "Dashboard"; // Change back from notification tab name
+
+    //Temporarily disable the company he declined.
+
     this.setState({
       showReadyPromptPopUp: false,
+      readyCompanyIndex: null,
     });
   };
 
@@ -144,23 +234,35 @@ class StudentDashboard extends Component {
       companyCards = <Spinner />;
       readyCheckPopUp = null;
     } else {
-      companyCards = this.props.companies.map((company, index) => {
-        // console.log(company);
-        return (
-          <CompanyCard
-            id={company._id}
-            index={index}
-            isQueued={company.isQueued}
-            logo={company.logoURL}
-            key={company._id}
-            hadSession={company.hadSession}
-            queuePosition={company.queuePosition}
-            onInfoClick={(event) => this.showInfoPopup(event, index)}
-            queuing={company.queuing}
-            description={company.description}
-          />
+      if (!this.state.permissionGranted) {
+        companyCards = (
+          <span
+            style={{ textAlign: "center", gridColumnStart: 2, color: "red" }}
+          >
+            Please give permission for camera and microphone to participate in
+            the event
+          </span>
         );
-      });
+      } else {
+        companyCards = this.props.companies.map((company, index) => {
+          // console.log(company);
+          return (
+            <CompanyCard
+              id={company._id}
+              index={index}
+              isQueued={company.isQueued}
+              logo={company.logoURL}
+              key={company._id}
+              hadSession={company.hadSession}
+              queuePosition={company.queuePosition}
+              onInfoClick={(event) => this.showInfoPopup(event, index)}
+              queuing={company.queuing}
+              description={company.description}
+            />
+          );
+        });
+      }
+
       if (this.state.readyCompanyIndex !== null) {
         readyCheckPopUp = (
           <Aux>

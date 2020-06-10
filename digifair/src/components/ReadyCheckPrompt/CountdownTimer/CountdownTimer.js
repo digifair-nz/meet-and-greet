@@ -1,57 +1,54 @@
-import React, { Component } from 'react';
-import classes from './CountdownTimer.module.css';
+import React, { Component } from "react";
+import classes from "./CountdownTimer.module.css";
 
 const COUNTDOWN_TIME = 10;
 
 class CountdownTimer extends Component {
+  state = {
+    seconds: COUNTDOWN_TIME,
+    // isPlaying: false
+  };
 
-    state = {
-        seconds: COUNTDOWN_TIME,
-        // isPlaying: false
-    }
+  startTimer = () => {
+    this.timer = setInterval(() => {
+      if (this.state.seconds === 0) {
+        clearInterval(this.timer);
+        this.props.onTimerEnd();
+      }
+      console.log(this.state.seconds);
+      this.setState((prevState) => {
+        return {
+          seconds: prevState.seconds - 1,
+        };
+      });
+    }, 1000);
+  };
 
+  componentDidMount() {
+    this.startTimer();
+  }
 
-    startTimer = () => {
+  componentWillUnmount() {
+    console.log("Hello");
+    clearInterval(this.timer);
+  }
 
-        const interval = setInterval(() => {
-
-            if (this.state.seconds === 0) {
-                clearInterval(interval);
-                this.props.onTimerEnd();
-            }
-
-            this.setState(prevState => {
-                return {
-                    seconds: prevState.seconds - 1
-                }
-            });
-
-        }, 1000);
+  render() {
+    const durationStyle = {
+      animationDuration: COUNTDOWN_TIME + "s",
     };
 
-
-    componentDidMount(){
-        this.startTimer();
-    }
-
-
-    render() {
-
-        const durationStyle = {
-            animationDuration: COUNTDOWN_TIME + 's'
-        }
-
-        return (
-            <div className={classes.Countdown}>
-                
-                <div className={classes.CountdownNumber} style={durationStyle}>{this.state.seconds}</div>
-                <svg>
-                    <circle r="36" cx="40" cy="40" style={durationStyle}></circle>
-                </svg>
-
-            </div>
-        )
-    }
+    return (
+      <div className={classes.Countdown}>
+        <div className={classes.CountdownNumber} style={durationStyle}>
+          {this.state.seconds}
+        </div>
+        <svg>
+          <circle r="36" cx="40" cy="40" style={durationStyle}></circle>
+        </svg>
+      </div>
+    );
+  }
 }
 
 // const countdownTimer = (props) => {
@@ -62,7 +59,6 @@ class CountdownTimer extends Component {
 
 //     const countdown = () => {
 //         // countdownNumberEl.textContent = seconds;
-
 
 //         setInterval(function () {
 //             seconds = --seconds <= 0 ? COUNTDOWN_TIME : seconds;
@@ -81,9 +77,7 @@ class CountdownTimer extends Component {
 //     )
 // }
 
-
 // class CountdownTimer extends Component {
-
 
 //   constructor(props) {
 //     super(props);

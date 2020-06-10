@@ -46,7 +46,7 @@ export const studentJoinChatroom = (companyId) => {
         // Save credentials to local storage
         const talkJSData = response.data.talkJSData;
         // expect recruiter talkJS data
-
+        console.log(talkJSData);
         // extract talkJSdata and save the object in local storage
         localStorage.setItem("talkJSData", JSON.stringify(talkJSData));
         //Don't forget to retrieve data from auth check state
@@ -58,9 +58,7 @@ export const studentJoinChatroom = (companyId) => {
       .catch((err) => {
         console.log(err);
 
-        dispatch(
-          studentJoinChatroomFail("Could not connect to the company room")
-        );
+        dispatch(studentJoinChatroomFail(err.response.data));
       });
   };
 };
@@ -68,6 +66,7 @@ export const studentJoinChatroom = (companyId) => {
 export const studentLeaveSession = () => {
   // Clear credentials
   localStorage.removeItem("credentials");
+  localStorage.removeItem("talkJSData");
 
   return {
     type: actionTypes.STUDENT_LEAVE_SESSION,

@@ -1,5 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
+import { fetchCompaniesStart } from "../actions/fetchCompanies";
+import { fetchStudentData } from "../actions";
 
 // NOTE: RENAME TO STUDENT not studentAuth
 const initialState = {
@@ -26,6 +28,7 @@ const initialState = {
 };
 
 const authStart = (state, action) => {
+  console.log(state);
   // console.log(action.eventId);
   return updateObject(state, {
     error: null,
@@ -68,11 +71,14 @@ const recruiterAuthSuccess = (state, action) => {
   });
 };
 const authLogout = (state, action) => {
-  console.log(state);
   return updateObject(state, {
     credentials: null,
     token: null,
     loading: false,
+    talkJSData: null,
+    name: null,
+    isStudent: true,
+    id: null,
   });
 };
 
@@ -97,7 +103,7 @@ const studentJoinChatroomFail = (state, action) => {
 };
 
 const studentLeaveSession = (state, action) => {
-  return updateObject(state, { credentials: null });
+  return updateObject(state, { credentials: null, talkJSData: null });
 };
 
 const recruiterKickStudentStart = (state, action) => {
@@ -108,7 +114,6 @@ const recruiterKickStudentSuccess = (state, action) => {
   return updateObject(state, {
     credentials: action.credentials,
     loading: false,
-    allowNextUser: true,
   });
 };
 
@@ -127,12 +132,31 @@ const recruiterInviteNextStart = (state, action) => {
 
 const recruiterInviteNextSuccess = (state, action) => {
   return updateObject(state, {
-    allowNextUser: true,
     loading: false,
   });
 };
 
 const recruiterInviteNextFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+const fetchStudentDataStart = (state, action) => {
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const fetchStudentDataSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    talkJSData: action.talkJSData,
+  });
+};
+
+const fetchStudentDataFail = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
@@ -173,6 +197,12 @@ const reducer = (state = initialState, action) => {
       return recruiterInviteNextSuccess(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_FAIL:
       return recruiterInviteNextFail(state, action);
+    case actionTypes.FETCH_STUDENT_DATA_START:
+      return fetchStudentDataStart(state, action);
+    case actionTypes.FETCH_STUDENT_DATA_SUCCESS:
+      return fetchStudentDataSuccess(state, action);
+    case actionTypes.FETCH_STUDENT_DATA_FAIL:
+      return fetchStudentDataFail(state, action);
     default:
       return state;
   }

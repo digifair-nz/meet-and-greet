@@ -47,6 +47,11 @@ export const authFail = (error) => {
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("credentials");
+  localStorage.removeItem("talkJSData");
+  localStorage.removeItem("name");
+  localStorage.removeItem("id");
+
+  // Dequeue them from all companies if they are a student when they logout
 
   // localStorage.removeItem("expirationDate");
 
