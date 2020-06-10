@@ -42,6 +42,10 @@ export const kickStudent = () => {
         console.log(response);
         const credentials = response.data.credentials;
         localStorage.removeItem("credentials");
+
+        // Remove Student's credentials
+        localStorage.removeItem("talkJSData");
+
         localStorage.setItem("credentials", JSON.stringify(credentials));
         dispatch(kickStudentSuccess(response.data.credentials));
       })
@@ -101,9 +105,10 @@ export const fetchStudentDataStart = () => {
   };
 };
 
-export const fetchStudentDataSuccess = (studentData) => {
+export const fetchStudentDataSuccess = (talkJSData) => {
   return {
     type: actionTypes.FETCH_STUDENT_DATA_SUCCESS,
+    talkJSData: talkJSData,
   };
 };
 
@@ -124,13 +129,15 @@ export const fetchStudentData = () => {
     // const token = localStorage.getItem("token");
 
     axios
-      .post("/company/next/")
+      .get("/company/student-details/")
       .then((response) => {
         console.log(response);
 
         // Get name, appId and student's id for text chat
-        const studentData = response.data.talkJSData;
-        dispatch(fetchStudentDataSuccess(studentData));
+        const talkJSData = response.data.talkJSData;
+        localStorage.setItem("talkJSData", JSON.stringify(talkJSData));
+
+        dispatch(fetchStudentDataSuccess(talkJSData));
       })
       .catch((err) => {
         console.log(err);

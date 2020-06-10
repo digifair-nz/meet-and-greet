@@ -15,7 +15,6 @@ import "./App.css";
 // This will need to be refractored so that it can be reused for both types of users --> Companies and Students
 class App extends Component {
   componentDidMount() {
-    console.log("Hey");
     // check users local storage for a token and try to sign them in automatically
     // Also check credentials for a room session and redirect to the room if credentials are found
     this.props.onTryAutoSignUp();
@@ -43,8 +42,9 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path="/chat-room" component={ChatRoom} />
-          <Route path="/sign-in" component={Auth} />
+          {/* <Route path="/sign-in" component={Auth} /> */}
           <Route path="/" component={StudentDashboard} exact />
+          <Redirect to="/" />
         </Switch>
       );
     }

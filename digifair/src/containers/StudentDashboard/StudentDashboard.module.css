@@ -11,7 +11,7 @@
   padding-top: 5%;
   grid-auto-rows: 220px;
   overflow-y: scroll;
-  /* margin-left: 10%; */
+  margin-left: 5%;
 }
 /* Event container encapsulates company cards, event title, and event statistics*/
 /* .Event {
