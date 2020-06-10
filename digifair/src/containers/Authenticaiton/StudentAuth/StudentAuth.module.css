@@ -86,6 +86,37 @@ Form - Contains the title, error message and input fields (not the button)
 }
 
 
+
+
+@media only screen and (orientation: landscape) {
+
+  @media (max-aspect-ratio: 4/3){
+    .AuthContainer {
+      grid-template-columns: 60% 40%;
+      grid-template-rows: 100%;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1366px) {
+    /*Ipad Pro */
+    .FormContainer {
+      width: 120%;
+      justify-self: center;
+    }
+  }
+
+  @media (max-height: 481px) {
+    /*Iphone 11 PRO */
+    .Logo{
+      width: 15%;
+    }
+
+  }
+
+}
+
 @media only screen and (orientation: portrait) {
 
   .AuthContainer{
@@ -111,24 +142,4 @@ Form - Contains the title, error message and input fields (not the button)
     /*Iphone X */
 
   }
-}
-
-@media only screen and (orientation: landscape) {
-
-  @media (max-width: 1366px) {
-    /*Ipad Pro */
-    .FormContainer {
-      width: 120%;
-      justify-self: center;
-    }
-  }
-
-  @media (max-height: 481px) {
-    /*Iphone 11 PRO */
-    .Logo{
-      width: 15%;
-    }
-
-  }
-
 }
