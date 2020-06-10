@@ -176,7 +176,7 @@ export const authCheckState = () => {
 
     let talkjsData = null;
     if (talkJSData != null) {
-      talkjsData = talkJSData;
+      talkjsData = JSON.parse(talkJSData);
     }
     // Get event id from local storage and save it to state if have any
     if (eventId != null) {
