@@ -192,24 +192,26 @@ class StudentAuth extends Component {
         {
           authed /*This causes authenticated users to be redirected to the root */
         }
+        <img
+          className={classes.Logo}
+          src={digifairLogo}
+          alt="Digifair Black and White Logo"
+        />
         <div className={classes.FormContainer}>
-          <img
-            className={classes.Logo}
-            src={digifairLogo}
-            alt="Digifair Black and White Logo"
-          />
+
 
           <form
             className={classes.Form}
             onSubmit={(event) => this.submitHandler(event)}
           >
             <h2 className={classes.FormTitle}>Sign in</h2>
-
-            {/* Toggle company and studet */}
-            <SwitchButton
-              switchUser={this.userTypeSwitch}
-              isStudent={this.state.isStudent}
-            />
+            <span className={classes.IdentityToggle}>
+              {/* Toggle company and studet */}
+              <SwitchButton
+                switchUser={this.userTypeSwitch}
+                isStudent={this.state.isStudent}
+              />
+            </span>
             <span className={classes.ErrorMessage}>{errorMessage}</span>
 
             {form}
@@ -217,13 +219,13 @@ class StudentAuth extends Component {
           {this.props.loading ? (
             <Spinner />
           ) : (
-            <Button
-              clicked={(event) => this.submitHandler(event)}
-              btnType="Accept"
-            >
-              Sign in
-            </Button>
-          )}
+              <Button
+                clicked={(event) => this.submitHandler(event)}
+                btnType="Accept"
+              >
+                Sign in
+              </Button>
+            )}
         </div>
         <div className={classes.BackgroundIllustration}></div>
       </div>

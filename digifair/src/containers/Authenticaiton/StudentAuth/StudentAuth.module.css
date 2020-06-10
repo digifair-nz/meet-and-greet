@@ -26,8 +26,8 @@ Form - Contains the title, error message and input fields (not the button)
 }
 
 .Logo {
-  width: 22%;
-  margin-top: 5%;
+  width: 12%;
+  margin-top: 2%;
   padding-left: 2%;
   position: absolute;
   top: 0;
@@ -55,4 +55,124 @@ Form - Contains the title, error message and input fields (not the button)
   color: rgb(211, 32, 32);
   text-align: center;
   padding-bottom: 3%;
+}
+/* .IdentityToggle{
+  width: 100%;
+  justify-content: center;
+} */
+
+
+
+
+/*DISPLAY 1920 BY DEFAULT*/
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+  *{
+    font-size: 102%;
+  }
+}
+@media (min-height: 1000px) {
+  *{
+    font-size: 102%;
+  }
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+  *{
+    font-size: 107%;
+  }
+}
+@media (min-height: 2000px) {
+  *{
+    font-size: 107%;
+  }
+}
+
+/*
+
+16:9 aspect ratio resolutions: 1024×576, 1152×648, 1280×720, 1366×768, 1600×900, 1920×1080, 2560×1440 and 3840×2160
+*/
+
+@media only screen and (orientation: portrait) {
+
+  .AuthContainer{
+    grid-template-columns: 100%;
+  }
+  .Logo{
+    width: 22%;
+  }
+
+
+  @media (min-width: 769px) {
+    /*Ipad */
+    /* *{
+      font-size: 102%;
+    } */
+  }
+  @media (max-width: 640px) {
+  }
+
+  @media (max-width: 560px) {
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px) {
+    .FormContainer {
+      width: 135%;
+      justify-self: center;
+      bottom: 5%;
+    }
+    .Logo{
+      width: 33%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 1920px) {
+  }
+
+  @media (max-width: 1600px) {
+  }
+
+  @media (max-width: 1366px) {
+    /*Ipad Pro */
+    .FormContainer {
+      width: 120%;
+      justify-self: center;
+    }
+    
+  }
+
+
+  @media (max-width: 1024px) {
+    /*Ipad */
+  }
+
+  @media (max-height: 481px) {
+    /*Iphone 11 PRO */
+    .Logo{
+      width: 15%;
+    }
+
+  }
+
+  @media (max-width: 823px) {
+  }
+
+  @media (max-width: 812px) {
+  }
+
+  @media (max-width: 736px) {
+  }
 }
