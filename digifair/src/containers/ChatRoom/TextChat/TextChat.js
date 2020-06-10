@@ -17,26 +17,26 @@ class TextChat extends Component {
     Talk.ready
       .then(() => {
         const me = new Talk.User({
-          id: this.props.token,
+          id: this.props.id,
           name: this.props.name,
           role: "Student",
-          email: "george@looney.net",
+          // email: "george@looney.net",
 
           welcomeMessage: "Hey there! How are you? :-)",
         });
 
         if (!window.talkSession) {
           window.talkSession = new Talk.Session({
-            appId: "tlKy3Mz6",
+            appId: this.props.talkJSData.appId,
             me: me,
           });
         }
 
         const other = new Talk.User({
-          id: "543121",
-          name: "John Motor",
+          id: this.props.talkJSData.id,
+          name: this.props.talkJSData.name,
           role: "Recruiter",
-          email: "ronald@teflon.com",
+          // email: "ronald@teflon.com",
 
           welcomeMessage: "Hey there! Love to chat :-)",
         });
