@@ -6,8 +6,26 @@
   width: 100%;
 }
 
+.AuthContainerCompany {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100%;
+  height: 100%;
+  width: 100%;
+  background-color: #ffc4dc;
+}
+
+
 .BackgroundIllustration {
   background-image: url("../../../assets//screen-images/auth-screen.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+.BackgroundIllustrationCompany {
+  background-image: url("../../../assets//screen-images/placeholdercompanyauth3.png");
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -23,6 +41,7 @@ Form - Contains the title, error message and input fields (not the button)
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 }
 
 .Logo {
@@ -122,6 +141,11 @@ Form - Contains the title, error message and input fields (not the button)
   .AuthContainer{
     grid-template-columns: 100%;
   }
+
+  .AuthContainerCompany{
+    grid-template-columns: 100%;
+  }
+  
   .Logo{
     width: 22%;
   }

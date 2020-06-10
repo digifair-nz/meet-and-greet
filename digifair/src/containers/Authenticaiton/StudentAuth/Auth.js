@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import * as actions from "../../../store/actions/index";
 
 import classes from "./StudentAuth.module.css";
-import digifairLogo from "../../../assets/company_logos/digifair-logo-inverse.png";
+import digifairLogo from "../../../assets/company_logos/digifair-full-black.png";
 import Button from "../../../components/UI/Button/Button";
 import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
@@ -170,6 +170,7 @@ class StudentAuth extends Component {
         shouldValidate={formElement.config.validation}
         invalid={!formElement.config.valid}
         touched={formElement.config.touched}
+        isStudent={this.state.isStudent}
       />
     ));
 
@@ -193,8 +194,10 @@ class StudentAuth extends Component {
       errorMessage = this.props.error.message;
     }
 
+
+
     return (
-      <div className={classes.AuthContainer}>
+      <div className={this.state.isStudent ? classes.AuthContainer : classes.AuthContainerCompany}>
         {
           authed /*This causes authenticated users to be redirected to the root */
         }
@@ -233,7 +236,7 @@ class StudentAuth extends Component {
               </Button>
             )}
         </div>
-        <div className={classes.BackgroundIllustration}></div>
+        <div className={this.state.isStudent ? classes.BackgroundIllustration : classes.BackgroundIllustrationCompany}></div>
       </div>
     );
   }

@@ -10,6 +10,18 @@
   margin-bottom: 6%;
 }
 
+.InputCompany {
+  width: 100%;
+
+  box-sizing: border-box;
+  background-color: #fff8fb;
+  border-radius: 50px;
+
+  position: relative;
+  height: 4vh;
+  margin-bottom: 6%;
+}
+
 /* Brwoser autofill  */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

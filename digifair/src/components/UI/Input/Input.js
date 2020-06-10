@@ -41,8 +41,9 @@ const input = (props) => {
     alt = "User icon";
   }
 
+
   return (
-    <div className={classes.Input}>
+    <div className={props.isStudent ? classes.Input : classes.InputCompany}>
       <div className={classes.IconWrapper}>
         <img alt={alt} className={classes.InputIcon} src={icon} />
       </div>
