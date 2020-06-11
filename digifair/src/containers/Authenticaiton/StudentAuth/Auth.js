@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirectm withRouter } from "react-router-dom";
 import * as actions from "../../../store/actions/index";
 
 import classes from "./StudentAuth.module.css";
@@ -53,6 +53,7 @@ class StudentAuth extends Component {
 
   componentDidMount() {
     console.log("AUTH CONTAINER MOUNTED");
+    
     const eventId = this.props.match.params.id;
 
     this.setState({
@@ -63,8 +64,9 @@ class StudentAuth extends Component {
       let path = this.props.isStudent ? "/" : "/chat-room";
       this.props.onSetAuthRedirectPath(path);
     }
-
-    window.addEventListener("keydown", this.onKeydown, false);
+    if (!this.props.authenticated) {
+      window.addEventListener("keydown", this.onKeydown, false);
+    }
   }
 
   onKeydown = (e) => {
@@ -74,10 +76,12 @@ class StudentAuth extends Component {
     }
   };
 
-  UNSAFE_componentWillMount = () => {
-    console.log("Unmounted");
-    window.removeEventListener("keydown", this.onKeydown, false);
-  };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.authenticated) {
+      window.removeEventListener("keydown", this.onKeydown, false);
+    }
+  }
+
 
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
@@ -112,6 +116,7 @@ class StudentAuth extends Component {
   };
 
   submitHandler = (event) => {
+    console.log(this.props);
     event.preventDefault();
 
     // if (this.state.controls.email.value === "" && ) {
@@ -263,4 +268,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentAuth);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(StudentAuth)
+);
+
