@@ -32,37 +32,41 @@ class App extends Component {
 
     let routes = (
       <Switch>
-        <Route path="/sign-in/:id" component={Auth} />
+        <Route path="/sign-in/:id" component={Auth} exact />
         {/* <Route path="/" component={StudentDashboard} exact /> */}
         <Redirect to={urlWithEventId} />
       </Switch>
     );
 
-    if (this.props.isAuthenticated) {
+    if (this.props.isAuthenticated && this.props.isStudent) {
       routes = (
         <Switch>
-          <Route path="/chat-room" component={ChatRoom} />
-          {/* <Route path="/sign-in" component={Auth} /> */}
           <Route path="/" component={StudentDashboard} exact />
+          <Route path="/chat-room" component={ChatRoom} exact />
+          <Route path="/sign-in" component={Auth} exact />
+
           <Redirect to="/" />
         </Switch>
       );
     }
 
-    if (this.props.isAuthenticated && this.props.hasCredentials) {
-      routes = (
-        <Switch>
-          <Route path="/chat-room" component={ChatRoom} />
-          <Redirect to="/chat-room" />
-        </Switch>
-      );
-    } else if (
+    if (
       this.props.isAuthenticated &&
-      this.props.recruiterHasCredentials
+      this.props.hasCredentials &&
+      this.props.isStudent
     ) {
       routes = (
         <Switch>
-          <Route path="/chat-room" component={ChatRoom} />
+          <Route path="/chat-room" component={ChatRoom} exact />
+          <Route path="/" component={StudentDashboard} exact />
+          <Redirect to="/chat-room" />
+        </Switch>
+      );
+    } else if (this.props.isAuthenticated && !this.props.isStudent) {
+      routes = (
+        <Switch>
+          <Route path="/chat-room" component={ChatRoom} exact />
+
           <Redirect to="/chat-room" />
         </Switch>
       );
@@ -82,6 +86,7 @@ const mapStateToProps = (state) => {
     token: state.user.token,
     hasCredentials: state.user.credentials !== null,
     eventId: state.user.eventId,
+    isStudent: state.user.isStudent,
   };
 };
 
