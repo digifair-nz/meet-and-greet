@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirectm withRouter } from "react-router-dom";
+import { Redirectm, withRouter } from "react-router-dom";
 import * as actions from "../../../store/actions/index";
 
 import classes from "./StudentAuth.module.css";
