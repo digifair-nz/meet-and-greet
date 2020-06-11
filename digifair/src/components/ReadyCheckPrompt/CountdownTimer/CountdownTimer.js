@@ -13,13 +13,14 @@ class CountdownTimer extends Component {
       if (this.state.seconds === 0) {
         clearInterval(this.timer);
         this.props.onTimerEnd();
+      } else {
+        console.log(this.state.seconds);
+        this.setState((prevState) => {
+          return {
+            seconds: prevState.seconds - 1,
+          };
+        });
       }
-      console.log(this.state.seconds);
-      this.setState((prevState) => {
-        return {
-          seconds: prevState.seconds - 1,
-        };
-      });
     }, 1000);
   };
 
@@ -28,7 +29,6 @@ class CountdownTimer extends Component {
   }
 
   componentWillUnmount() {
-    console.log("Hello");
     clearInterval(this.timer);
   }
 
@@ -49,6 +49,5 @@ class CountdownTimer extends Component {
     );
   }
 }
-
 
 export default CountdownTimer;
