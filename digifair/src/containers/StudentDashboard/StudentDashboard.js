@@ -160,7 +160,7 @@ class StudentDashboard extends Component {
     // Open a socket connection
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
-      const ws = new WebSocket(
+      var ws = new WebSocket(
         "ws://localhost:3000/?token=" + this.props.token
         // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
       );
@@ -314,6 +314,7 @@ class StudentDashboard extends Component {
         </Toolbar>
 
         <div className={classes.Event}>
+          <div className={classes.BackgroundMask}></div>
           {/* <h1 className={classes.EventTitle}>CV Clinic July 2020</h1>
           <h1 className={classes.EventTime}>Event Timer : Live Participants</h1> */}
           <div className={classes.CompanyCardContainer}>{companyCards}</div>
@@ -330,6 +331,7 @@ const mapStateToProps = (state) => {
     companies: state.companies.companies,
     error: state.companies.error,
     token: state.user.token,
+    credentials: state.user.credentials,
   };
 };
 
