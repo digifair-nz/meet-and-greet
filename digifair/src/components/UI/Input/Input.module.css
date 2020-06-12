@@ -30,6 +30,9 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #ffc4dc inset !important;
   z-index: 1;
 }
+input::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
 
 .InputElement {
   outline: none;
@@ -82,23 +85,17 @@ input:-webkit-autofill:active {
   background-color: #fda49a;
 }
 
-
-
 @media only screen and (orientation: landscape) {
-
-  @media (max-height: 481px){
-    .Input{
+  @media (max-height: 481px) {
+    .Input {
       height: 6vh;
     }
-    .InputElement{
+    .InputElement {
       height: 6vh;
-      
     }
-    .IconWrapper{
+    .IconWrapper {
       height: 6vh;
       width: 6vh;
-      
     }
   }
-
 }

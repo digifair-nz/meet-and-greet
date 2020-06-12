@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
 import Aux from "../Auxiliary";
 
 import classes from "./Layout.module.css";
 
 class Layout extends Component {
-  //NOTE: Might refractor later!
   render() {
     return (
       <Aux>
@@ -15,11 +13,5 @@ class Layout extends Component {
     );
   }
 }
-
-// const mapStateToProps = (state) => {
-//   return {
-//     isAuthenticated: state.student.token !== null,
-//   };
-// };
 
 export default Layout;

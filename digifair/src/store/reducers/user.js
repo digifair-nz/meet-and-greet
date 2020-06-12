@@ -1,7 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
-import { fetchCompaniesStart } from "../actions/fetchCompanies";
-import { fetchStudentData } from "../actions";
 
 // NOTE: RENAME TO STUDENT not studentAuth
 const initialState = {
@@ -10,25 +8,15 @@ const initialState = {
   error: null,
   loading: false,
   authRedirectPath: "/",
-
-  // credentials: {
-  //   apiKey: "46721402",
-  //   sessionId:
-  //     "1_MX40NjcyMTQwMn5-MTU5MDYyNzc1MzE5NH5XL0lzaXExNDZJYUtjUVNiOWZSd3lCUWt-fg",
-  //   token:
-  //     "T1==cGFydG5lcl9pZD00NjcyMTQwMiZzaWc9ZWJkZWM4ZTc2NTI3YjY0YTQ5OWJlZjFjZmZkMDgxZDk2Zjc5YzFkYzpzZXNzaW9uX2lkPTFfTVg0ME5qY3lNVFF3TW41LU1UVTVNRFl5TnpjMU16RTVOSDVYTDBsemFYRXhORFpKWVV0alVWTmlPV1pTZDNsQ1VXdC1mZyZjcmVhdGVfdGltZT0xNTkwNjI3NzUzJnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE1OTA2Mjc3NTMuMjE2NTE3NTcxNTQ3NTQ=",
-  // },
   credentials: null, // this is for vonage API
   isStudent: true,
   eventId: null,
-  //allowNextUser: null,
   name: null,
   id: null,
-  talkJSData: null,
+  talkJSData: null, // for text chat (talk js)
 };
 
 const authStart = (state, action) => {
-  console.log(state);
   // console.log(action.eventId);
   return updateObject(state, {
     error: null,
@@ -193,7 +181,7 @@ const reducer = (state = initialState, action) => {
       return recruiterKickStudentFail(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_START:
       return recruiterInviteNextStart(state, action);
-    case actionTypes.INVITE_NEXT_STUDENT_START:
+    case actionTypes.INVITE_NEXT_STUDENT_SUCCESS:
       return recruiterInviteNextSuccess(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_FAIL:
       return recruiterInviteNextFail(state, action);

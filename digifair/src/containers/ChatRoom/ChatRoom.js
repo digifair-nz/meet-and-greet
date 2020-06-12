@@ -99,7 +99,7 @@ class ChatRoom extends Component {
       connections: [],
       loading: true,
       allowNextUser: true,
-      searching: true,
+      searching: false,
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -207,29 +207,22 @@ class ChatRoom extends Component {
           connected: false,
           acitve: false,
           publishers: null,
-          subscriber: null,
+          subscribers: null,
           connectionId: null,
           connections: null,
           loading: true,
+          meta: null,
         });
 
-        // connected: false,
-        // active: false,
-        // publishers: null,
-        // subscribers: null,
-        // meta: null,
-        // localAudioEnabled: true,
-        // localVideoEnabled: true,
-        // connectionId: null,
-        // connections: [],
-        // loading: true,
-        // allowNextUser: true,
-
-        const options = otCoreOptions.otCoreOptions;
-        options.credentials = this.props.credentials;
+        const options2 = otCoreOptions.otCoreOptions2;
+        options2.credentials = this.props.credentials;
         console.log(this.props.credentials);
-        otCore = new AccCore(options);
 
+        console.log(otCore);
+
+        otCore = null;
+        otCore = new AccCore(options2);
+        otCore.eventListeners.startScreenShare = null;
         // Connect the user to the session and start the call
         otCore.connect().then(() => {
           this.setState({ connected: true });
@@ -266,14 +259,19 @@ class ChatRoom extends Component {
           }
         });
         // otCore.disconnect()
-        const events = [
+        const events2 = [
           "subscribeToCamera",
           "unsubscribeFromCamera",
           "subscribeToScreen",
           "unsubscribeFromScreen",
-          "startScreenShare",
-          "endScreenShare",
+          //"startScreenShare",
+          //"endScreenShare",
         ];
+        events2.forEach((event) =>
+          otCore.on(event, ({ publishers, subscribers, meta }) => {
+            this.setState({ publishers, subscribers, meta });
+          })
+        );
         // Student Client Kicked
         if (this.props.isStudent) {
           otCore.on("sessionDisconnected", (event) => {
@@ -286,11 +284,6 @@ class ChatRoom extends Component {
             this.props.history.push("/");
           });
         }
-        events.forEach((event) =>
-          otCore.on(event, ({ publishers, subscribers, meta }) => {
-            this.setState({ publishers, subscribers, meta });
-          })
-        );
       }
     }
 
@@ -313,7 +306,7 @@ class ChatRoom extends Component {
 
   kickStudent() {
     console.log(this.state);
-    if (!this.props.isStudent) {
+    if (!this.props.isStudent && this.state.connections.length > 1) {
       // Kick the user with the connectionId that is not mine
 
       // Check that the connection is loaded
@@ -334,7 +327,7 @@ class ChatRoom extends Component {
                 this.setState({
                   connections: connections,
                   allowNextUser: true,
-                  searching: true,
+                  //searching: true,
                 });
 
                 this.props.kickStudent();
@@ -375,7 +368,19 @@ class ChatRoom extends Component {
 
     this.props.logout();
   };
+
+  inviteNextStudent = () => {
+    if (this.state.connections != null) {
+      if (this.state.connections.length < 2) {
+        this.props.inviteNextStudent();
+        this.setState({
+          searching: true,
+        });
+      }
+    }
+  };
   render() {
+    console.log(this.state.searching);
     console.log(this.props.talkJSData);
 
     let textChat = null;
@@ -399,29 +404,34 @@ class ChatRoom extends Component {
         />
       );
     } else {
-      console.log("Hello");
-      nameCard = (
-        // This is the name of the person they are chatting with.
+      if (this.state.searching) {
+        console.log("Overhere");
+        nameCard = (
+          // This is the name of the person they are chatting with.
 
-        <NameCard
-          isStudent={this.props.isStudent}
-          searching={this.state.searching}
-        />
-      );
+          <NameCard
+            isStudent={this.props.isStudent}
+            searching={this.state.searching}
+          />
+        );
+      } else {
+        nameCard = null;
+      }
     }
 
     console.log(this.state);
-    const { connected, active } = this.state;
-    const {
+
+    let { connected, active } = this.state;
+    let {
       localAudioClass,
       localVideoClass,
-      localCallClass,
       controlClass,
       cameraPublisherClass,
       screenPublisherClass,
       cameraSubscriberClass,
       screenSubscriberClass,
     } = containerClasses(this.state);
+
     return (
       <div className={classes.ChatRoomContainer}>
         {nameCard}
@@ -445,7 +455,7 @@ class ChatRoom extends Component {
               <Button btnType="Control">Tutorial</Button>
               {
                 <Button
-                  clicked={this.props.inviteNextStudent}
+                  clicked={this.inviteNextStudent}
                   disabled={!this.state.allowNextUser}
                   btnType="Success"
                 >
@@ -453,7 +463,13 @@ class ChatRoom extends Component {
                 </Button>
               }
               {/* <Button btnType="Control">Take a break</Button> */}
-              <Button clicked={this.kickStudent} btnType="Danger">
+              <Button
+                disabled={
+                  this.state.searching || this.state.connections.length < 2
+                }
+                clicked={this.kickStudent}
+                btnType="Danger"
+              >
                 Disconnect Student
               </Button>
               <Button

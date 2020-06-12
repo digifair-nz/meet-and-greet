@@ -135,6 +135,12 @@ export const dequeueStudent = (companyId, index) => {
   };
 };
 
+/*
+NOTE: 
+This is initiated when the student either presses the decline button or doesn't respond to the pop up.
+The server automatically removes them from the queue after 10 seconds. The front-end will make it difficult to queue again for another 10-30 seconds as penalty.
+
+*/
 export const declineJoinChatroom = (companyId, index) => {
   return (dispatch) => {
     dispatch(dequeueInit(companyId, index));
