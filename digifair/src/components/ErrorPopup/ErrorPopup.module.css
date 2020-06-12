@@ -1,0 +1,18 @@
+.ErrorContainer {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+.ErrorIcon {
+  width: 10%;
+  padding-bottom: 2%;
+  padding-top: 2%;
+}
+
+.ErrorMessage {
+  text-align: center;
+  font-weight: 500;
+  padding-bottom: 2%;
+}

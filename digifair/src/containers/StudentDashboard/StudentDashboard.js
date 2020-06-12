@@ -8,6 +8,7 @@ import Aux from "../../hoc/Auxiliary";
 // Components
 import Button from "../../components/UI/Button/Button";
 import CompanyCard from "../../components/CompanyCard/CompanyCard";
+import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
 import Modal from "../../components/UI/Modal/Modal";
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
 import sendNotification from "../../components/Notification/Notification";
@@ -30,8 +31,6 @@ class StudentDashboard extends Component {
 
   It also manages the queue status by dispatching actions 
 
-
-  Author: Michael Shaimerden (michael@tadesign.co.nz)  May - 2020
   */
 
   state = {
@@ -73,7 +72,7 @@ class StudentDashboard extends Component {
     navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
       switch (permissionStatus.state) {
         case "denied":
-          console.log("denied");
+          //console.log("denied");
           this.setState({
             permissionGranted: false,
           });
@@ -84,7 +83,9 @@ class StudentDashboard extends Component {
           });
           break;
         case "prompt":
-          console.log("waiting...");
+        //console.log("waiting...");
+        default:
+        //console.log("Internal error");
       }
       permissionStatus.onchange = (e) => {
         // detecting if the event is a change
@@ -284,19 +285,13 @@ class StudentDashboard extends Component {
       }
     }
 
-    // if (this.props.error) {
-    //   companyCards = (
-    //     <h1 className={classes.ErrorMessage}>{this.props.error.message}</h1>
-    //   );
-    // }
-
     return (
       <Aux>
-        <Modal show={this.props.error} modalClosed={this.errorConfirmedHandler}>
-          <h1 style={{ textAlign: "center" }}>
-            {this.props.error ? this.props.error.message : null}
-          </h1>
-        </Modal>
+        <ErrorPopup
+          show={this.props.error}
+          modalClosed={this.errorConfirmedHandler}
+          error={this.props.error}
+        />
         <Toolbar
           isAuth={true}
           drawerToggleClicked={false}
