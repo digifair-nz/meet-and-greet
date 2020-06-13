@@ -9,6 +9,7 @@ const EventSchema = new mongoose.Schema({
         type: String,
         default: 'No description'
     },
+    expirationTime: String,
     // time and date too
     // clubId: {
     //     type: mongoose.Types.ObjectId,

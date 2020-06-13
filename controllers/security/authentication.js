@@ -49,7 +49,12 @@ async function studentLogin(req, res) {
         port: process.env.PORT || 3000,
         name: user.name
     }, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send(token)
+    res.header('auth-token', token).json({
+        event: {
+            name: event.name,
+            expirationDate: expirationTime
+        }
+    })
 }
 
 async function companyLogin(req, res) {
@@ -82,11 +87,15 @@ async function companyLogin(req, res) {
         role: 'moderator'
     })
 
-    return res.header('auth-token', token).send({
+    return res.header('auth-token', token).json({
         credentials: {
             apiKey: process.env.VONAGE_API_KEY,
             sessionId,
             token: vonageToken
+        },
+        event: {
+            name: event.name,
+            expirationDate: event.expirationTime
         }
     })
 }
