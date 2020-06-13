@@ -59,43 +59,79 @@ module.exports = function(wsInstance) {
      * @param {Object} res The response object
      */
     async function enqueue(req, res) {
-        // validate the room id
+        // validate the param id
         if(!validate.isId(req.params, res)) {
             return
         }
         try {
-            // find the room in the database
-            let queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
-            if(!queue) {
-                queue = await createQueue(req.payload.eventId, req.params._id)
-            }
-    
-            // fail if the user is already queued
-            if(queue.members.includes(req.payload._id)) {
-                return res.status(403).json({ message: 'Failed to enqueue as user is already in queue.'})
-            }
+            const result = enqueueSingle(req.payload.eventId, req.params._id, req.payload._id)
             
-            // fail if the user is attempting to queue more than once (not allowed)
-            if(queue.blacklist.includes(req.payload._id)) {
-                return res.status(403).json({ message: 'Failed to enqueue as user has previously had session with room.' })
+            if(result.error) {
+                return res.status(result.status).json({ message: result.message })
             }
-            // add the user to the queue
-            queue.members.push(req.payload._id)
-            await queue.save()
-            // if they are eligible, send a notification that the user may join the session
-            if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
-                const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
-                const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || !value.inSession, false)
-
-                if(atLeastOneRoomIsFree) {
-                    company.findAndNotifyEligibleUsers(queue)
-                }
-            }
-            return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
+            return res.status(200).json({ message: 'Successfully enqueued to ' + req.params._id, queuePosition: result.index })
         }
         catch (error) {
             console.log(error)
             return res.status(500).json({ message: error })
+        }
+    }
+
+    async function enqueueAll(req, res) {
+        const companies = await Company.find({ eventId: req.payload.eventId })
+        if(!companies) {
+            return res.status(404).json({ message: 'Failed to enqueue to all as companies were not found.' })
+        }
+
+        const indices = []
+        for(const company of companies) {
+            const result = enqueueSingle(req.payload.eventId, company._id, req.payload._id)
+            if(result.error) {
+                return res.status(result.status).json({ message: result.message })
+            }
+            indices.push({ companyId: company._id, position: result.index })
+        }
+        return res.status(200).json({ message: 'Successfully enqueued to all', positions: indices })
+    }
+
+    async function enqueueSingle(eventId, companyId, userId) {
+        let queue = await Queue.findOne({ eventId, companyId })
+        if(!queue) {
+            queue = await createQueue(eventId, companyId)
+        }
+
+        // fail if the user is already queued
+        if(queue.members.includes(userId)) {
+            return {
+                error: true,
+                status: 403,
+                message: 'Failed to enqueue as user is already in queue.'
+            }
+        }
+        
+        // fail if the user is attempting to queue more than once (not allowed)
+        if(queue.blacklist.includes(userId)) {
+            return {
+                error: true,
+                status: 403,
+                message: 'Failed to enqueue as user has previously had session with room.'
+            }
+        }
+        // add the user to the queue
+        queue.members.push(userId)
+        await queue.save()
+        // if they are eligible, send a notification that the user may join the session
+        if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
+            const rooms = await Room.find({ eventId, companyId })
+            const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || !value.inSession, false)
+
+            if(atLeastOneRoomIsFree) {
+                company.findAndNotifyEligibleUsers(queue)
+            }
+        }
+        return {
+            error: false,
+            index: queue.members.length
         }
     }
     
@@ -334,6 +370,7 @@ module.exports = function(wsInstance) {
     return {
         getCompaniesForEvent,
         enqueue,
+        enqueueAll,
         dequeue,
         joinSession,
         leaveSession

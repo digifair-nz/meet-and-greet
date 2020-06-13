@@ -17,7 +17,7 @@ module.exports = function(wsInstance) {
     
     // endpoints for enqueuing and dequeuing
     router.post('/enqueue/:_id', authCtrl.asStudent, userCtrl.enqueue)
-    // router.post('/enqueue', authCtrl.asStudent, userCtrl.enqueueAll)
+    router.post('/enqueue', authCtrl.asStudent, userCtrl.enqueueAll)
     router.post('/dequeue/:_id', authCtrl.asStudent, userCtrl.dequeue)
     // router.post('/dequeue', authCtrl.asStudent, userCtrl.dequeueAll)
     

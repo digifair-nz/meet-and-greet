@@ -1,7 +1,5 @@
 require('dotenv').config()
 
-console.log(process.env.TALKJS_APP_ID)
-
 const createError = require('http-errors')
 const express = require('express')
 const expressWs = require('express-ws')
