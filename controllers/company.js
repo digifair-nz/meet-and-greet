@@ -244,12 +244,12 @@ module.exports = function(wsInstance) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    function getStudentTalkJSDetails(req, res) {
-        const room = Room.findById(req.payload._id)
+    async function getStudentTalkJSDetails(req, res) {
+        const room = await Room.findById(req.payload._id)
         if(!room) {
             return res.status(404).json({ message: 'Room could not be found.' })
         }
-        const user = User.findById(room.sessionPartner)
+        const user = await User.findById(room.sessionPartner)
         if(!user) {
             return res.status(404).json({ message: 'User could not be found.' })
         }
