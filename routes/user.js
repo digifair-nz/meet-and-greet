@@ -7,7 +7,6 @@ module.exports = function(wsInstance) {
     // login
 
     router.use(function(req, res, next) {
-        console.log('c')
         next()
     })
 

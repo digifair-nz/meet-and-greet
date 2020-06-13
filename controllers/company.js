@@ -59,9 +59,6 @@ module.exports = function(wsInstance) {
             if(room.sessionPartner) {
                 return res.status(403).json({ message: 'Could not request next student as there is still a student within the session.' })
             }
-            if(room.searching) {
-                return res.status(403).json({ message: 'Could not request next student as the next student has already been requested.' })
-            }
             const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
             if(!queue) {
                 return res.status(404).json({ message: 'Could not request next student as queue could not be found.' })
@@ -96,12 +93,7 @@ module.exports = function(wsInstance) {
                     hasNewCredentials: true
                 })
             }
-            room.searching = true
-            await room.save()
-            // notify the next user that they may join
-            await findAndNotifyEligibleUser(queue)
-            room.searching = false
-            await room.save()
+            findAndNotifyEligibleUsers(queue)
         }
         catch (error) {
             console.log(error)
@@ -168,6 +160,107 @@ module.exports = function(wsInstance) {
         }
     }
     
+    const allSearchings = {}
+    async function findAndNotifyEligibleUsers(queue) {
+        console.log('hit searching function')
+        // make sure that there is not currently another function executing the notification code
+        if(allSearchings[queue._id]) {
+            return false
+        }
+        if(!allSearchings[queue._id]) {
+            allSearchings[queue._id] = true
+        }
+        console.log('searching engaged')
+        let currentNotifications
+        let rooms
+        let availableRooms
+        let allRoomsFilled = false
+        
+        while(!allRoomsFilled && queue.members.length > 0) {
+            console.log('Looping with length: ' + queue.members.length)
+            const currentlyNotifiedUsers = []
+            currentNotifications = []
+            rooms = await Room.find({ eventId: queue.eventId, companyId: queue.companyId })
+            availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
+            console.log(`Available rooms: ${availableRooms}`)
+
+            let invalidUsersCount = 0
+
+            for(let i = 0; i < queue.members.length; i++) {
+                const user = await User.findById(queue.members[i])
+                // make sure that there are available rooms and that too many notifications are not sent
+                if(availableRooms == 0 || currentlyNotifiedUsers.length >= availableRooms) {
+                    console.log(`Failed 1: ${availableRooms}, ${currentlyNotifiedUsers.length}, ${availableRooms}`)
+                    break
+                }
+                // make sure that the user hasn't been notified and is eligible to join a session
+                if(user.inSession || currentlyNotifiedUsers.includes(user._id)) {
+                    console.log(`Failed 2: ${user.inSession}, ${currentlyNotifiedUsers}, ${user._id}`)
+                    invalidUsersCount ++
+                    continue
+                }
+                // make sure the user's websocket connection exists
+                let client
+                for(const c of wsInstance.getWss().clients) {
+                    if(c.jwt._id == user._id) {
+                        client = c
+                        break
+                    }
+                }
+                if(!client) {
+                    console.log('Failed 3')
+                    invalidUsersCount ++
+                    continue
+                }
+                // mark the user as notified and send the notification
+                currentlyNotifiedUsers.push(user._id)
+                client.send(JSON.stringify({
+                    messageType: 'ready',
+                    companyId: queue.companyId
+                }))
+                currentNotifications.push(getUserResponse(queue, user._id))
+                console.log('Sent notification')
+            }
+            if(invalidUsersCount == queue.members.length) {
+                await timeout(5000)
+            }
+
+            allRoomsFilled = (await Promise.all(currentNotifications)).reduce((total, value) => total + value, 0) == availableRooms
+            console.log('pre-a', allRoomsFilled)
+            console.log('a', await Promise.all(currentNotifications))
+            console.log('b', (await Promise.all(currentNotifications)).reduce((total, value) => total + value, 0))
+            queue = await Queue.findById(queue._id)
+            console.log('c', availableRooms)
+
+            console.log('d', queue.members.length)
+        }
+
+        allSearchings[queue._id] = false
+    }
+
+    async function getUserResponse(queue, userId) {
+        return new Promise(async resolve => {
+            await timeout(10000)
+            const user = await User.findById(userId)
+
+            console.log('----------')
+            console.log(user.inSession, user.sessionPartner, queue._id)
+            console.log('----------')
+
+            const room = await Room.findOne({
+                eventId: queue.eventId,
+                companyId: queue.companyId,
+                sessionPartner: user._id
+            }).lean()
+
+            if(user.inSession && room) {
+                // if they did join the session then...
+                return resolve(true)
+            }
+            return resolve(false)
+        })
+    }
+
     /**
      * Sends a ready notification to the first eligible member of the queue to notify them that they may join a room associated with that queue.
      * If the user does not accept the invitation then the next user is notified.
@@ -224,13 +317,12 @@ module.exports = function(wsInstance) {
                 if(updatedIndex != -1) {
                     queue.members.splice(updatedIndex, 1)
                 }
-                queue.blacklist.push(updatedUser._id)    
                 await queue.save()
                 
-                if(!user.previousSessions[client.jwt.eventId]) {
-                    user.previousSessions[client.jwt.eventId] = {}
-                }
-                user.previousSessions[client.jwt.eventId][queue.companyId] = true
+                // if(!user.previousSessions[client.jwt.eventId]) {
+                //     user.previousSessions[client.jwt.eventId] = {}
+                // }
+                // user.previousSessions[client.jwt.eventId][queue.companyId] = true
                 await user.save()
             }
             catch (error) {
@@ -266,7 +358,7 @@ module.exports = function(wsInstance) {
         createRoom,
         kickStudent,
         getNextStudent,
-        findAndNotifyEligibleUser,
+        findAndNotifyEligibleUsers,
         getStudentTalkJSDetails
     }
 }

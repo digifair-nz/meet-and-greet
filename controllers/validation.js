@@ -3,16 +3,12 @@ Joi.objectId = require('joi-objectid')(Joi)
 
 function isValid(schema) {
     return function(source, res) {
-        console.log('h1')
         const { error } = schema.validate(source)
-        console.log('h2')
         if(error) {
-            console.log('h3')
             if(res) res.status(400).json(error.details[0].message)
-            console.log('h4')
             return false
         }
-        console.log('h5')
+
         return true
     }
 }

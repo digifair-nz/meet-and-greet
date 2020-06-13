@@ -30,23 +30,18 @@ async function adminLogin(req, res) {
 }
 
 async function studentLogin(req, res) {
-    console.log('a')
     if(!validate.isEmail(req.body, res)) {
         return
     }
-    console.log('hmm')
     if(!validate.isId(req.params, res)) {
         return
     }
-    console.log('11')
     const event = await Event.findById(req.params._id)
     if(!event) return res.status(400).json({ message: 'Bad link.' })
     
     const user = await User.findOne({ email: req.body.email })
-    console.log('22')
     if(!user) return res.status(404).json({ message: 'Email not found.' })
     
-    console.log('33')
     const token = jwt.sign({
         _id: user._id,
         accountType: user.accountType,
@@ -54,7 +49,6 @@ async function studentLogin(req, res) {
         port: process.env.PORT || 3000,
         name: user.name
     }, process.env.TOKEN_SECRET)
-    console.log('44')
     res.header('auth-token', token).send(token)
 }
 

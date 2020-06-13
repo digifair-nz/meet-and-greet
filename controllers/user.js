@@ -83,13 +83,12 @@ module.exports = function(wsInstance) {
             queue.members.push(req.payload._id)
             await queue.save()
             // if they are eligible, send a notification that the user may join the session
-            console.log('1', await userIsEligibleToJoinSession(queue, queue.members.length - 1))
             if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
                 const rooms = await Room.find({ eventId: req.payload.eventId, companyId: req.params._id })
                 const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || !value.inSession, false)
-                console.log('2', atLeastOneRoomIsFree)
+
                 if(atLeastOneRoomIsFree) {
-                    company.findAndNotifyEligibleUser(queue)
+                    company.findAndNotifyEligibleUsers(queue)
                 }
             }
             return res.status(200).json({ message: 'Successfully enqueued to ' + queue.companyId, queuePosition: queue.members.length })
@@ -190,8 +189,8 @@ module.exports = function(wsInstance) {
                     room.inSession = true
                     room.sessionPartner = user._id
                     await room.save()
-                    // remove the user from the queue
-                    queue.members.splice(index, 1)
+                    // remove the user from the queue and add to the blacklist  
+                    queue.blacklist.push(queue.members.splice(index, 1))
                     await queue.save()
                     user.inSession = true
                     user.sessionPartner = room._id
