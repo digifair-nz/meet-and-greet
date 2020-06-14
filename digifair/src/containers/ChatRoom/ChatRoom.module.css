@@ -30,19 +30,23 @@
 
   /*480px is max phone size*/
   @media (max-width: 481px) {
-    .ChatRoomContainer {
+
+    /* .ChatRoomContainer {
       display: flex;
       flex-direction: column;
-    }
+    }*/
 
     .VideoChatContainer {
-      margin-top: 40px;
+      margin-top: 0px;
       padding-left: 0px;
     }
 
+    /*
     .TextChatContainer {
       flex-grow: 1;
-    }
+    } */
+
+    
   }
 
   @media (max-width: 375px) {

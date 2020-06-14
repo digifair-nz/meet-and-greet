@@ -135,7 +135,14 @@
   }
 
   @media (max-width: 481px) {
-
+    .ToggleMenu {
+      right: 21px;
+      top: -5px;
+      transform: scale(1.2);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(-90deg) scale(1.2);
+    }
   }
 }
 
