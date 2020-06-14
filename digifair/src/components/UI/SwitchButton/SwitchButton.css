@@ -71,7 +71,7 @@ input:checked + .slider:before {
   position: absolute;
 
   top: 25%;
-  right: 17%;
+  right: 16%;
   bottom: 0;
 }
 
