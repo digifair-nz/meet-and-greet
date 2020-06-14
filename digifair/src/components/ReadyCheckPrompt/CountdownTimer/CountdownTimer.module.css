@@ -29,7 +29,7 @@ svg circle {
     stroke-dasharray: 226px;
     stroke-dashoffset: 0px;
     stroke-linecap: round;
-    stroke-width: 6px;
+    stroke-width: 8px;
     /* stroke: lightgray; */
     fill: none;
     animation-name: CountdownAnimation;
@@ -42,11 +42,15 @@ svg circle {
 
 
 @keyframes CountdownAnimation {
-    from {
+    0% {
         stroke-dashoffset: 0px;
-        stroke: rgb(241, 223, 223);
+        stroke: green;
     }
-    to {
+    50% {
+        stroke-dashoffset: 113px;
+        stroke: orangered;
+    }
+    100% {
         stroke-dashoffset: 226px;
         stroke: red;
     }

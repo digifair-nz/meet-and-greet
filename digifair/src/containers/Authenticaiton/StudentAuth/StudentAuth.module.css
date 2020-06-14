@@ -22,6 +22,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
+  position: relative;
 }
 
 .BackgroundIllustrationCompany {
@@ -30,6 +31,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
+  position: relative;
 }
 
 /*
@@ -76,6 +78,13 @@ Form - Contains the title, error message and input fields (not the button)
   padding-bottom: 3%;
 }
 
+.SOTLogo {
+  opacity: 0.3;
+  width: 120px;
+  position: absolute;
+  left: 5%;
+  top: 80%;
+}
 
 
 /*DISPLAY 1920 BY DEFAULT*/

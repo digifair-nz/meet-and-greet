@@ -9,6 +9,8 @@ import Button from "../../../components/UI/Button/Button";
 import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
 import Spinner from "../../../components/UI/Spinner/Spinner";
+import sot_logo from "../../../assets/company_logos/logo-sot-clear.png";
+
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
 
@@ -245,13 +247,12 @@ class StudentAuth extends Component {
             </Button>
           )}
         </div>
-        <div
-          className={
-            this.state.isStudent
-              ? classes.BackgroundIllustration
-              : classes.BackgroundIllustrationCompany
-          }
-        ></div>
+        <div 
+        className={this.state.isStudent ? 
+        classes.BackgroundIllustration : 
+        classes.BackgroundIllustrationCompany}>
+          <img src={sot_logo} alt="summer of tech" className={classes.SOTLogo}></img>
+        </div>
       </div>
     );
   }
