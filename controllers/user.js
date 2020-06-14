@@ -90,7 +90,7 @@ module.exports = function(wsInstance) {
                 return res.status(result.status).json({ message: result.message })
             }
             if(!result.error) {
-                indices.push({ companyId: company._id, position: result.index })
+                indices.push({ companyId: company._id, queuePosition: result.index })
             }
         }
         return res.status(200).json({ message: 'Successfully enqueued to all', positions: indices })

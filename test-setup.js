@@ -47,6 +47,7 @@ async function seedDatabase(opentok = false) {
     })
     const event = new Event({
         name: "Test event",
+        expirationDate: 'December 17, 1995 03:24:00'
     })
     const company1 = new Company({
         name: "Google",
@@ -72,20 +73,20 @@ async function seedDatabase(opentok = false) {
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 1',
+        inSession: false,
         email: '1@gmail.com'
     })
     const room2 = new Room({
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 2',
-        inSession: true,
-        email: '2@gmail.com'
+        email: '2@gmail.com',
+        inSession: false
     })
     const room3 = new Room({
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 3',
-        inSession: true,
         email: '3@gmail.com'
     })
     const queue1 = new Queue({
