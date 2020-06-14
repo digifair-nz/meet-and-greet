@@ -52,7 +52,7 @@ async function studentLogin(req, res) {
     res.header('auth-token', token).json({
         event: {
             name: event.name,
-            expirationDate: event.expirationTime
+            expirationDate: expirationTime
         }
     })
 }
