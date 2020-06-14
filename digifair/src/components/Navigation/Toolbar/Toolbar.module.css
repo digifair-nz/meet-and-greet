@@ -89,7 +89,7 @@
   height: auto;
 
   justify-self: center;
-  grid-row-gap: 7%;
+  /* grid-row-gap: 7%; */
   justify-content: center;
   grid-template-columns: 100%;
   /* padding-bottom: 30%; */
