@@ -65,11 +65,13 @@ module.exports = function(wsInstance) {
             return
         }
         try {
-            const result = enqueueSingle(req.payload.eventId, req.params._id, req.payload._id)
+            const result = await enqueueSingle(req.payload.eventId, req.params._id, req.payload._id)
             
+            console.log('y ', result)
             if(result.error) {
                 return res.status(result.status).json({ message: result.message })
             }
+            console.log(result.index)
             return res.status(200).json({ message: 'Successfully enqueued to ' + req.params._id, queuePosition: result.index })
         }
         catch (error) {
@@ -79,32 +81,46 @@ module.exports = function(wsInstance) {
     }
 
     async function enqueueAll(req, res) {
-        const companies = await Company.find({ eventId: req.payload.eventId })
-        if(!companies) {
+        const queues = await Queue.find({ eventId: req.payload.eventId })
+        if(!queues) {
             return res.status(404).json({ message: 'Failed to enqueue to all as companies were not found.' })
         }
-
+        console.log('got here')
         const indices = []
-        for(const company of companies) {
-            const result = enqueueSingle(req.payload.eventId, company._id, req.payload._id)
+        for(const queue of queues) {
+            console.log('here too')
+            const result = await enqueueSingle(req.payload.eventId, queue.companyId, req.payload._id)
             if(result.error && result.critical) {
                 return res.status(result.status).json({ message: result.message })
             }
             if(!result.error) {
-                indices.push({ companyId: company._id, queuePosition: result.index })
+                console.log('added')
+                indices.push({ queueId: queue.companyId, queuePosition: result.index })
             }
         }
+        if(indices.length == 0) {
+            return res.status(403).json({ message: 'There are no companies available to which you may queue.' })
+        }
+        console.log(indices)
         return res.status(200).json({ message: 'Successfully enqueued to all', positions: indices })
     }
 
+    /**
+     * Enqueue a user to a company for a specific event. This function is used by the enqueueSingle and enqueueAll functions
+     * @param {ObjectId} eventId The id of the event for which the user is enqueuing
+     * @param {ObjectId} companyId The id of the company to which the user is enqueuing
+     * @param {ObjectId} userId The id of the user to enqueue
+     */
     async function enqueueSingle(eventId, companyId, userId) {
         let queue = await Queue.findOne({ eventId, companyId })
+        console.log('x')
         if(!queue) {
             queue = await createQueue(eventId, companyId)
         }
-
+        
         // fail if the user is already queued
         if(queue.members.includes(userId)) {
+            console.log('failed 1', queue._id)
             return {
                 error: true,
                 status: 403,
@@ -112,9 +128,12 @@ module.exports = function(wsInstance) {
                 critical: false
             }
         }
+        console.log('y')
         
         // fail if the user is attempting to queue more than once (not allowed)
+        console.log(queue.blacklist)
         if(queue.blacklist.includes(userId)) {
+            console.log('failed 2', queue._id)
             return {
                 error: true,
                 status: 403,
@@ -123,6 +142,7 @@ module.exports = function(wsInstance) {
             }
         }
         // add the user to the queue
+        console.log('z')
         queue.members.push(userId)
         await queue.save()
         // if they are eligible, send a notification that the user may join the session
