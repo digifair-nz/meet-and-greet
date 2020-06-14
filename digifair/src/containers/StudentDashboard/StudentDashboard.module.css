@@ -25,13 +25,14 @@
 .EventTitle {
   width: 100%;
   padding-top: 3%;
-  margin-left: 10%;
+  margin-left: 5%;
   text-align: center;
 }
 .EventTime {
   width: 100%;
   font-size: 20px;
   margin-left: 10%;
+  margin-left: 5%;
   text-align: center;
 }
 .ErrorMessage {
@@ -176,7 +177,6 @@ MOBILE and TABLET
     .CompanyCardContainer {
       grid-auto-rows: 170px;
       grid-row-gap: 6%;
-
     }
   }
 

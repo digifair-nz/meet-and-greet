@@ -85,6 +85,17 @@ export const checkAuthTimeout = (expirationTime) => {
   };
 };
 
+/**************
+EVENT FETCHING
+***************/
+export const fetchEvent = (eventName, eventExpiration) => {
+  return {
+    type: actionTypes.FETCH_EVENT,
+    eventName: eventName,
+    eventExpiration: eventExpiration,
+  };
+};
+
 export const auth = (eventId, email, password, isStudent) => {
   return (dispatch) => {
     dispatch(authStart(eventId, true));
@@ -100,17 +111,20 @@ export const auth = (eventId, email, password, isStudent) => {
           // const expirationDate = new Date(
           //   new Date().getTime() + response.data.expiresIn * 1000
           // );
+          console.log(response);
           const token = response.headers["auth-token"];
           const name = jwt(token).name;
           const id = jwt(token)._id;
+          const event = response.data.event;
 
+          localStorage.setItem("event", JSON.stringify(event));
           localStorage.setItem("name", name);
           localStorage.setItem("id", id);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
           // localStorage.setItem("expirationDate", expirationDate);
 
-          //axios.defaults.headers.common["auth-token"] = token; // for all requests
+          dispatch(fetchEvent(event.name, event.eventExpiration));
           dispatch(studentAuthSuccess(token, name, id, null, null));
           // dispatch(studentCheckAuthTimeout(response.data.expiresIn));
         })
@@ -159,6 +173,8 @@ export const authCheckState = () => {
   return (dispatch) => {
     const eventId = localStorage.getItem("eventId");
 
+    const event = localStorage.getItem("event");
+
     const token = localStorage.getItem("token");
     const name = localStorage.getItem("name");
     const id = localStorage.getItem("id");
@@ -172,6 +188,11 @@ export const authCheckState = () => {
     if (credentials != null) {
       //console.log(creds);
       creds = JSON.parse(credentials);
+    }
+
+    let eventDetails = null;
+    if (event) {
+      eventDetails = JSON.parse(event);
     }
 
     let talkjsData = null;
@@ -193,6 +214,7 @@ export const authCheckState = () => {
     // console.log(creds);
 
     if (token) {
+      dispatch(fetchEvent(eventDetails.name, eventDetails.eventExpiration));
       if (credentials != null) {
         if (isStudent) {
           dispatch(studentAuthSuccess(token, name, id, creds, talkjsData));

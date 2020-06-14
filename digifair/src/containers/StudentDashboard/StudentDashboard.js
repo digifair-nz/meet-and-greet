@@ -9,6 +9,7 @@ import Aux from "../../hoc/Auxiliary";
 import Button from "../../components/UI/Button/Button";
 import CompanyCard from "../../components/CompanyCard/CompanyCard";
 import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
+import EventTimer from "../../components/EventTimer/EventTimer";
 import Modal from "../../components/UI/Modal/Modal";
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
 import sendNotification from "../../components/Notification/Notification";
@@ -18,6 +19,7 @@ import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 // import logoutIcon from "../../assets/icons/logout.png";
 // CSS
 import classes from "./StudentDashboard.module.css";
+import eventTimer from "../../components/EventTimer/EventTimer";
 
 //Redux
 
@@ -83,9 +85,11 @@ class StudentDashboard extends Component {
           });
           break;
         case "prompt":
-        //console.log("waiting...");
+          //console.log("waiting...");
+          break;
         default:
-        //console.log("Internal error");
+          console.log("Internal error");
+          break;
       }
       permissionStatus.onchange = (e) => {
         // detecting if the event is a change
@@ -125,6 +129,10 @@ class StudentDashboard extends Component {
             break;
           case "prompt":
             console.log("waiting...");
+            break;
+          default:
+            console.log("internal error");
+            break;
         }
         permissionStatus.onchange = (e) => {
           // detecting if the event is a change
@@ -162,8 +170,8 @@ class StudentDashboard extends Component {
     // This page is only accessible to authenticated users but double check before making a connection
     if (this.props.token !== null) {
       var ws = new WebSocket(
-        // "ws://localhost:3000/?token=" + this.props.token
-        "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+        "ws://localhost:3000/?token=" + this.props.token
+        // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
       );
 
       // console.log("Socket Connection Opened!");
@@ -229,6 +237,8 @@ class StudentDashboard extends Component {
   };
   // Fetch companies logic and spinner
   render() {
+    console.log(this.props.event);
+
     let companyCards;
     let readyCheckPopUp;
     if (!this.props.companies) {
@@ -310,8 +320,10 @@ class StudentDashboard extends Component {
 
         <div className={classes.Event}>
           <div className={classes.BackgroundMask}></div>
-          {/* <h1 className={classes.EventTitle}>CV Clinic July 2020</h1>
-          <h1 className={classes.EventTime}>Event Timer : Live Participants</h1> */}
+          <h1 className={classes.EventTitle}>{this.props.event.eventName}</h1>
+          <h1 className={classes.EventTime}>
+            <EventTimer eventExpiration={this.props.event.eventExpiration} />
+          </h1>
           <div className={classes.CompanyCardContainer}>{companyCards}</div>
         </div>
         {readyCheckPopUp}
@@ -327,6 +339,7 @@ const mapStateToProps = (state) => {
     error: state.companies.error,
     token: state.user.token,
     credentials: state.user.credentials,
+    event: state.event,
   };
 };
 

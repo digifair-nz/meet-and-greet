@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 
 import companiesReducer from "./store/reducers/companies";
+import eventReducer from "./store/reducers/event";
 import userReducer from "./store/reducers/user";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -18,6 +19,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
   companies: companiesReducer,
   user: userReducer,
+  event: eventReducer,
 });
 
 const store = createStore(

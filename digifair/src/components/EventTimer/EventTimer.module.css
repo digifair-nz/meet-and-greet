@@ -1,0 +1,16 @@
+.Time {
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+}
+.ClockIcon {
+  width: 3vh;
+  margin-right: 10px;
+}
+
+.EventTimerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}

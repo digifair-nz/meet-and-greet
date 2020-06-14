@@ -1,4 +1,5 @@
-// Authentication for Companies
+// Event fetching
+export const FETCH_EVENT = "FETCH_EVENT";
 
 // Authentication for students
 export const AUTH_START = "AUTH_START";
@@ -23,6 +24,11 @@ export const FETCH_COMPANIES_FAIL = "FETCH_COMPANIES_FAIL";
 
 // Queue Position update
 export const UPDATE_QUEUE_POSITION = "UPDATE_QUEUE_POSITION";
+
+// Queue to all companies
+export const QUEUE_TO_ALL_START = "QUEUE_TO_ALL_START";
+export const QUEUE_TO_ALL_SUCCESS = "QUEUE_TO_ALL_SUCCESS";
+export const QUEUE_TO_ALL_FAIL = "QUEUE_TO_ALL_FAIL";
 
 // Queue Student to a Company
 export const QUEUE_INIT = "QUEUE_INIT";
@@ -55,9 +61,9 @@ export const FETCH_STUDENT_DATA_SUCCESS = "FETCH_STUDENT_DATA_SUCCESS";
 export const FETCH_STUDENT_DATA_FAIL = "FETCH_STUDENT_DATA_FAIL";
 
 // Student Leave Session
-export const STUDENT_LEAVE_SESSION = "STUDENT_LEAVE_SESSION";
-//export const STUDENT_LEAVE_SESSION_SUCCESS = "STUDENT_LEAVE_SESSION_SUCCESS";
-//export const STUDENT_LEAVE_SESSION_FAIL = "STUDENT_LEAVE_SESSION_FAIL";
+export const STUDENT_LEAVE_CHATROOM_START = "STUDENT_LEAVE_CHATROOM_START";
+export const STUDENT_LEAVE_CHATROOM_SUCCESS = "STUDENT_LEAVE_CHATROOM_SUCCESS";
+export const STUDENT_LEAVE_CHATROOM_FAIL = "STUDENT_LEAVE_CHATROOM_FAIL";
 
 // Clear error
 export const CLEAR_ERROR = "CLEAR_ERROR";
