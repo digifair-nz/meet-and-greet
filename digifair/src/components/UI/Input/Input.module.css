@@ -6,7 +6,7 @@
   border-radius: 50px;
 
   position: relative;
-  height: 4vh;
+  height: 5vh;
   margin-bottom: 6%;
 }
 
@@ -18,7 +18,7 @@
   border-radius: 50px;
 
   position: relative;
-  height: 4vh;
+  height: 5vh;
   margin-bottom: 6%;
 }
 
@@ -39,7 +39,7 @@ input::placeholder {
   border: 0px solid rgba(255, 255, 255, 0);
   background-color: rgba(255, 255, 255, 0);
   font: inherit;
-  height: 4vh;
+  height: 5vh;
   box-sizing: border-box;
   padding: 10px;
   display: block;
@@ -47,7 +47,7 @@ input::placeholder {
   border-radius: 50px;
   /* background-color: #ffc4dc; */
   width: 80%;
-  left: 4vh;
+  left: 5vh;
   top: 0;
   position: absolute;
 }
@@ -63,8 +63,8 @@ input::placeholder {
 /* The circular key and user icon*/
 
 .IconWrapper {
-  width: 4vh;
-  height: 4vh;
+  width: 5vh;
+  height: 5vh;
   background-color: black;
   border-radius: 50%;
   position: relative;

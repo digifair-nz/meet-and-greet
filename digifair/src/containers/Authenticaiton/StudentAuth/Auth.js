@@ -4,7 +4,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import * as actions from "../../../store/actions/index";
 
 import classes from "./StudentAuth.module.css";
-import digifairLogo from "../../../assets/company_logos/digifair-full-black.png";
+import digifairLogo from "../../../assets/company_logos/digifair-logo-black.png";
 import Button from "../../../components/UI/Button/Button";
 import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
