@@ -11,7 +11,7 @@
   padding-top: 5%;
   grid-auto-rows: 220px;
   /* overflow-y: scroll; */
-  margin-left: 5%;
+  margin-left: 2%;
   padding-bottom: 25vh;
 }
 /* Event container encapsulates company cards, event title, and event statistics*/
@@ -25,14 +25,14 @@
 .EventTitle {
   width: 100%;
   padding-top: 3%;
-  margin-left: 5%;
+  margin-left: 2%;
   text-align: center;
 }
 .EventTime {
   width: 100%;
   font-size: 20px;
-  margin-left: 10%;
-  margin-left: 5%;
+  /* margin-left: 10%; */
+  margin-left: 2%;
   text-align: center;
 }
 .ErrorMessage {
@@ -116,7 +116,7 @@ MOBILE and TABLET
       grid-template-columns: 35% 35%;
       grid-auto-rows: 200px;
       grid-row-gap: 6%;
-      margin-left: 0%;
+      /* margin-left: 0%; */
     }
   }
   @media (max-width: 768px) {
@@ -151,16 +151,26 @@ MOBILE and TABLET
       grid-template-columns: 70%;
       grid-auto-rows: 150px;
       grid-row-gap: 6%;
+      padding-top: 2%;
     }
+    .EventTitle{
+      padding-top: 15%;
+      transform: scale(0.8);
+    }
+    .EventTime{
+      transform: scale(0.8);
+      margin-top: -5%;
+    }
+
   }
   @media (max-width: 375px) {
-    .CompanyCardContainer {
+    /* .CompanyCardContainer {
       grid-template-columns: 70%;
       grid-auto-rows: 150px;
       grid-row-gap: 6%;
       margin-left: auto;
       margin-top: 70px;
-    }
+    } */
   }
 }
 
@@ -184,7 +194,7 @@ MOBILE and TABLET
     .CompanyCardContainer {
       grid-auto-rows: 150px;
       grid-row-gap: 6%;
-      margin-left: 0%;
+      /* margin-left: 0; */
     }
   }
 
@@ -231,4 +241,20 @@ MOBILE and TABLET
       grid-row-gap: 6%;
     }
   }
+
+  @media (max-height: 481px) {
+    .CompanyCardContainer {
+      grid-template-columns: 35% 35%;
+      grid-auto-rows: 120px;
+      grid-row-gap: 6%;
+      padding-top: 0;
+    }
+    .EventTitle{
+      padding-top: 0;
+    }
+    .EventTime{
+      margin-top: -3%;
+    }
+  }
+
 }
