@@ -86,10 +86,12 @@ module.exports = function(wsInstance) {
         const indices = []
         for(const company of companies) {
             const result = enqueueSingle(req.payload.eventId, company._id, req.payload._id)
-            if(result.error) {
+            if(result.error && result.critical) {
                 return res.status(result.status).json({ message: result.message })
             }
-            indices.push({ companyId: company._id, position: result.index })
+            if(!result.error) {
+                indices.push({ companyId: company._id, position: result.index })
+            }
         }
         return res.status(200).json({ message: 'Successfully enqueued to all', positions: indices })
     }
@@ -105,7 +107,8 @@ module.exports = function(wsInstance) {
             return {
                 error: true,
                 status: 403,
-                message: 'Failed to enqueue as user is already in queue.'
+                message: 'Failed to enqueue as user is already in queue.',
+                critical: false
             }
         }
         
@@ -114,7 +117,8 @@ module.exports = function(wsInstance) {
             return {
                 error: true,
                 status: 403,
-                message: 'Failed to enqueue as user has previously had session with room.'
+                message: 'Failed to enqueue as user has previously had session with room.',
+                critical: false
             }
         }
         // add the user to the queue
