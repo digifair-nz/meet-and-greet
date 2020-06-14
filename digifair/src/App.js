@@ -43,9 +43,8 @@ class App extends Component {
         <Switch>
           <Route path="/" component={StudentDashboard} exact />
           <Route path="/chat-room" component={ChatRoom} exact />
-          <Route path="/sign-in" component={Auth} exact />
-
           <Redirect to="/" />
+          <Route path="/sign-in" component={Auth} exact />
         </Switch>
       );
     }
@@ -66,8 +65,8 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path="/chat-room" component={ChatRoom} exact />
-
           <Redirect to="/chat-room" />
+          <Route path="/sign-in" component={Auth} exact />
         </Switch>
       );
     }

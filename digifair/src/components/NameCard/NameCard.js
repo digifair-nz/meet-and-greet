@@ -9,7 +9,7 @@ import classes from "./NameCard.module.css";
 
 const nameCard = (props) => {
   let name;
-  console.log(props);
+  //console.log(props);
   let icon = <Spinner fontSize="20px" />;
   let userType = null;
   if (!props.searching) {

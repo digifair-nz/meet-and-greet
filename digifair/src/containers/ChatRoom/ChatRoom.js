@@ -22,11 +22,10 @@ import * as actions from "../../store/actions/index";
 // Style
 
 import classes from "./ChatRoom.module.css";
-
+const OT = require("@opentok/client");
 // import * as otCoreOptions from "./otCoreOptions";
 
-//const OT = require("@opentok/client");
-let otCore;
+var otCore;
 
 /**
  * Build classes for container elements based on state
@@ -99,6 +98,7 @@ class ChatRoom extends Component {
       connections: [],
       loading: true,
       allowNextUser: true,
+      allowKicking: false,
       searching: false,
     };
     this.startCall = this.startCall.bind(this);
@@ -122,8 +122,11 @@ class ChatRoom extends Component {
     options.credentials = this.props.credentials;
 
     otCore = new AccCore(options);
+    console.log(otCore);
+
     // Connect the user to the session and start the call
     otCore.connect().then(() => {
+      console.log(otCore);
       this.setState({ connected: true });
 
       if (this.state.connected && !this.state.active) {
@@ -151,13 +154,25 @@ class ChatRoom extends Component {
           }
 
           if (this.state.connections.length > 0) {
-            let connections = [...this.state.connections];
-            connections.push(event.connection);
-            this.setState({
-              allowNextUser: false,
-              connections: connections,
-              searching: false,
-            });
+            if (this.props.isStudent && this.state.connections.length > 1) {
+              // When the recruiter refrehses their tab too, cause the student's connection to be reset
+              console.log("This is it..");
+              //alert("Session connection disrupted. Reconnecting...");
+              window.location.reload(false);
+            } else {
+              console.log(this.props.isStudent);
+              console.log(this.state.conn);
+              // If the student first joins in
+              let connections = [...this.state.connections];
+              connections.push(event.connection);
+
+              this.setState({
+                allowNextUser: false,
+                connections: connections,
+                searching: false,
+                allowKicking: true,
+              });
+            }
           }
         }
       }
@@ -165,6 +180,7 @@ class ChatRoom extends Component {
     // Student Client Kicked
     if (this.props.isStudent) {
       otCore.on("sessionDisconnected", (event) => {
+        console.log(event);
         // Clear students' credentials
         // Move them back to to the dashboard
         console.log("I got kicked :( ");
@@ -189,6 +205,19 @@ class ChatRoom extends Component {
         this.setState({ publishers, subscribers, meta });
       })
     );
+    if (!this.props.isStudent) {
+      // Detect when the student loses connection from the session either by closing the tab or losing internet connection.
+      // WARNING: When the student refreshes the tab or loses connection briefly, they might be kicked.
+      otCore.on("connectionDestroyed", (event) => {
+        this.setState({
+          allowKicking: true,
+        });
+      });
+    }
+
+    otCore.on("sessionDisconnected", (event) => {
+      console.log(event);
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -199,91 +228,132 @@ class ChatRoom extends Component {
       // console.log(this.props.credentials.sessionId);
 
       if (this.props.credentials.sessionId != prevProps.credentials.sessionId) {
-        console.log("Called");
-        console.log(this.state.connectionId);
-        otCore.endCall();
+        //otCore.session.connect();
+        window.location.reload(false);
+        //   const events = [
+        //     "subscribeToCamera",
+        //     "unsubscribeFromCamera",
+        //     "subscribeToScreen",
+        //     "unsubscribeFromScreen",
+        //     "startScreenShare",
+        //     "endScreenShare",
+        //   ];
 
-        this.setState({
-          connected: false,
-          acitve: false,
-          publishers: null,
-          subscribers: null,
-          connectionId: null,
-          connections: null,
-          loading: true,
-          meta: null,
-        });
+        //   // console.log(this.state.connections[0]);
+        //   // let connection = this.state.connections[0];
+        //   // otCore.forceDisconnect(connection, function (error) {
+        //   //   if (error) {
+        //   //     console.log(error);
+        //   //   } else {
+        //   //     console.log("Conne");
+        //   //   }
+        //   // });
+        //   console.log("----------------");
+        //   console.log(otCore.session);
 
-        const options2 = otCoreOptions.otCoreOptions2;
-        options2.credentials = this.props.credentials;
-        console.log(this.props.credentials);
+        //   console.log("----------------");
+        //   console.log(otCore.internalState);
+        //   console.log("----------------");
+        //   console.log(otCore.getSession);
+        //   console.log("----------------");
 
-        console.log(otCore);
+        //   otCore.session.off();
 
-        otCore = null;
-        otCore = new AccCore(options2);
-        otCore.eventListeners.startScreenShare = null;
-        // Connect the user to the session and start the call
-        otCore.connect().then(() => {
-          this.setState({ connected: true });
+        //   otCore.endCall();
+        //   otCore.session.destroy();
 
-          this.startCall();
-        });
+        //   console.log("----------------");
+        //   console.log(otCore.session);
 
-        // Event listener for client connecting to the session
-        otCore.on("connectionCreated", (event) => {
-          if (event.connection.connectionId != this.state.connectionId) {
-            // Check if this is an initial connection (for the recruiter)
-            if (this.state.connectionId === null) {
-              console.log("I have connected");
-              let connections = []; // Initially there are no connections
-              connections.push(event.connection); // push his connection
+        //   console.log("----------------");
+        //   console.log(otCore.session);
 
-              this.setState({
-                connectionId: event.connection.connectionId,
-                connections: connections,
-              });
-            } else {
-              // Recruiter has already joined
-              console.log("Another client connected.");
-              if (this.state.connections.length > 0) {
-                let connections = [...this.state.connections];
-                connections.push(event.connection);
-                this.setState({
-                  allowNextUser: false,
-                  connections: connections,
-                  searching: false,
-                });
-              }
-            }
-          }
-        });
-        // otCore.disconnect()
-        const events2 = [
-          "subscribeToCamera",
-          "unsubscribeFromCamera",
-          "subscribeToScreen",
-          "unsubscribeFromScreen",
-          //"startScreenShare",
-          //"endScreenShare",
-        ];
-        events2.forEach((event) =>
-          otCore.on(event, ({ publishers, subscribers, meta }) => {
-            this.setState({ publishers, subscribers, meta });
-          })
-        );
-        // Student Client Kicked
-        if (this.props.isStudent) {
-          otCore.on("sessionDisconnected", (event) => {
-            // Clear students' credentials
-            // Move them back to to the dashboard
-            console.log("I got kicked :( ");
+        //   this.setState({
+        //     connected: false,
+        //     acitve: false,
+        //     publishers: null,
+        //     subscribers: null,
+        //     connectionId: null,
+        //     connections: [],
+        //     loading: true,
+        //     meta: null,
+        //   });
 
-            this.props.studentLeaveSession();
+        //   const options2 = otCoreOptions.otCoreOptions2;
+        //   options2.credentials = this.props.credentials;
+        //   console.log(this.props.credentials);
 
-            this.props.history.push("/");
-          });
-        }
+        //   // otCore = new AccCore(options2);
+
+        //   //     for(const key of Object.getOwnPropertyNames(otCore)) {
+        //   //       delete otCore[key]
+        //   //  }
+
+        //   otCore.internalState.setCredentials(this.props.credentials);
+        //   // const session = OT.initSession(
+        //   //   this.props.credentials.apiKey,
+        //   //   this.props.credentials.sessionId
+        //   // );
+        //   // otCore.internalState.reset();
+        //   // otCore.internalState.setSession(session);
+        //   console.log(otCore);
+        //   console.log(otCore.session);
+
+        //   // Connect the user to the session and start the call
+        //   otCore.connect().then(() => {
+        //     this.setState({ connected: true });
+
+        //     this.startCall();
+        //   });
+
+        //   // Event listener for client connecting to the session
+        //   otCore.on("connectionCreated", (event) => {
+        //     if (event.connection.connectionId != this.state.connectionId) {
+        //       // Check if this is an initial connection (for the recruiter)
+        //       if (this.state.connectionId === null) {
+        //         console.log("I have connected");
+        //         let connections = []; // Initially there are no connections
+        //         connections.push(event.connection); // push his connection
+
+        //         this.setState({
+        //           connectionId: event.connection.connectionId,
+        //           connections: connections,
+        //         });
+        //       } else {
+        //         // Recruiter has already joined
+        //         console.log("Another client connected.");
+        //         if (this.state.connections.length > 0) {
+        //           let connections = [...this.state.connections];
+        //           connections.push(event.connection);
+        //           this.setState({
+        //             allowNextUser: false,
+        //             connections: connections,
+        //             searching: false,
+        //           });
+        //         }
+        //       }
+        //     }
+        //   });
+
+        //   events.forEach((event) =>
+        //     otCore.on(event, ({ publishers, subscribers, meta }) => {
+        //       console.log(event);
+        //       this.setState({ publishers, subscribers, meta });
+        //     })
+        //   );
+        //   // Student Client Kicked
+        //   if (this.props.isStudent) {
+        //     otCore.on("sessionDisconnected", (event) => {
+        //       // Clear students' credentials
+        //       // Move them back to to the dashboard
+        //       console.log("I got kicked :( ");
+
+        //       this.props.studentLeaveSession();
+
+        //       this.props.history.push("/");
+        //     });
+        //   }
+        //
       }
     }
 
@@ -305,36 +375,48 @@ class ChatRoom extends Component {
   }
 
   kickStudent() {
+    console.log(otCore);
     console.log(this.state);
-    if (!this.props.isStudent && this.state.connections.length > 1) {
-      // Kick the user with the connectionId that is not mine
+    if (this.state.connections != null) {
+      if (!this.props.isStudent && this.state.connections.length > 1) {
+        // Kick the user with the connectionId that is not mine
 
-      // Check that the connection is loaded
-      if (this.state.connections != null) {
+        // Check that the connection is loaded
+
         // If there are less than 2 users in the session do nothing
-        if (this.state.connections.length > 1) {
-          // Itterate through the connections
-          for (let i = 0; i < this.state.connections.length; i++) {
-            // If the connection doesn't have my id we want to kick this user
-            if (
-              this.state.connectionId != this.state.connections[i].connectionId
-            ) {
-              //Kick the student with a different connection id
-              otCore.forceDisconnect(this.state.connections[i]).then(() => {
-                console.log("Kicked!!");
-                let connections = [...this.state.connections];
-                connections.pop();
-                this.setState({
-                  connections: connections,
-                  allowNextUser: true,
-                  //searching: true,
-                });
 
-                this.props.kickStudent();
-              });
-            }
+        // Itterate through the connections
+        for (let i = 0; i < this.state.connections.length; i++) {
+          // If the connection doesn't have my id we want to kick this user
+          if (
+            this.state.connectionId != this.state.connections[i].connectionId
+          ) {
+            //Kick the student with a different connection id
+            console.log(this.state);
+            console.log(this.state.connections[i]);
+            console.log(otCore.session);
+
+            otCore.forceDisconnect(this.state.connections[i]).then(() => {
+              console.log("Kicked!!");
+
+              //let connections = [...this.state.connections];
+              //connections.pop();
+              // this.setState({
+              //   connections: connections,
+              //   allowNextUser: false,
+              //   //searching: true,
+              // });
+
+              // otCore.session.off();
+
+              // otCore.endCall();
+              // otCore.session.destroy();
+
+              this.props.kickStudent();
+            });
           }
         }
+        this.props.kickStudent();
       }
     }
   }
@@ -380,9 +462,8 @@ class ChatRoom extends Component {
     }
   };
   render() {
-    console.log(this.state.searching);
-    console.log(this.props.talkJSData);
-
+    console.log("hhhhhhhhhhhhhhhhhh");
+    console.log(otCore);
     let textChat = null;
     let nameCard = null;
     if (this.props.talkJSData) {
@@ -393,7 +474,7 @@ class ChatRoom extends Component {
           talkJSData={this.props.talkJSData}
         />
       );
-      console.log(this.props.talkJSData);
+
       nameCard = (
         // This is the name of the person they are chatting with.
 
@@ -419,8 +500,6 @@ class ChatRoom extends Component {
       }
     }
 
-    console.log(this.state);
-
     let { connected, active } = this.state;
     let {
       localAudioClass,
@@ -432,6 +511,7 @@ class ChatRoom extends Component {
       screenSubscriberClass,
     } = containerClasses(this.state);
 
+    console.log(this.state.connections);
     return (
       <div className={classes.ChatRoomContainer}>
         {nameCard}
@@ -465,7 +545,9 @@ class ChatRoom extends Component {
               {/* <Button btnType="Control">Take a break</Button> */}
               <Button
                 disabled={
-                  this.state.searching || this.state.connections.length < 2
+                  this.state.searching ||
+                  this.state.connections.length < 2 ||
+                  !this.state.allowKicking
                 }
                 clicked={this.kickStudent}
                 btnType="Danger"
