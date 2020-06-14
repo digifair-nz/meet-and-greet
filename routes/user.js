@@ -23,7 +23,7 @@ module.exports = function(wsInstance) {
     
     // endpoints for joining and leaving sessions
     router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
-    router.post('/end/:_id', authCtrl.asStudent, userCtrl.leaveSession)
+    router.post('/end', authCtrl.asStudent, userCtrl.leaveSession)
 
     const temp = require('../test-setup')
     router.post('/setup', async (req, res) => {
