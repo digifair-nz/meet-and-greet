@@ -11,6 +11,7 @@ import classNames from "classnames";
 // Components
 import Aux from "../../hoc/Auxiliary";
 import Button from "../../components/UI/Button/Button";
+import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
 import NameCard from "../../components/NameCard/NameCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import TextChat from "./TextChat/TextChat";
@@ -22,6 +23,7 @@ import * as actions from "../../store/actions/index";
 // Style
 
 import classes from "./ChatRoom.module.css";
+
 const OT = require("@opentok/client");
 // import * as otCoreOptions from "./otCoreOptions";
 
@@ -100,6 +102,7 @@ class ChatRoom extends Component {
       allowNextUser: true,
       allowKicking: false,
       searching: false,
+      studentLeft: false,
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -107,26 +110,40 @@ class ChatRoom extends Component {
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
     this.kickStudent = this.kickStudent.bind(this);
   }
-  // state = {
-  //   disconnect: false,
-  // };
+
   kickStudentHandler = () => {
     this.props.kickStudent();
   };
 
   componentDidMount() {
-    console.log("CHAT ROOM MOUNTED");
+    // console.log("CHAT ROOM MOUNTED");
     // console.log(this.props.credentials);
     // console.log(this.props.isStudent);
     const options = otCoreOptions.otCoreOptions;
     options.credentials = this.props.credentials;
 
     otCore = new AccCore(options);
-    console.log(otCore);
+
+    /* If the student leaves the room for too long by closing the tab or losing the connection (enough so that the recruiter has already switched sessions)
+         We want to inform him that he is by himself. Execute set-timeout after 30seconds   
+      */
+    if (this.props.credentials) {
+      setTimeout(() => {
+        const inRoom = localStorage.getItem("inRoom");
+        if (
+          this.props.isStudent &&
+          this.state.connections.length < 2 &&
+          inRoom
+        ) {
+          alert(
+            "Looks like you are no longer in a session with a recruiter. Please leave this room and get back to the main event (leave session button in the menu)"
+          );
+        }
+      }, 5000);
+    }
 
     // Connect the user to the session and start the call
     otCore.connect().then(() => {
-      console.log(otCore);
       this.setState({ connected: true });
 
       if (this.state.connected && !this.state.active) {
@@ -141,6 +158,10 @@ class ChatRoom extends Component {
           console.log("I have connected");
           let connections = []; // Initially there are no connections
           connections.push(event.connection); // push his connection
+
+          if (this.props.isStudent) {
+            localStorage.setItem("inRoom", true);
+          }
 
           this.setState({
             connectionId: event.connection.connectionId,
@@ -158,10 +179,8 @@ class ChatRoom extends Component {
               // When the recruiter refrehses their tab too, cause the student's connection to be reset
               console.log("This is it..");
               //alert("Session connection disrupted. Reconnecting...");
-              window.location.reload(false);
+              //window.location.reload(false);
             } else {
-              console.log(this.props.isStudent);
-              console.log(this.state.conn);
               // If the student first joins in
               let connections = [...this.state.connections];
               connections.push(event.connection);
@@ -184,6 +203,7 @@ class ChatRoom extends Component {
         console.log(event);
         // Clear students' credentials
         // Move them back to to the dashboard
+        localStorage.removeItem("inRoom");
         console.log("I got kicked :( ");
 
         this.props.studentLeaveSession();
@@ -210,14 +230,24 @@ class ChatRoom extends Component {
       // Detect when the student loses connection from the session either by closing the tab or losing internet connection.
       // WARNING: When the student refreshes the tab or loses connection briefly, they might be kicked.
       otCore.on("connectionDestroyed", (event) => {
-        // Remove a connection
-        alert(
-          "The student Has lost a connection...You can end the student's session by disconnecting the student permanently."
-        );
         this.setState({
           allowKicking: true,
           studentLeft: true,
         });
+      });
+    } else {
+      otCore.on("connectionDestroyed", (event) => {
+        console.log(event);
+
+        /*
+        EXPERIMENTAL!!
+
+        This is done to sync the sessions but we want the student to load later than the recruiter. 
+        So they have different conneciton Ids
+        */
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
       });
     }
 
@@ -227,7 +257,6 @@ class ChatRoom extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("Check");
     if (!this.props.isStudent) {
       if (this.props.credentials.sessionId != prevProps.credentials.sessionId) {
         //otCore.session.connect();
@@ -251,8 +280,8 @@ class ChatRoom extends Component {
   }
 
   kickStudent() {
-    console.log(otCore);
-    console.log(this.state);
+    //console.log(otCore);
+    //console.log(this.state);
     if (this.state.connections != null) {
       if (
         !this.props.isStudent &&
@@ -272,25 +301,29 @@ class ChatRoom extends Component {
             this.state.connectionId != this.state.connections[i].connectionId
           ) {
             //Kick the student with a different connection id
-            console.log(this.state);
-            console.log(this.state.connections[i]);
-            console.log(otCore.session);
+            // console.log(this.state);
+            // console.log(this.state.connections[i]);
+            // console.log(otCore.session);
 
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
-              console.log("Kicked!!");
               this.props.kickStudent();
             });
+            //this.props.kickStudent();
           }
         }
-        // If the student has lost a connection.
-      } else if (!this.props.isStudent && this.state.studentLeft) {
+      } else if (
+        !this.props.isStudent &&
+        this.state.connections.length > 1 &&
+        this.state.studentLeft
+      ) {
         this.props.kickStudent();
       }
     }
   }
 
   leaveSession = () => {
-    otCore.endCall();
+    localStorage.removeItem("inRoom");
+    otCore.session.destroy();
     this.props.history.push("/");
     this.props.studentLeaveSession();
   };
@@ -329,9 +362,11 @@ class ChatRoom extends Component {
       }
     }
   };
+
+  errorConfirmedHandler = () => {
+    this.props.clearError();
+  };
   render() {
-    console.log("hhhhhhhhhhhhhhhhhh");
-    console.log(otCore);
     let textChat = null;
     let nameCard = null;
     if (this.props.talkJSData) {
@@ -354,7 +389,6 @@ class ChatRoom extends Component {
       );
     } else {
       if (this.state.searching) {
-        console.log("Overhere");
         nameCard = (
           // This is the name of the person they are chatting with.
 
@@ -365,6 +399,13 @@ class ChatRoom extends Component {
         );
       } else {
         nameCard = null;
+      }
+    }
+    const inRoom = localStorage.getItem("inRoom");
+    if (this.state.connections) {
+      if (this.props.isStudent && this.state.connections.length < 2 && inRoom) {
+        nameCard = null;
+        textChat = null;
       }
     }
 
@@ -382,6 +423,11 @@ class ChatRoom extends Component {
     console.log(this.state.connections);
     return (
       <div className={classes.ChatRoomContainer}>
+        <ErrorPopup
+          show={this.props.error}
+          modalClosed={this.errorConfirmedHandler}
+          error={this.props.error}
+        />
         {nameCard}
         <Toolbar
           isAuth={true}
@@ -413,9 +459,10 @@ class ChatRoom extends Component {
               {/* <Button btnType="Control">Take a break</Button> */}
               <Button
                 disabled={
-                  this.state.searching ||
-                  this.state.connections.length < 2 ||
-                  !this.state.allowKicking
+                  this.state.searching || !this.state.allowKicking
+                  // this.state.connections.length < 2 ||
+                  // !this.state.allowKicking ||
+                  // !this.state.studentLeft
                 }
                 clicked={this.kickStudent}
                 btnType="Danger"
@@ -480,18 +527,18 @@ const mapStateToProps = (state) => {
     myId: state.user.id,
     talkJSData: state.user.talkJSData,
     loadingTextChat: state.user.loading,
-    //allowNextUser: state.user.allowNextUser,
+    error: state.user.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    //kickStudent: () => dispatch(actions.studentLeaveSession()),
     logout: () => dispatch(actions.logout()),
-    studentLeaveSession: () => dispatch(actions.studentLeaveSession()),
+    studentLeaveSession: () => dispatch(actions.studentLeaveChatroom()),
     kickStudent: () => dispatch(actions.kickStudent()),
     inviteNextStudent: () => dispatch(actions.inviteNextStudent()),
     fetchStudentData: () => dispatch(actions.fetchStudentData()),
+    clearError: () => dispatch(actions.clearError()),
   };
 };
 

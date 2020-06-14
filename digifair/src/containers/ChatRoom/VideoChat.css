@@ -3,6 +3,9 @@
   width: 100%;
 }
 
+
+
+
 #opentok_canvas {
   opacity: 0.6; /*This makes the annotations more transparent (like a highlighter)*/
 }

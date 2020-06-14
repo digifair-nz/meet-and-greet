@@ -18,7 +18,7 @@ export {
 export { updateQueuePosition } from "./queuePosition";
 
 // Join student to chatroom
-export { studentJoinChatroom, studentLeaveSession } from "./studentChatroom";
+export { studentJoinChatroom, studentLeaveChatroom } from "./studentChatroom";
 
 // Kick student and move sessions
 export {

@@ -63,16 +63,6 @@ export const studentJoinChatroom = (companyId) => {
   };
 };
 
-export const studentLeaveSession = () => {
-  // Clear credentials
-  localStorage.removeItem("credentials");
-  localStorage.removeItem("talkJSData");
-
-  return {
-    type: actionTypes.STUDENT_LEAVE_SESSION,
-  };
-};
-
 // export const studentChatRoomRedirect
 // Check if student users have chat room credentials in case they refrehsed the page or closed the tab
 // export const studentCheckCredentials = () => {
@@ -83,3 +73,47 @@ export const studentLeaveSession = () => {
 //     }
 //   };
 // };
+
+export const studentLeaveChatroomStart = () => {
+  // Expect to be called when a message is sent from the socket connection
+  return {
+    type: actionTypes.STUDENT_LEAVE_CHATROOM_START,
+  };
+};
+
+export const studentLeaveChatroomSuccess = () => {
+  // Expect to be called when a message is sent from the socket connection
+  return {
+    type: actionTypes.STUDENT_LEAVE_CHATROOM_SUCCESS,
+  };
+};
+
+export const studentLeaveChatroomFail = (error) => {
+  // Expect to be called when a message is sent from the socket connection
+  return {
+    type: actionTypes.STUDENT_LEAVE_CHATROOM_FAIL,
+    error: error,
+  };
+};
+
+export const studentLeaveChatroom = () => {
+  // Clear credentials
+  localStorage.removeItem("credentials");
+  localStorage.removeItem("talkJSData");
+
+  return (dispatch) => {
+    dispatch(studentLeaveChatroomStart());
+
+    axios
+      .post("/user/end/")
+      .then((response) => {
+        console.log(response);
+        dispatch(studentLeaveChatroomSuccess());
+      })
+      .catch((err) => {
+        console.log(err);
+
+        dispatch(studentLeaveChatroomFail(err.response.data));
+      });
+  };
+};
