@@ -1,9 +1,18 @@
 import * as actionTypes from "../actions/actionTypes";
 
 import { updateObject } from "../utility";
-const initialState = {
-  /// REFRACTOR FOR IS QUEUED?
 
+/*
+
+This reducer is responsible for the companies slice of the state 
+which includes the companies that the student sees and can queue too
+
+It contains information necessary to queue users or dequeue them or update 
+their queue position for specific queued companies
+
+*/
+
+const initialState = {
   companies: null,
   loading: false,
   error: null,
@@ -47,7 +56,25 @@ const fetchCompaniesFail = (state, action) => {
 /********************
 QUEUE/DEQUEUE STUDENT 
 ********************/
-// Queue
+
+// Queue to all
+const queueToAllStart = (state, action) => {
+  // Make all the companies load
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const queueToAllSuccess = (state, action) => {};
+
+const queueToAllFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+// Queue for a specific company
 
 /**
  * UpdateCompanyQueuing allows to reduce duplicate code and is used by reducer functions.

@@ -1,7 +1,16 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
-// NOTE: RENAME TO STUDENT not studentAuth
+/*
+
+This reducer is responsible for the user slice of the state 
+which includes the recruiter and the student.
+
+It contains information necessary to move the user between chatrooms 
+which means it is managing kicking students, inviting students, leaving sessions,
+fetching data, and signing in and signing out.
+
+*/
 const initialState = {
   token: null,
 
@@ -15,6 +24,10 @@ const initialState = {
   id: null,
   talkJSData: null, // for text chat (talk js)
 };
+
+/***********************************************
+                 AUTHENTICATION             
+***********************************************/
 
 const authStart = (state, action) => {
   // console.log(action.eventId);
@@ -45,6 +58,7 @@ const authFail = (state, action) => {
     //isStudent: false,
   });
 };
+
 const recruiterAuthSuccess = (state, action) => {
   return updateObject(state, {
     token: action.token,
@@ -74,6 +88,12 @@ const setAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });
 };
 
+/***********************************************
+                STUDENT CHATROOM            
+***********************************************/
+
+// Joining chatroom
+
 const studentJoinChatroomStart = (state, action) => {
   return state;
   // return updateObject(state, { authRedirectPath: action.path });
@@ -90,10 +110,31 @@ const studentJoinChatroomFail = (state, action) => {
   return updateObject(state, { error: action.error });
 };
 
-const studentLeaveSession = (state, action) => {
-  return updateObject(state, { credentials: null, talkJSData: null });
+// leaving chatroom
+
+const studentLeaveChatroomStart = (state, action) => {
+  return updateObject(state, { loading: true });
 };
 
+const studentLeaveChatroomSuccess = (state, action) => {
+  return updateObject(state, {
+    credentials: null,
+    talkJSData: null,
+    loading: false,
+  });
+};
+
+const studentLeaveChatroomFail = (state, action) => {
+  return updateObject(state, {
+    credentials: null,
+    talkJSData: null,
+    loading: false,
+  });
+};
+
+/***********************************************
+                RECRUITER CHATROOM            
+***********************************************/
 const recruiterKickStudentStart = (state, action) => {
   return updateObject(state, { loading: true });
 };
@@ -153,6 +194,7 @@ const fetchStudentDataFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    //--------- AUTHENTICATION ----------------
     case actionTypes.AUTH_START:
       return authStart(state, action);
     case actionTypes.STUDENT_AUTH_SUCCESS:
@@ -165,32 +207,44 @@ const reducer = (state = initialState, action) => {
       return authLogout(state, action);
     case actionTypes.SET_AUTH_REDIRECT_PATH:
       return setAuthRedirectPath(state, action);
+    //--------- STUDENT JOINING THE CHATROOM ----------------
     case actionTypes.STUDENT_JOIN_CHATROOM_START:
       return studentJoinChatroomStart(state, action);
     case actionTypes.STUDENT_JOIN_CHATROOM_SUCCESS:
       return studentJoinChatroomSuccess(state, action);
     case actionTypes.STUDENT_JOIN_CHATROOM_FAIL:
       return studentJoinChatroomFail(state, action);
-    case actionTypes.STUDENT_LEAVE_SESSION:
-      return studentLeaveSession(state, action);
+    //--------- STUDENT LEAVING THE CHATROOM ----------------
+    case actionTypes.STUDENT_LEAVE_CHATROOM_START:
+      return studentLeaveChatroomStart(state, action);
+    case actionTypes.STUDENT_LEAVE_CHATROOM_SUCCESS:
+      return studentLeaveChatroomSuccess(state, action);
+    case actionTypes.STUDENT_LEAVE_CHATROOM_FAIL:
+      return studentLeaveChatroomFail(state, action);
+    //--------- RECRUITER KICKING ----------------
     case actionTypes.KICK_STUDENT_START:
       return recruiterKickStudentStart(state, action);
     case actionTypes.KICK_STUDENT_SUCCESS:
       return recruiterKickStudentSuccess(state, action);
     case actionTypes.KICK_STUDENT_FAIL:
       return recruiterKickStudentFail(state, action);
+    //--------- RECRUITER INVITING NEXT USER ----------------
     case actionTypes.INVITE_NEXT_STUDENT_START:
       return recruiterInviteNextStart(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_SUCCESS:
       return recruiterInviteNextSuccess(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_FAIL:
       return recruiterInviteNextFail(state, action);
+    //--------- RECRUITER GETTING STUDENT'S INFORMATION ----------------
     case actionTypes.FETCH_STUDENT_DATA_START:
       return fetchStudentDataStart(state, action);
     case actionTypes.FETCH_STUDENT_DATA_SUCCESS:
       return fetchStudentDataSuccess(state, action);
     case actionTypes.FETCH_STUDENT_DATA_FAIL:
       return fetchStudentDataFail(state, action);
+    case actionTypes.CLEAR_ERROR:
+      return updateObject(state, { error: null });
+      return;
     default:
       return state;
   }

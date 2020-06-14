@@ -1,41 +1,55 @@
 import * as actionTypes from "./actionTypes";
 
 import instance from "../../axios-instance";
-// import axios from "axios";
-
-// const instance = axios.create({});
-
-// (function () {
-//   const token = localStorage.getItem("token");
-//   if (token) {
-//     instance.defaults.headers.common["auth-token"] = token;
-//   } else {
-//     instance.defaults.headers.common["auth-token"] = null;
-//   }
-// })();
-
-// instance.interceptors.request.use(function (config) {
-//   const token = localStorage.getItem("token");
-//   config.headers.common["auth-token"] = token;
-
-//   return config;
-// });
-// const instance = axios.create({});
-
-// (function () {
-//   const token = localStorage.getItem("token");
-
-//   if (token) {
-//     instance.defaults.headers.common["auth-token"] = token;
-//   }
-// })();
 
 /*
 
 QUEUE STUDENT TO A COMPANY 
 
 */
-//axios.defaults.header.common[Auth_Token] = token
+
+export const queueToAllStart = () => {
+  return {
+    type: actionTypes.QUEUE_TO_ALL_START,
+  };
+};
+
+export const queueToAllSuccess = (companies) => {
+  // This will give back an array of company objects where...
+  // [ { companyId, queuePosition}....]
+  // Are all the companies that the student has succesfully queued to.
+
+  return {
+    type: actionTypes.QUEUE_TO_ALL_SUCCESS,
+    companies: companies,
+  };
+};
+
+export const queueToAllFinish = (error) => {
+  return {
+    type: actionTypes.QUEUE_TO_ALL_FAIL,
+    error: error,
+  };
+};
+
+// This will enqueue the student to all available companies
+export const queueToAll = () => {
+  return (dispatch) => {
+    dispatch(queueToAllStart());
+
+    instance
+      .post("/user/enqueue/")
+
+      .then((res) => {
+        console.log(res);
+        dispatch(queueToAllSuccess(res.data.companies));
+      })
+      .catch((error) => {
+        dispatch(queueFail(error.response.data));
+      });
+  };
+};
+
 /**
  * initialize queue to a specific comapny
  * @param {string} companyId
