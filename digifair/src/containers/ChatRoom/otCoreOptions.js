@@ -80,7 +80,7 @@ export const otCoreOptions2 = {
   },
 
   screenSharing: {
-    extensionID: "plocfffmbcclpdifaikiikgplfnepkpo",
+    extensionID: "cfhdojbkjhnklbpkdaibdccddilifddb",
     annotation: false,
     appendControl: false,
     controlsContainer: false,

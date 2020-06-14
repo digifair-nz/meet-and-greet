@@ -55,7 +55,7 @@ class StudentAuth extends Component {
 
   componentDidMount() {
     console.log("AUTH CONTAINER MOUNTED");
-    
+
     const eventId = this.props.match.params.id;
 
     this.setState({
@@ -74,7 +74,9 @@ class StudentAuth extends Component {
   onKeydown = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      this.submitHandler(e); // Submit on pressing enter
+      if (this.state.isStudent) {
+        this.submitHandler(e); // Submit on pressing enter
+      }
     }
   };
 
@@ -83,7 +85,6 @@ class StudentAuth extends Component {
       window.removeEventListener("keydown", this.onKeydown, false);
     }
   }
-
 
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
@@ -118,38 +119,39 @@ class StudentAuth extends Component {
   };
 
   submitHandler = (event) => {
-    console.log(this.props);
-    event.preventDefault();
+    if (!this.props.authenticated) {
+      event.preventDefault();
 
-    // if (this.state.controls.email.value === "" && ) {
-    //   this.setState({
-    //     invalidForm: true,
-    //   });
-    // } else {
-    //   this.setState({
-    //     invalidForm: false,
-    //   });
+      // if (this.state.controls.email.value === "" && ) {
+      //   this.setState({
+      //     invalidForm: true,
+      //   });
+      // } else {
+      //   this.setState({
+      //     invalidForm: false,
+      //   });
 
-    if (
-      !this.checkValidity(this.state.controls.email.value, { isEmail: true })
-    ) {
-      this.setState({
-        invalidForm: true,
-        invalidFormMessage: "Invalid Email",
-      });
-    } else {
-      this.setState({
-        invalidForm: false,
-      });
+      if (
+        !this.checkValidity(this.state.controls.email.value, { isEmail: true })
+      ) {
+        this.setState({
+          invalidForm: true,
+          invalidFormMessage: "Invalid Email",
+        });
+      } else {
+        this.setState({
+          invalidForm: false,
+        });
 
-      // Dispatch auth action
-      if (!this.state.invalidForm) {
-        this.props.onAuth(
-          this.state.eventId,
-          this.state.controls.email.value,
-          this.state.controls.password.value,
-          this.state.isStudent
-        );
+        // Dispatch auth action
+        if (!this.state.invalidForm) {
+          this.props.onAuth(
+            this.state.eventId,
+            this.state.controls.email.value,
+            this.state.controls.password.value,
+            this.state.isStudent
+          );
+        }
       }
     }
   };
@@ -201,10 +203,14 @@ class StudentAuth extends Component {
       errorMessage = this.props.error.message;
     }
 
-
-
     return (
-      <div className={this.state.isStudent ? classes.AuthContainer : classes.AuthContainerCompany}>
+      <div
+        className={
+          this.state.isStudent
+            ? classes.AuthContainer
+            : classes.AuthContainerCompany
+        }
+      >
         {
           authed /*This causes authenticated users to be redirected to the root */
         }
@@ -214,8 +220,6 @@ class StudentAuth extends Component {
           alt="Digifair Black and White Logo"
         />
         <div className={classes.FormContainer}>
-
-
           <form
             className={classes.Form}
             onSubmit={(event) => this.submitHandler(event)}
@@ -235,15 +239,18 @@ class StudentAuth extends Component {
           {this.props.loading ? (
             <Spinner />
           ) : (
-              <Button
-                clicked={(event) => this.submitHandler(event)}
-                btnType="Accept"
-              >
-                Sign in
-              </Button>
-            )}
+            <Button
+              clicked={(event) => this.submitHandler(event)}
+              btnType="Accept"
+            >
+              Sign in
+            </Button>
+          )}
         </div>
-        <div className={this.state.isStudent ? classes.BackgroundIllustration : classes.BackgroundIllustrationCompany}>
+        <div 
+        className={this.state.isStudent ? 
+        classes.BackgroundIllustration : 
+        classes.BackgroundIllustrationCompany}>
           <img src={sot_logo} alt="summer of tech" class={classes.SOTLogo}></img>
         </div>
       </div>
@@ -275,4 +282,3 @@ const mapDispatchToProps = (dispatch) => {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(StudentAuth)
 );
-
