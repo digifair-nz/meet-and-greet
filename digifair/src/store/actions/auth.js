@@ -144,11 +144,16 @@ export const auth = (eventId, email, password, isStudent) => {
           const name = jwt(token).name;
           const id = jwt(token)._id;
 
+          const event = response.data.event;
+          localStorage.setItem("event", JSON.stringify(event));
+
           localStorage.setItem("id", id);
           localStorage.setItem("name", name);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
+
+          dispatch(fetchEvent(event.name, event.eventExpiration));
 
           dispatch(recruiterAuthSuccess(token, name, id, credentials, null));
           // dispatch(recruiterCheckAuthTimeout(response.data.expiresIn));
