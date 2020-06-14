@@ -42,6 +42,7 @@ module.exports = function(wsInstance) {
                 const queuePosition = queue.members.indexOf(req.payload._id)
                 company.queuePosition = queuePosition + 1
                 company.isQueued = queuePosition != -1
+                company.hadSession = queue.blacklist.includes(req.payload._id)
             }
             // respond with the companies if failure did not occur
             return res.status(200).json(companies)
