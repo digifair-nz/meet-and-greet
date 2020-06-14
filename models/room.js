@@ -25,16 +25,12 @@ const RoomSchema = new mongoose.Schema({
     },
     inSession: {
         type: Boolean,
-        default: false
+        default: true
     },
     sessionPartner: {
         type: mongoose.Types.ObjectId,
     },
     kickedStudent: {
-        type: Boolean,
-        default: false
-    },
-    searching: {
         type: Boolean,
         default: false
     },
