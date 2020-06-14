@@ -1,0 +1,106 @@
+module.exports = function(wsInstance) {
+    const mongoose = require('mongoose')
+    const Queue = mongoose.model('Queue')
+    const User = mongoose.model('User')
+    const Room = mongoose.model('Room')
+    
+    const searcherProto = {
+        init: async function init(queueId) {
+            this.queueId = queueId
+            this.activeNotifications = []
+
+            const queue = await Queue.findById(queueId)
+            this.companyId = queue.companyId
+            this.eventId = queue.eventId
+
+            this.search()
+        },
+        search: async function search() {
+            await timeout(process.env.SEARCH_FREQUENCY)
+            // if the flag for searcher teardown has been set, stop searching
+            if(this.stopSearching) {
+                return
+            }
+            const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
+            const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
+
+            if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
+                return this.search()
+            }
+
+            const queue = await Queue.findById(this.queueId)
+            if(queue.members.length == 0) {
+                return this.search()
+            }
+
+            for(let i = 0; i < queue.members.length; i++) {
+                const user = await User.findById(queue.members[i])
+
+                if(this.activeNotifications.length >= availableRooms) {
+                    return this.search()
+                }
+                // make sure that the user hasn't been notified and is eligible to join a session
+                console.log('should stop here: ', this.activeNotifications, user._id, this.activeNotifications.includes(user._id), this.activeNotifications[0] == user._id.toString())
+                if(user.inSession || this.activeNotifications.includes(user._id.toString())) {
+                    console.log(`Failed 2: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
+                    continue
+                }
+                // make sure the user's websocket connection exists
+                let client
+                for(const c of wsInstance.getWss().clients) {
+                    if(c.jwt._id == user._id) {
+                        client = c
+                        break
+                    }
+                }
+                if(!client) {
+                    console.log('Failed 3')
+
+                    if(queue.members.includes(user._id)) {
+                        queue.members.splice(queue.members.indexOf(user._id), 1)
+                    }
+                    await queue.save()
+                    continue
+                }
+                // mark the user as notified and send the notification
+                this.activeNotifications.push(user._id.toString())
+                setTimeout(async () => {
+                    this.activeNotifications.splice(this.activeNotifications.indexOf(user._id), 1)
+                    const updatedQueue = await Queue.findOne(this.queueId)
+                    if(updatedQueue.members.includes(user._id)) {
+                        updatedQueue.members.splice(updatedQueue.members.indexOf(user._id), 1)
+                        await updatedQueue.save()
+                    }
+                }, 10000)
+                console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
+                client.send(JSON.stringify({
+                    messageType: 'ready',
+                    companyId: queue.companyId
+                }))
+            }
+            this.search()
+        },
+        stop() {
+            this.stopSearching = true
+        }
+    }
+    function createQueueSearcher(queueId) {
+        const searcher = Object.create(searcherProto)
+        searcher.init(queueId)
+        return searcher
+    }
+
+    async function setupAll() {
+        const queues = await Queue.find({})
+        for(const queue of queues) {
+            const searcher = createQueueSearcher(queue._id)
+        }
+    }
+
+    timeout = x => new Promise(resolve => setTimeout(resolve, x))
+
+    return {
+        createQueueSearcher,
+        setupAll
+    }
+}

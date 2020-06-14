@@ -145,15 +145,8 @@ module.exports = function(wsInstance) {
         console.log('z')
         queue.members.push(userId)
         await queue.save()
-        // if they are eligible, send a notification that the user may join the session
-        if(await userIsEligibleToJoinSession(queue, queue.members.length - 1)) {
-            const rooms = await Room.find({ eventId, companyId })
-            const atLeastOneRoomIsFree = rooms.reduce((total, value) => total || !value.inSession, false)
 
-            if(atLeastOneRoomIsFree) {
-                company.findAndNotifyEligibleUsers(queue)
-            }
-        }
+        console.log('j', queue.members.length)
         return {
             error: false,
             index: queue.members.length

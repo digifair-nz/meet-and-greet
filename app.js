@@ -20,7 +20,7 @@ const wsInstance = expressWs(app, app.server, {
     wsOptions: {
         verifyClient: function({ req }, done) {
             const { query: { token } } = url.parse(req.url, true)
-    
+            
             try {
                 req.jwt = jwt.verify(token, process.env.TOKEN_SECRET)
                 done(true)
@@ -39,6 +39,9 @@ app.ws('/', function(ws, req) {
         messageType: 'connected',
     }))
 })
+
+const searchers = require('./searchers')(wsInstance)
+searchers.setupAll()
 
 const userRouter = require('./routes/user')(wsInstance)
 const companyRouter = require('./routes/company')(wsInstance)
