@@ -80,7 +80,7 @@ Form - Contains the title, error message and input fields (not the button)
 
 .SOTLogo {
   opacity: 0.3;
-  width: 120px;
+  width: 12vw;
   position: absolute;
   left: 5%;
   top: 80%;
