@@ -80,6 +80,7 @@ module.exports = function(wsInstance) {
 
                         if(queue.members.includes(user._id)) {
                             queue.members.splice(queue.members.indexOf(user._id), 1)
+                            console.log('removed from queue 1')
                         }
                         await queue.save()
                         continue
@@ -91,6 +92,7 @@ module.exports = function(wsInstance) {
                         this.activeNotifications.splice(this.activeNotifications.indexOf(user._id), 1)
                         const updatedQueue = await Queue.findOne(this.queueId)
                         if(updatedQueue.members.includes(user._id)) {
+                            console.log('removed from queue 2')
                             updatedQueue.members.splice(updatedQueue.members.indexOf(user._id), 1)
                             await updatedQueue.save()
                         }
