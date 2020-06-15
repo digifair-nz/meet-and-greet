@@ -29,7 +29,7 @@ module.exports = function(wsInstance) {
             const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
 
             if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                console.log(`No rooms or enough active notifications.`)
+                console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
                 return this.search()
             }
 
