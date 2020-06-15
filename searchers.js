@@ -30,6 +30,8 @@ module.exports = function(wsInstance) {
                     return
                 }
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
+                console.log(`Rooms: ${rooms}`)
+                console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
