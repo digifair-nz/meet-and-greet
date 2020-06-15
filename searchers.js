@@ -5,6 +5,7 @@ module.exports = function(wsInstance) {
     const Queue = mongoose.model('Queue')
     const User = mongoose.model('User')
     const Room = mongoose.model('Room')
+    const Company = mongoose.model('Company')
 
     let currentSearchers = []
     const activeNotificationsGlobal = []
@@ -30,6 +31,7 @@ module.exports = function(wsInstance) {
                     return
                 }
 
+                const isGoogle = (await Company.findById(this.companyId)) == 'Google'
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
                 // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
                 // console.log(`Rooms: ${rooms}`)
@@ -37,12 +39,21 @@ module.exports = function(wsInstance) {
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                    // console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
+                    if(isGoogle) {
+                        console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
+                    }
                     return this.search()
                 }
                 // console.log('running three')
 
+                if(isGoogle) {
+                    console.log('made it here for google')
+                }
+
                 const queue = await Queue.findById(this.queueId)
+                if(isGoogle) {
+                    console.log(queue)
+                }
                 if(queue.members.length == 0) {
                     console.log(`No one in queue to search for.`)
                     console.log(queue)
