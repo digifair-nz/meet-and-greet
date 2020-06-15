@@ -69,6 +69,7 @@ module.exports = function(wsInstance) {
             // if the student has been kicked previously then the session has already been regenerated and it doesn't have to be done again
             if(room.kickedStudent) {
                 room.kickedStudent = false
+                await room.save()
                 return res.status(200).json({
                     message: 'Searching for student to join the session...',
                     hasNewCredentials: false
