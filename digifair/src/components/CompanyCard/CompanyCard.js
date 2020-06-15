@@ -41,7 +41,8 @@ class CompanyCard extends Component {
       nextProps.logo !== this.props.logo ||
       nextProps.isQueued !== this.props.isQueued ||
       nextState.showInfoPopup !== this.state.showInfoPopup ||
-      nextProps.queuePosition !== this.props.queuePosition
+      nextProps.queuePosition !== this.props.queuePosition ||
+      nextProps.hadSession !== this.props.hadSession
     );
   }
 
@@ -73,6 +74,7 @@ class CompanyCard extends Component {
   };
 
   render() {
+    console.log(this.props.hadSession);
     // If the student has talked to a recruiter from this company, disable queuing ability
     let currentClass = classes.CompanyCard;
     // console.log(

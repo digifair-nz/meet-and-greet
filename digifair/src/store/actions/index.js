@@ -12,6 +12,7 @@ export {
   queueStudent,
   dequeueStudent,
   declineJoinChatroom,
+  queueToAll,
 } from "./studentQueue";
 
 // Update student's position in queue for a specific company

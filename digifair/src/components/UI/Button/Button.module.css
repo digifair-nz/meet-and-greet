@@ -7,7 +7,7 @@
   outline: none;
   cursor: pointer;
   font-family: "Roboto", sans-serif;
-  /* padding: 2% 10%; */
+  padding: 2% 10%;
   font-weight: 500;
   text-align: center;
   text-transform: uppercase;
@@ -15,7 +15,7 @@
   margin: 2%;
   position: relative;
   transition: ease-in-out 100ms;
-  height: 70px;
+  /* height: 70px; */
 }
 /* .Button:hover {
   transform: scale(1.1);

@@ -119,143 +119,171 @@ class ChatRoom extends Component {
     // console.log("CHAT ROOM MOUNTED");
     // console.log(this.props.credentials);
     // console.log(this.props.isStudent);
-    const options = otCoreOptions.otCoreOptions;
-    options.credentials = this.props.credentials;
+    console.log(this.props.credentials);
+    if (this.props.credentials) {
+      if (!this.props.isStudent) {
+        const studentLeft = localStorage.getItem("studentLeft");
+        if (studentLeft) {
+          // If the student has left the recruiter, and the recruiter refreshes the tab,
+          // then this state is persistant and we can allow the recruiter to disconnect the student
+          this.setState({
+            studentLeft: studentLeft,
+            allowKicking: true,
+          });
+        }
+      }
 
-    otCore = new AccCore(options);
+      const options = otCoreOptions.otCoreOptions;
+      options.credentials = this.props.credentials;
 
-    /* If the student leaves the room for too long by closing the tab or losing the connection (enough so that the recruiter has already switched sessions)
+      otCore = new AccCore(options);
+
+      /* If the student leaves the room for too long by closing the tab or losing the connection (enough so that the recruiter has already switched sessions)
          We want to inform him that he is by himself. Execute set-timeout after 30seconds   
       */
-    if (this.props.credentials) {
-      setTimeout(() => {
-        const inRoom = localStorage.getItem("inRoom");
-        if (
-          this.props.isStudent &&
-          this.state.connections.length < 2 &&
-          inRoom
-        ) {
-          alert(
-            "Looks like you are no longer in a session with a recruiter. Please leave this room and get back to the main event (leave session button in the menu)"
-          );
-        }
-      }, 5000);
-    }
-
-    // Connect the user to the session and start the call
-    otCore.connect().then(() => {
-      this.setState({ connected: true });
-
-      if (this.state.connected && !this.state.active) {
-        this.startCall();
+      if (this.props.credentials) {
+        setTimeout(() => {
+          const inRoom = localStorage.getItem("inRoom");
+          if (
+            this.props.isStudent &&
+            this.state.connections.length < 2 &&
+            inRoom
+          ) {
+            alert(
+              "Looks like you are no longer in a session with a recruiter. Please leave this room and get back to the main event (leave session button in the menu)"
+            );
+          }
+        }, 5000);
       }
-    });
 
-    otCore.on("connectionCreated", (event) => {
-      if (event.connection.connectionId != this.state.connectionId) {
-        // Check if this is an initial connection (for the recruiter)
-        if (this.state.connectionId === null) {
-          console.log("I have connected");
-          let connections = []; // Initially there are no connections
-          connections.push(event.connection); // push his connection
+      // Connect the user to the session and start the call
+      otCore.connect().then(() => {
+        this.setState({ connected: true });
 
-          if (this.props.isStudent) {
-            localStorage.setItem("inRoom", true);
-          }
+        if (this.state.connected && !this.state.active) {
+          this.startCall();
+        }
+      });
 
-          this.setState({
-            connectionId: event.connection.connectionId,
-            connections: connections,
-          });
-        } else {
-          // Recruiter has already joined
-          console.log("Another client connected.");
-          if (!this.props.isStudent) {
-            this.props.fetchStudentData(); // Get student's data for talkJS
-          }
+      otCore.on("connectionCreated", (event) => {
+        if (event.connection.connectionId != this.state.connectionId) {
+          // Check if this is an initial connection (for the recruiter)
+          if (this.state.connectionId === null) {
+            //console.log("I have connected");
+            let connections = []; // Initially there are no connections
+            connections.push(event.connection); // push his connection
 
-          if (this.state.connections.length > 0) {
-            if (this.props.isStudent && this.state.connections.length > 1) {
-              // When the recruiter refrehses their tab too, cause the student's connection to be reset
-              console.log("This is it..");
-              //alert("Session connection disrupted. Reconnecting...");
-              //window.location.reload(false);
-            } else {
-              // If the student first joins in
-              let connections = [...this.state.connections];
-              connections.push(event.connection);
+            if (this.props.isStudent) {
+              localStorage.setItem("inRoom", true);
+            }
 
-              this.setState({
-                allowNextUser: false,
-                connections: connections,
-                searching: false,
-                allowKicking: true,
-                studentLeft: false,
-              });
+            this.setState({
+              connectionId: event.connection.connectionId,
+              connections: connections,
+            });
+          } else {
+            // Recruiter has already joined
+            //console.log("Another client connected.");
+            if (!this.props.isStudent) {
+              this.props.fetchStudentData(); // Get student's data for talkJS
+            }
+
+            if (this.state.connections.length > 0) {
+              if (this.props.isStudent && this.state.connections.length > 1) {
+                // When the recruiter refrehses their tab too, cause the student's connection to be reset
+                //alert("Session connection disrupted. Reconnecting...");
+                //window.location.reload(false);
+              } else {
+                // If the student first joins in
+                let connections = [...this.state.connections];
+                connections.push(event.connection);
+
+                this.setState({
+                  allowNextUser: false,
+                  connections: connections,
+                  searching: false,
+                  allowKicking: true,
+                  studentLeft: false,
+                });
+              }
             }
           }
         }
-      }
-    });
-    // Student Client Kicked
-    if (this.props.isStudent) {
-      otCore.on("sessionDisconnected", (event) => {
-        console.log(event);
-        // Clear students' credentials
-        // Move them back to to the dashboard
-        localStorage.removeItem("inRoom");
-        console.log("I got kicked :( ");
-
-        this.props.studentLeaveSession();
-
-        this.props.history.push("/");
       });
-    }
-    // otCore.disconnect()
-    const events = [
-      "subscribeToCamera",
-      "unsubscribeFromCamera",
-      "subscribeToScreen",
-      "unsubscribeFromScreen",
-      "startScreenShare",
-      "endScreenShare",
-    ];
+      // Student Client Kicked
+      if (this.props.isStudent) {
+        otCore.on("sessionDisconnected", (event) => {
+          //console.log(event);
+          // Clear students' credentials
+          // Move them back to to the dashboard
+          localStorage.removeItem("inRoom");
+          console.log("I got kicked :( ");
 
-    events.forEach((event) =>
-      otCore.on(event, ({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta });
-      })
-    );
-    if (!this.props.isStudent) {
-      // Detect when the student loses connection from the session either by closing the tab or losing internet connection.
-      // WARNING: When the student refreshes the tab or loses connection briefly, they might be kicked.
-      otCore.on("connectionDestroyed", (event) => {
-        this.setState({
-          allowKicking: true,
-          studentLeft: true,
+          otCore.off();
+          otCore.endCall();
+          otCore.session.destroy();
+
+          this.props.studentLeaveSession();
+
+          this.props.history.push("/");
         });
-      });
-    } else {
-      otCore.on("connectionDestroyed", (event) => {
-        console.log(event);
+      }
+      // otCore.disconnect()
+      const events = [
+        "subscribeToCamera",
+        "unsubscribeFromCamera",
+        "subscribeToScreen",
+        "unsubscribeFromScreen",
+        "startScreenShare",
+        "endScreenShare",
+      ];
 
-        /*
+      events.forEach((event) =>
+        otCore.on(event, ({ publishers, subscribers, meta }) => {
+          this.setState({ publishers, subscribers, meta });
+        })
+      );
+      if (!this.props.isStudent) {
+        // Detect when the student loses connection from the session either by closing the tab or losing internet connection.
+        // WARNING: When the student refreshes the tab or loses connection briefly, they might be kicked.
+        otCore.on("connectionDestroyed", (event) => {
+          console.log(event);
+          // If the student loses connection for 10 seconds we can notify the recruiter if he wants to disonnect the student permanently and change session
+
+          setTimeout(() => {
+            if (this.state.connections.length < 3) {
+              alert(
+                "Looks like the student has lost a connection. You can disconnect the student permanently if you want to change sessions and invite next user."
+              );
+            }
+          }, 10000);
+          localStorage.setItem("studentLeft", true);
+          this.setState({
+            allowKicking: true,
+            studentLeft: true,
+          });
+        });
+      } else {
+        otCore.on("connectionDestroyed", (event) => {
+          console.log(event);
+
+          /*
         EXPERIMENTAL!!
 
         This is done to sync the sessions but we want the student to load later than the recruiter. 
         So they have different conneciton Ids
         */
-        setTimeout(() => {
-          window.location.reload(false);
-        }, 2000);
+          setTimeout(() => {
+            window.location.reload(false);
+          }, 2000);
+        });
+      }
+
+      otCore.on("sessionDisconnected", (event) => {
+        console.log(event);
       });
     }
-
-    otCore.on("sessionDisconnected", (event) => {
-      console.log(event);
-    });
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.isStudent) {
       if (this.props.credentials.sessionId != prevProps.credentials.sessionId) {
@@ -282,6 +310,7 @@ class ChatRoom extends Component {
   kickStudent() {
     //console.log(otCore);
     //console.log(this.state);
+
     if (this.state.connections != null) {
       if (
         !this.props.isStudent &&
@@ -306,6 +335,7 @@ class ChatRoom extends Component {
             // console.log(otCore.session);
 
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
+              localStorage.removeItem("studentLeft");
               this.props.kickStudent();
             });
             //this.props.kickStudent();
@@ -313,9 +343,10 @@ class ChatRoom extends Component {
         }
       } else if (
         !this.props.isStudent &&
-        this.state.connections.length > 1 &&
+        // this.state.connections.length > 1 &&
         this.state.studentLeft
       ) {
+        localStorage.removeItem("studentLeft");
         this.props.kickStudent();
       }
     }
@@ -323,7 +354,13 @@ class ChatRoom extends Component {
 
   leaveSession = () => {
     localStorage.removeItem("inRoom");
+    //console.log(otCore);
+    console.log(otCore);
+    otCore.off();
+    otCore.endCall();
     otCore.session.destroy();
+
+    //otCore.session.connections.destroy();
     this.props.history.push("/");
     this.props.studentLeaveSession();
   };
@@ -450,7 +487,9 @@ class ChatRoom extends Component {
               {
                 <Button
                   clicked={this.inviteNextStudent}
-                  disabled={!this.state.allowNextUser}
+                  disabled={
+                    !this.state.allowNextUser || this.state.allowKicking
+                  }
                   btnType="Success"
                 >
                   Invite Next User

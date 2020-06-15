@@ -39,6 +39,7 @@ class StudentDashboard extends Component {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
     permissionGranted: false,
+    isQueuedToAll: false,
   };
 
   // Set default tab title on mounting
@@ -177,7 +178,7 @@ class StudentDashboard extends Component {
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
         // dispatch update queue position
-        console.log(message);
+        //console.log(message);
         const packet = JSON.parse(message.data);
         //console.log(packet.messageType);
         if (this.props.companies !== null && packet.companyId !== null) {
@@ -235,10 +236,29 @@ class StudentDashboard extends Component {
   errorConfirmedHandler = () => {
     this.props.clearError();
   };
+
+  queueToAll = () => {
+    let flag = false;
+    //Check if the student has eligible companies to queue for
+    for (let i = 0; i < this.props.companies.length; i++) {
+      if (
+        !this.props.companies[i].isQueued &&
+        !this.props.companies[i].hadSession
+      ) {
+        flag = true;
+      }
+    }
+
+    if (flag && !this.state.isQueuedToAll) {
+      this.setState({
+        isQueuedToAll: true,
+      });
+      this.props.queueToAll();
+    }
+  };
+
   // Fetch companies logic and spinner
   render() {
-    console.log(this.props.event);
-
     let companyCards;
     let readyCheckPopUp;
     if (!this.props.companies) {
@@ -307,7 +327,13 @@ class StudentDashboard extends Component {
           drawerToggleClicked={false}
           controlsLocation="StudentDashboard"
         >
-          <Button btnType="Control">Queue All</Button>
+          <Button
+            disabled={this.state.isQueuedToAll}
+            btnType="Control"
+            clicked={this.queueToAll}
+          >
+            Queue All
+          </Button>
           <Button btnType="Control">Dequeue All</Button>
           <Button
             clicked={this.props.logout}
@@ -350,6 +376,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.updateQueuePosition(companyId, queuePosition)),
     logout: () => dispatch(actions.logout()),
     clearError: () => dispatch(actions.clearError()),
+    queueToAll: () => dispatch(actions.queueToAll()),
   };
 };
 

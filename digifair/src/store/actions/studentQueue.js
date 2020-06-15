@@ -42,7 +42,7 @@ export const queueToAll = () => {
 
       .then((res) => {
         console.log(res);
-        dispatch(queueToAllSuccess(res.data.companies));
+        dispatch(queueToAllSuccess(res.data.positions));
       })
       .catch((error) => {
         dispatch(queueFail(error.response.data));

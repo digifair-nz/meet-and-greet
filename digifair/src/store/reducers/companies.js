@@ -1,4 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
+import cloneDeep from "lodash/cloneDeep";
 
 import { updateObject } from "../utility";
 
@@ -65,7 +66,31 @@ const queueToAllStart = (state, action) => {
   });
 };
 
-const queueToAllSuccess = (state, action) => {};
+const queueToAllSuccess = (state, action) => {
+  console.log(action);
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+    for (let i = 0; i < action.companies.length; i++) {
+      // Update their queuePositions and isQueued
+
+      if (company._id === action.companies[i].queueId) {
+        company.isQueued = true;
+        company.queuePosition = action.companies[i].queuePosition;
+      }
+      //return company;
+    }
+  });
+
+  console.log(updatedCompanies);
+
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+    companies: updatedCompanies,
+  });
+};
 
 const queueToAllFail = (state, action) => {
   return updateObject(state, {
@@ -177,6 +202,10 @@ const updateQueuePosition = (state, action) => {
   return updateObject(state, { companies: updatedCompanies });
 };
 
+// Disable Company for student (hadSession)
+// This is called when the student has had a session with the company.
+// Specifically, this is called when the student accepts to join the chatroom
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     //refractor
@@ -187,7 +216,12 @@ const reducer = (state = initialState, action) => {
       return fetchCompaniesSuccess(state, action);
     case actionTypes.FETCH_COMPANIES_FAIL:
       return fetchCompaniesFail(state, action);
-
+    case actionTypes.QUEUE_TO_ALL_START:
+      return queueToAllStart(state, action);
+    case actionTypes.QUEUE_TO_ALL_SUCCESS:
+      return queueToAllSuccess(state, action);
+    case actionTypes.QUEUE_TO_ALL_FAIL:
+      return queueToAllFail(state, action);
     case actionTypes.QUEUE_INIT:
       return queueInit(state, action);
     case actionTypes.QUEUE_SUCCESS:
