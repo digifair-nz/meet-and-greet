@@ -49,10 +49,6 @@ async function seedDatabase(opentok = false) {
         email: 'Roger@gmail.com',
         name: 'Roger'
     })
-    const user4 = new User({
-        email: 'Roger@gmail.com',
-        name: 'Roger'
-    })
     const user5 = new User({
         email: 'Rogan@gmail.com',
         name: 'Rogan'
