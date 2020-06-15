@@ -125,6 +125,12 @@ Form - Contains the title, error message and input fields (not the button)
       height: 100%;
       width: 100%;
     }
+    .AuthContainerCompany{
+      grid-template-columns: 60% 40%;
+      grid-template-rows: 100%;
+      height: 100%;
+      width: 100%;
+    }
   }
 
   @media (max-width: 1366px) {
