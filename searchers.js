@@ -22,6 +22,7 @@ module.exports = function(wsInstance) {
         },
         search: async function search() {
             try {
+                console.log('running...')
                 await timeout(process.env.SEARCH_FREQUENCY)
                 // if the flag for searcher teardown has been set, stop searching
                 if(this.stopSearching) {
