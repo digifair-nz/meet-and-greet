@@ -59,41 +59,19 @@ module.exports = function(wsInstance) {
             if(room.sessionPartner) {
                 return res.status(403).json({ message: 'Could not request next student as there is still a student within the session.' })
             }
+            if(!room.inSession) {
+                return res.status(403).json({ message: 'Could not request next student as room is already in open state.' })
+            }
             const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
             if(!queue) {
                 return res.status(404).json({ message: 'Could not request next student as queue could not be found.' })
             }
-            // open the room for new students and generate a new session so that the previous student can't reconnect
+            // open the room for new students
             room.inSession = false
-
-            // if the student has been kicked previously then the session has already been regenerated and it doesn't have to be done again
-            if(room.kickedStudent) {
-                room.kickedStudent = false
-                await room.save()
-                return res.status(200).json({
-                    message: 'Searching for student to join the session...',
-                    hasNewCredentials: false
-                })
-            }
-            // otherwise the session must be regenerated and the new details must be sent to the company
-            else {
-                const sessionId = await room.newSessionId()
-                // get the new token for the company
-                const token = opentok.generateToken(room.sessionId, {
-                    expireTime: (new Date().getTime()/ 1000) + 300 * 60,
-                    role: 'moderator'
-                })
-                // send the new session id and token back to the company
-                return res.status(200).json({
-                    message: 'Searching for student to join the session...',
-                    credentials: {
-                        apiKey: process.env.VONAGE_API_KEY,
-                        sessionId,
-                        token
-                    },
-                    hasNewCredentials: true
-                })
-            }
+            await room.save()
+            return res.status(200).json({
+                message: 'Searching for student to join the session...'
+            })
         }
         catch (error) {
             console.log(error)
@@ -138,8 +116,6 @@ module.exports = function(wsInstance) {
                 await user.save()
             }
             // empty room and generate a new session id so that the student cannot rejoin the call
-            room.sessionPartner = null
-            room.kickedStudent = true
             const sessionId = await room.newSessionId()
             const token = opentok.generateToken(room.sessionId, {
                 expireTime: (new Date().getTime()/ 1000) + 300 * 60,
