@@ -176,10 +176,12 @@ class StudentDashboard extends Component {
       );
 
       setInterval(() => {
-        ws.send(JSON.stringify({
-          messageType: 'ping'
-        }))
-      }, 30000)
+        ws.send(
+          JSON.stringify({
+            messageType: "ping",
+          })
+        );
+      }, 30000);
 
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
@@ -241,6 +243,12 @@ class StudentDashboard extends Component {
 
   errorConfirmedHandler = () => {
     this.props.clearError();
+  };
+
+  dequeueFromAll = () => {
+    alert(
+      "Not live for the beta test, sorry. There is only like 3 companies though u lazy goose, just dequeue manually please. "
+    );
   };
 
   queueToAll = () => {
@@ -340,7 +348,9 @@ class StudentDashboard extends Component {
           >
             Queue All
           </Button>
-          <Button btnType="Control">Dequeue All</Button>
+          <Button clicked={this.dequeueFromAll} btnType="Control">
+            Dequeue All
+          </Button>
           <Button
             clicked={this.props.logout}
             iconType="Logout"

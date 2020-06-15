@@ -119,7 +119,11 @@ class ChatRoom extends Component {
     // console.log("CHAT ROOM MOUNTED");
     // console.log(this.props.credentials);
     // console.log(this.props.isStudent);
+    console.log(
+      "----------------------------- CREDENTIALS-----------------------------------"
+    );
     console.log(this.props.credentials);
+
     if (this.props.credentials) {
       if (!this.props.isStudent) {
         const studentLeft = localStorage.getItem("studentLeft");
@@ -477,7 +481,11 @@ class ChatRoom extends Component {
             </Aux>
           ) : this.props.isStudent ? (
             <Aux>
-              <Button btnType="Danger" clicked={this.leaveSession}>
+              <Button
+                btnType="Danger"
+                btnStyle={{ padding: "padding: 10% 10%;" }}
+                clicked={this.leaveSession}
+              >
                 Leave Session
               </Button>
             </Aux>
