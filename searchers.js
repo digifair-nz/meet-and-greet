@@ -29,7 +29,9 @@ module.exports = function(wsInstance) {
                     console.log('stopping here')
                     return
                 }
+
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
+                console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
                 console.log(`Rooms: ${rooms}`)
                 console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
