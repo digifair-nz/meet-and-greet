@@ -36,6 +36,10 @@ app.ws('/', function(ws, req) {
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
+
+    ws.on('message', message => {
+        console.log(message)
+    })
 })
 
 const searchers = require('./searchers')(wsInstance)

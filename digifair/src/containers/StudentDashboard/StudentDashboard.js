@@ -175,6 +175,12 @@ class StudentDashboard extends Component {
         "wss://digifair-test.herokuapp.com/?token=" + this.props.token
       );
 
+      setInterval(() => {
+        ws.send(JSON.stringify({
+          messageType: 'ping'
+        }))
+      }, 30000)
+
       // console.log("Socket Connection Opened!");
       ws.onmessage = (message) => {
         // dispatch update queue position
