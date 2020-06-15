@@ -96,11 +96,7 @@ module.exports = function(wsInstance) {
             if(!room) {
                 return res.status(404).json({ message: 'Could not kick student as room could not be found.' })
             }
-            // remove the user as the session partner
-            const user = await User.findById(room.sessionPartner)
 
-            room.sessionPartner = null
-            room.save()
             const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
             if(!queue) {
                 return res.status(404).json({ message: 'Could not kick student as queue could not be found.' })
@@ -111,11 +107,15 @@ module.exports = function(wsInstance) {
                 await queue.save()
             }
             // if the user has not left the room themselves, then remove them from the room properly
+            const user = await User.findById(room.sessionPartner)
             if(user && user.sessionPartner == room.sessionPartner) {
                 user.sessionPartner = null
                 user.inSession = false
                 await user.save()
             }
+            // remove the user as the session partner
+            room.sessionPartner = null
+            room.save()
             // empty room and generate a new session id so that the student cannot rejoin the call
             const sessionId = await room.newSessionId()
             const token = opentok.generateToken(room.sessionId, {
