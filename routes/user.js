@@ -3,6 +3,8 @@ module.exports = function(wsInstance) {
     const userCtrl = require('../controllers/user')(wsInstance)
     const loginCtrl = require('../controllers/security/authentication')
     const authCtrl = require('../controllers/security/authorisation')
+
+    const searchers = require('../searchers')(wsInstance)
     
     // login
 
@@ -29,6 +31,7 @@ module.exports = function(wsInstance) {
     router.post('/setup', async (req, res) => {
         await temp.removeAllCollections()
         const eventId = await temp.seedDatabase(true)
+        searchers.setupAll()
         return res.status(200).json({ message: 'Success.', eventId })
     })
 

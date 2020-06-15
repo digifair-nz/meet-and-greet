@@ -3,6 +3,8 @@ module.exports = function(wsInstance) {
     const Queue = mongoose.model('Queue')
     const User = mongoose.model('User')
     const Room = mongoose.model('Room')
+
+    let currentSearchers = []
     
     const searcherProto = {
         init: async function init(queueId) {
@@ -91,9 +93,12 @@ module.exports = function(wsInstance) {
     }
 
     async function setupAll() {
+        currentSearchers.forEach(searcher => searcher.stop())
+        
         const queues = await Queue.find({})
         for(const queue of queues) {
             const searcher = createQueueSearcher(queue._id)
+            currentSearchers.push(searcher)
         }
     }
 

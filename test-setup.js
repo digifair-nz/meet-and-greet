@@ -144,6 +144,8 @@ async function seedDatabase(opentok = false) {
         console.log(error)
         return false
     }
+
+    
 }
 
 module.exports = {
