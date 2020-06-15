@@ -96,10 +96,11 @@ module.exports = function(wsInstance) {
             if(!room) {
                 return res.status(404).json({ message: 'Could not kick student as room could not be found.' })
             }
+            // remove the user as the session partner
             const user = await User.findById(room.sessionPartner)
-            if(!room.sessionPartner || !user) {
-                return res.status(403).json({ message: 'Could not kick student as there is no student in the session.' })
-            }
+
+            room.sessionPartner = null
+            room.save()
             const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
             if(!queue) {
                 return res.status(404).json({ message: 'Could not kick student as queue could not be found.' })
@@ -110,7 +111,7 @@ module.exports = function(wsInstance) {
                 await queue.save()
             }
             // if the user has not left the room themselves, then remove them from the room properly
-            if(user.sessionPartner == room.sessionPartner) {
+            if(user && user.sessionPartner == room.sessionPartner) {
                 user.sessionPartner = null
                 user.inSession = false
                 await user.save()
