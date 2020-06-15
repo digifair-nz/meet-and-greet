@@ -22,20 +22,20 @@ module.exports = function(wsInstance) {
         },
         search: async function search() {
             try {
-                console.log('running...')
+                // console.log('running...')
                 await timeout(process.env.SEARCH_FREQUENCY)
                 // if the flag for searcher teardown has been set, stop searching
                 if(this.stopSearching) {
-                    console.log('stopping here')
+                    // console.log('stopping here')
                     return
                 }
 
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
-                console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
-                console.log(`Rooms: ${rooms}`)
-                console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
+                // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
+                // console.log(`Rooms: ${rooms}`)
+                // console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
-                console.log('running 2')
+                // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
                     console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
                     return this.search()
@@ -67,6 +67,7 @@ module.exports = function(wsInstance) {
                     }
                     // make sure the user's websocket connection exists
                     let client
+                    console.log(wsInstance.getWss().clients)
                     for(const c of wsInstance.getWss().clients) {
                         if(c.jwt._id == user._id) {
                             client = c
@@ -80,12 +81,6 @@ module.exports = function(wsInstance) {
                             queue.members.splice(queue.members.indexOf(user._id), 1)
                         }
                         await queue.save()
-
-                        client.send(JSON.stringify({
-                            messageType: 'dequeue',
-                            companyId: queue.companyId
-                        }))
-
                         continue
                     }
                     // mark the user as notified and send the notification
