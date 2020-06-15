@@ -70,3 +70,11 @@ MOBILE and TABLET
   @media (max-width: 736px) {
   }
 }
+
+/*temporary... FOR PETER*/
+@media (max-height: 600px){
+  .Modal{
+    margin-top: -35px;
+    width: 60%;
+  }
+}

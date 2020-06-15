@@ -79,3 +79,95 @@
 .PromptContainer:after {
   filter: blur(30px);
 }
+
+
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+}
+
+/*
+
+16:9 aspect ratio resolutions: 1024×576, 1152×648, 1280×720, 1366×768, 1600×900, 1920×1080, 2560×1440 and 3840×2160
+*/
+
+
+/*FOR PETER*/
+@media (max-height: 600px){
+  /* .PromptContainer{
+    transform: scale(0.7);
+    margin-top: -50px;
+  }
+  .PromptContainer:before,
+.PromptContainer:after {
+  transform: scale(0.7);
+} */
+}
+
+/**/
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+    /*Ipad Pro */
+  }
+
+  @media (max-width: 768px) {
+    /*Ipad */
+  }
+  @media (max-width: 640px) {
+  }
+
+  @media (max-width: 560px) {
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px) {
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 1920px) {
+  }
+
+  @media (max-width: 1600px) {
+  }
+
+  @media (max-width: 1366px) {
+  }
+  @media (max-width: 1280px) {
+  }
+
+  @media (max-width: 1152px) {
+  }
+
+  @media (max-width: 1024px) {
+    /*Ipad */
+  }
+
+  @media (max-width: 896px) {
+    /*Iphone 11 PRO */
+  }
+
+  @media (max-width: 823px) {
+  }
+
+  @media (max-width: 812px) {
+  }
+
+  @media (max-width: 736px) {
+  }
+}
