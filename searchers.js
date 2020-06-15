@@ -23,6 +23,12 @@ module.exports = function(wsInstance) {
         },
         search: async function search() {
             try {
+                console.log(JSON.stringify(wsInstance.getWss().clients))
+                let count = 0
+                for(const client of wsInstance.getWss().clients) {
+                    count++
+                }
+                console.log('Clients: ' + count)
                 // console.log('running...')
                 await timeout(process.env.SEARCH_FREQUENCY)
                 // if the flag for searcher teardown has been set, stop searching
@@ -81,7 +87,7 @@ module.exports = function(wsInstance) {
                     let client
                     console.log(wsInstance.getWss().clients)
                     for(const c of wsInstance.getWss().clients) {
-                        if(c.jwt._id == user._id) {
+                        if(c.jwt._id == user._id.toString()) {
                             client = c
                             break
                         }
@@ -115,6 +121,12 @@ module.exports = function(wsInstance) {
                         messageType: 'ready',
                         companyId: queue.companyId
                     }))
+                    await timeout(1000)
+                    client.send(JSON.stringify({
+                        messageType: 'pog',
+                        companyId: queue.companyId
+                    }))
+                    
                     console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
                 }
                 this.search()
