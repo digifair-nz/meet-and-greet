@@ -37,17 +37,18 @@ module.exports = function(wsInstance) {
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                    console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
+                    // console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
                     return this.search()
                 }
-                console.log('running three')
+                // console.log('running three')
 
                 const queue = await Queue.findById(this.queueId)
                 if(queue.members.length == 0) {
                     console.log(`No one in queue to search for.`)
+                    console.log(queue)
                     return this.search()
                 }
-
+                console.log('made it past')
                 for(let i = 0; i < queue.members.length; i++) {
                     const user = await User.findById(queue.members[i])
 
