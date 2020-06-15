@@ -76,7 +76,7 @@ async function seedDatabase(opentok = false) {
     const room1 = new Room({
         eventId: event._id,
         companyId: company1._id,
-        name: 'Room 1',,
+        name: 'Room 1',
         email: '1@gmail.com'
     })
     const room2 = new Room({
