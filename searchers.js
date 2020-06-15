@@ -20,74 +20,79 @@ module.exports = function(wsInstance) {
             this.search()
         },
         search: async function search() {
-            await timeout(process.env.SEARCH_FREQUENCY)
-            // if the flag for searcher teardown has been set, stop searching
-            if(this.stopSearching) {
-                return
-            }
-            const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
-            const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
+            try {
+                await timeout(process.env.SEARCH_FREQUENCY)
+                // if the flag for searcher teardown has been set, stop searching
+                if(this.stopSearching) {
+                    return
+                }
+                const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
+                const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
 
-            if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
-                return this.search()
-            }
-
-            const queue = await Queue.findById(this.queueId)
-            if(queue.members.length == 0) {
-                console.log(`No one in queue to search for.`)
-                return this.search()
-            }
-
-            for(let i = 0; i < queue.members.length; i++) {
-                const user = await User.findById(queue.members[i])
-
-                if(this.activeNotifications.length >= availableRooms) {
-                    console.log(`Enough active notifications have been sent.`)
+                if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
+                    console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
                     return this.search()
                 }
-                // make sure that the user hasn't been notified and is eligible to join a session
-                console.log('should stop here: ', this.activeNotifications, user._id, this.activeNotifications.includes(user._id), this.activeNotifications[0] == user._id.toString())
-                if(user.inSession || this.activeNotifications.includes(user._id.toString())) {
-                    console.log(`User not eligible for ${user.name}: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
-                    continue
-                }
-                // make sure the user's websocket connection exists
-                let client
-                for(const c of wsInstance.getWss().clients) {
-                    if(c.jwt._id == user._id) {
-                        client = c
-                        break
-                    }
-                }
-                if(!client) {
-                    console.log(`Client not found for ${user.name}.`)
 
-                    if(queue.members.includes(user._id)) {
-                        queue.members.splice(queue.members.indexOf(user._id), 1)
-                    }
-                    await queue.save()
-                    continue
+                const queue = await Queue.findById(this.queueId)
+                if(queue.members.length == 0) {
+                    console.log(`No one in queue to search for.`)
+                    return this.search()
                 }
-                // mark the user as notified and send the notification
-                this.activeNotifications.push(user._id.toString())
-                setTimeout(async () => {
-                    this.activeNotifications.splice(this.activeNotifications.indexOf(user._id), 1)
-                    const updatedQueue = await Queue.findOne(this.queueId)
-                    if(updatedQueue.members.includes(user._id)) {
-                        updatedQueue.members.splice(updatedQueue.members.indexOf(user._id), 1)
-                        await updatedQueue.save()
+
+                for(let i = 0; i < queue.members.length; i++) {
+                    const user = await User.findById(queue.members[i])
+
+                    if(this.activeNotifications.length >= availableRooms) {
+                        console.log(`Enough active notifications have been sent.`)
+                        return this.search()
                     }
-                    userCtrl.broadcastQueueUpdate(updatedQueue)
-                }, 10000)
-                console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
-                client.send(JSON.stringify({
-                    messageType: 'ready',
-                    companyId: queue.companyId
-                }))
+                    // make sure that the user hasn't been notified and is eligible to join a session
+                    console.log('should stop here: ', this.activeNotifications, user._id, this.activeNotifications.includes(user._id), this.activeNotifications[0] == user._id.toString())
+                    if(user.inSession || this.activeNotifications.includes(user._id.toString())) {
+                        console.log(`User not eligible for ${user.name}: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
+                        continue
+                    }
+                    // make sure the user's websocket connection exists
+                    let client
+                    for(const c of wsInstance.getWss().clients) {
+                        if(c.jwt._id == user._id) {
+                            client = c
+                            break
+                        }
+                    }
+                    if(!client) {
+                        console.log(`Client not found for ${user.name}.`)
+
+                        if(queue.members.includes(user._id)) {
+                            queue.members.splice(queue.members.indexOf(user._id), 1)
+                        }
+                        await queue.save()
+                        continue
+                    }
+                    // mark the user as notified and send the notification
+                    this.activeNotifications.push(user._id.toString())
+                    setTimeout(async () => {
+                        this.activeNotifications.splice(this.activeNotifications.indexOf(user._id), 1)
+                        const updatedQueue = await Queue.findOne(this.queueId)
+                        if(updatedQueue.members.includes(user._id)) {
+                            updatedQueue.members.splice(updatedQueue.members.indexOf(user._id), 1)
+                            await updatedQueue.save()
+                        }
+                        userCtrl.broadcastQueueUpdate(updatedQueue)
+                    }, 10000)
+                    console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
+                    client.send(JSON.stringify({
+                        messageType: 'ready',
+                        companyId: queue.companyId
+                    }))
+                }
+                console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
+                this.search()
             }
-            console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
-            this.search()
+            catch(error) {
+                console.log(error)
+            }
         },
         stop() {
             this.stopSearching = true
