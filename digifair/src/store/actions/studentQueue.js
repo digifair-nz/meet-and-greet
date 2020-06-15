@@ -4,7 +4,7 @@ import instance from "../../axios-instance";
 
 /*
 
-QUEUE STUDENT TO A COMPANY 
+QUEUE STUDENT TO THE COMPANIES
 
 */
 
@@ -25,7 +25,7 @@ export const queueToAllSuccess = (companies) => {
   };
 };
 
-export const queueToAllFinish = (error) => {
+export const queueToAllFail = (error) => {
   return {
     type: actionTypes.QUEUE_TO_ALL_FAIL,
     error: error,
@@ -45,7 +45,49 @@ export const queueToAll = () => {
         dispatch(queueToAllSuccess(res.data.positions));
       })
       .catch((error) => {
-        dispatch(queueFail(error.response.data));
+        dispatch(queueToAllFail(error.response.data));
+      });
+  };
+};
+
+export const dequeueFromAllStart = () => {
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_START,
+  };
+};
+
+export const dequeueFromAllSuccess = (companies) => {
+  // This will give back an array of company objects where...
+  // [ { companyId, queuePosition}....]
+  // Are all the companies that the student has succesfully queued to.
+
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_SUCCESS,
+    companies: companies,
+  };
+};
+
+export const dequeueFromAllFail = (error) => {
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_FAIL,
+    error: error,
+  };
+};
+
+// This will enqueue the student to all available companies
+export const dequeueFromAll = () => {
+  return (dispatch) => {
+    dispatch(dequeueFromAllStart());
+
+    instance
+      .post("/user/dequeue/")
+
+      .then((res) => {
+        console.log(res);
+        dispatch(dequeueFromAllSuccess());
+      })
+      .catch((error) => {
+        dispatch(dequeueFromAllFail(error.response.data));
       });
   };
 };

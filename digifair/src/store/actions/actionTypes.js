@@ -30,6 +30,11 @@ export const QUEUE_TO_ALL_START = "QUEUE_TO_ALL_START";
 export const QUEUE_TO_ALL_SUCCESS = "QUEUE_TO_ALL_SUCCESS";
 export const QUEUE_TO_ALL_FAIL = "QUEUE_TO_ALL_FAIL";
 
+// Dequeue to all companies
+export const DEQUEUE_FROM_ALL_START = "DEQUEUE_FROM_ALL_START";
+export const DEQUEUE_FROM_ALL_SUCCESS = "DEQUEUE_FROM_ALL_SUCCESS";
+export const DEQUEUE_FROM_ALL_FAIL = "DEQUEUE_FROM_ALL_FAIL";
+
 // Queue Student to a Company
 export const QUEUE_INIT = "QUEUE_INIT";
 export const QUEUE_SUCCESS = "QUEUE_SUCCESS";

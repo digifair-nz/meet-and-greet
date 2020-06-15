@@ -67,7 +67,6 @@ const queueToAllStart = (state, action) => {
 };
 
 const queueToAllSuccess = (state, action) => {
-  console.log(action);
   const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
 
   updatedCompanies.map((company) => {
@@ -83,16 +82,47 @@ const queueToAllSuccess = (state, action) => {
     }
   });
 
-  console.log(updatedCompanies);
-
   return updateObject(state, {
     loading: false,
-    error: action.error,
+
     companies: updatedCompanies,
   });
 };
 
 const queueToAllFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+const dequeueFromAllStart = (state, action) => {
+  // Make all the companies load
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const dequeueFromAllSuccess = (state, action) => {
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    if (company.isQueued && !company.hadSession) {
+      company.isQueued = false;
+      company.queuePosition = null;
+    }
+  });
+
+  return updateObject(state, {
+    loading: false,
+
+    companies: updatedCompanies,
+  });
+};
+
+const dequeueFromAllFail = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
@@ -222,6 +252,12 @@ const reducer = (state = initialState, action) => {
       return queueToAllSuccess(state, action);
     case actionTypes.QUEUE_TO_ALL_FAIL:
       return queueToAllFail(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_START:
+      return dequeueFromAllStart(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_SUCCESS:
+      return dequeueFromAllSuccess(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_FAIL:
+      return dequeueFromAllFail(state, action);
     case actionTypes.QUEUE_INIT:
       return queueInit(state, action);
     case actionTypes.QUEUE_SUCCESS:
