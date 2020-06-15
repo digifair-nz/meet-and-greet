@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
 require('./models/db')
-const User = require('mongoose').model('User')
 
 const app = express()
 app.server = require('http').createServer(app)
@@ -33,8 +32,7 @@ const wsInstance = expressWs(app, app.server, {
 })
 app.ws('/', function(ws, req) {
     ws.jwt = req.jwt
-    const user = User.findById(req.jwt._id)
-    ws.hasBeenNotified = user.previousSessions || {}
+
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
