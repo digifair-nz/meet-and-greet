@@ -45,6 +45,10 @@ async function seedDatabase(opentok = false) {
         email: 'Jiaru@gmail.com',
         name: 'Jiaru'
     })
+    const user4 = new User({
+        email: 'Roger@gmail.com',
+        name: 'Roger'
+    })
     const event = new Event({
         name: "Test event",
         expirationDate: 'December 17, 1995 03:24:00'
@@ -87,7 +91,21 @@ async function seedDatabase(opentok = false) {
         eventId: event._id,
         companyId: company1._id,
         name: 'Room 3',
-        email: '3@gmail.com'
+        email: '3@gmail.com',
+        inSession: false
+    })
+    const room4 = new Room({
+        eventId: event._id,
+        companyId: company2._id,
+        name: 'Room 4',
+        email: '4@gmail.com',
+        inSession: false
+    })
+    const room5 = new Room({
+        eventId: event._id,
+        companyId: company2._id,
+        name: 'Room 5',
+        email: '5@gmail.com'
     })
     const queue1 = new Queue({
         eventId: event._id,
@@ -114,6 +132,7 @@ async function seedDatabase(opentok = false) {
         await user1.save()
         await user2.save()
         await user3.save()
+        await user4.save()
         await company1.save()
         await company2.save()
         await company3.save()
@@ -123,11 +142,15 @@ async function seedDatabase(opentok = false) {
             await room1.newSessionId()
             await room2.newSessionId()
             await room3.newSessionId()
+            await room4.newSessionId()
+            await room5.newSessionId()
         }
         else {
             await room1.save()
             await room2.save()
             await room3.save()
+            await room4.save()
+            await room5.save()
         }
         await queue1.save()
         await queue2.save()

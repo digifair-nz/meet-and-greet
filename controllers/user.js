@@ -113,7 +113,6 @@ module.exports = function(wsInstance) {
      */
     async function enqueueSingle(eventId, companyId, userId) {
         let queue = await Queue.findOne({ eventId, companyId })
-        console.log('x')
         if(!queue) {
             queue = await createQueue(eventId, companyId)
         }
@@ -128,7 +127,6 @@ module.exports = function(wsInstance) {
                 critical: false
             }
         }
-        console.log('y')
         
         // fail if the user is attempting to queue more than once (not allowed)
         console.log(queue.blacklist)
@@ -142,11 +140,9 @@ module.exports = function(wsInstance) {
             }
         }
         // add the user to the queue
-        console.log('z')
         queue.members.push(userId)
         await queue.save()
 
-        console.log('j', queue.members.length)
         return {
             error: false,
             index: queue.members.length
@@ -278,6 +274,7 @@ module.exports = function(wsInstance) {
             return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
         }
         catch (error) {
+            console.log(`Accept error: ${error}`)
             return res.status(500).json({ message: error })
         }
     }
@@ -391,6 +388,7 @@ module.exports = function(wsInstance) {
         enqueueAll,
         dequeue,
         joinSession,
-        leaveSession
+        leaveSession,
+        broadcastQueueUpdate
     }
 }

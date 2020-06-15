@@ -1,4 +1,6 @@
 module.exports = function(wsInstance) {
+    const userCtrl = require('./controllers/user')(wsInstance)
+
     const mongoose = require('mongoose')
     const Queue = mongoose.model('Queue')
     const User = mongoose.model('User')
@@ -27,11 +29,13 @@ module.exports = function(wsInstance) {
             const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
 
             if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
+                console.log(`No rooms or enough active notifications.`)
                 return this.search()
             }
 
             const queue = await Queue.findById(this.queueId)
             if(queue.members.length == 0) {
+                console.log(`No one in queue to search for.`)
                 return this.search()
             }
 
@@ -39,12 +43,13 @@ module.exports = function(wsInstance) {
                 const user = await User.findById(queue.members[i])
 
                 if(this.activeNotifications.length >= availableRooms) {
+                    console.log(`Enough active notifications have been sent.`)
                     return this.search()
                 }
                 // make sure that the user hasn't been notified and is eligible to join a session
                 console.log('should stop here: ', this.activeNotifications, user._id, this.activeNotifications.includes(user._id), this.activeNotifications[0] == user._id.toString())
                 if(user.inSession || this.activeNotifications.includes(user._id.toString())) {
-                    console.log(`Failed 2: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
+                    console.log(`User not eligible for ${user.name}: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
                     continue
                 }
                 // make sure the user's websocket connection exists
@@ -56,7 +61,7 @@ module.exports = function(wsInstance) {
                     }
                 }
                 if(!client) {
-                    console.log('Failed 3')
+                    console.log(`Client not found for ${user.name}.`)
 
                     if(queue.members.includes(user._id)) {
                         queue.members.splice(queue.members.indexOf(user._id), 1)
@@ -73,6 +78,7 @@ module.exports = function(wsInstance) {
                         updatedQueue.members.splice(updatedQueue.members.indexOf(user._id), 1)
                         await updatedQueue.save()
                     }
+                    userCtrl.broadcastQueueUpdate(updatedQueue)
                 }, 10000)
                 console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
                 client.send(JSON.stringify({
@@ -80,6 +86,7 @@ module.exports = function(wsInstance) {
                     companyId: queue.companyId
                 }))
             }
+            console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
             this.search()
         },
         stop() {
