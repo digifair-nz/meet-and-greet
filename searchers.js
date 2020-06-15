@@ -26,15 +26,17 @@ module.exports = function(wsInstance) {
                 await timeout(process.env.SEARCH_FREQUENCY)
                 // if the flag for searcher teardown has been set, stop searching
                 if(this.stopSearching) {
+                    console.log('stopping here')
                     return
                 }
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
-
+                console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                    // console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
+                    console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}. Global notifications: ${activeNotificationsGlobal}`)
                     return this.search()
                 }
+                console.log('running three')
 
                 const queue = await Queue.findById(this.queueId)
                 if(queue.members.length == 0) {
