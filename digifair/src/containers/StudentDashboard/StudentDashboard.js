@@ -216,7 +216,7 @@ class StudentDashboard extends Component {
           }
         }
 
-        //console.log(message);
+        console.log(message);
       };
     }
   }
