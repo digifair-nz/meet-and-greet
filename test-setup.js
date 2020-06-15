@@ -76,8 +76,7 @@ async function seedDatabase(opentok = false) {
     const room1 = new Room({
         eventId: event._id,
         companyId: company1._id,
-        name: 'Room 1',
-        inSession: false,
+        name: 'Room 1',,
         email: '1@gmail.com'
     })
     const room2 = new Room({
@@ -85,7 +84,6 @@ async function seedDatabase(opentok = false) {
         companyId: company1._id,
         name: 'Room 2',
         email: '2@gmail.com',
-        inSession: false
     })
     const room3 = new Room({
         eventId: event._id,
@@ -98,14 +96,12 @@ async function seedDatabase(opentok = false) {
         companyId: company2._id,
         name: 'Room 4',
         email: '4@gmail.com',
-        inSession: false
     })
     const room5 = new Room({
         eventId: event._id,
         companyId: company2._id,
         name: 'Room 5',
         email: '5@gmail.com',
-        inSession: false
     })
     const queue1 = new Queue({
         eventId: event._id,

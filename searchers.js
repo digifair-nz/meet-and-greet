@@ -7,6 +7,7 @@ module.exports = function(wsInstance) {
     const Room = mongoose.model('Room')
 
     let currentSearchers = []
+    const activeNotificationsGlobal = []
     
     const searcherProto = {
         init: async function init(queueId) {
@@ -30,7 +31,7 @@ module.exports = function(wsInstance) {
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
 
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
-                    console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
+                    // console.log(`No rooms or enough active notifications. Available rooms: ${availableRooms}, activeNotifications: ${this.activeNotifications}. Rooms: ${rooms.map(room => room.inSession)}. Company: ${this.companyId}`)
                     return this.search()
                 }
 
@@ -53,6 +54,10 @@ module.exports = function(wsInstance) {
                         console.log(`User not eligible for ${user.name}: ${user.inSession}, ${this.activeNotifications}, ${user._id}`)
                         continue
                     }
+                    if(activeNotificationsGlobal.includes(user._id.toString())) {
+                        console.log(`User has already received a notification for another queue.`)
+                        continue
+                    }
                     // make sure the user's websocket connection exists
                     let client
                     for(const c of wsInstance.getWss().clients) {
@@ -68,10 +73,17 @@ module.exports = function(wsInstance) {
                             queue.members.splice(queue.members.indexOf(user._id), 1)
                         }
                         await queue.save()
+
+                        client.send(JSON.stringify({
+                            messageType: 'dequeue',
+                            companyId: queue.companyId
+                        }))
+
                         continue
                     }
                     // mark the user as notified and send the notification
                     this.activeNotifications.push(user._id.toString())
+                    activeNotificationsGlobal.push(user._id.toString())
                     setTimeout(async () => {
                         this.activeNotifications.splice(this.activeNotifications.indexOf(user._id), 1)
                         const updatedQueue = await Queue.findOne(this.queueId)
@@ -80,14 +92,15 @@ module.exports = function(wsInstance) {
                             await updatedQueue.save()
                         }
                         userCtrl.broadcastQueueUpdate(updatedQueue)
+                        activeNotificationsGlobal.splice(activeNotificationsGlobal.indexOf(user._id))
                     }, 10000)
                     console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
                     client.send(JSON.stringify({
                         messageType: 'ready',
                         companyId: queue.companyId
                     }))
+                    console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
                 }
-                console.log(`Found user (${user.name}) and sent notification for company ${queue.companyId}.`)
                 this.search()
             }
             catch(error) {
