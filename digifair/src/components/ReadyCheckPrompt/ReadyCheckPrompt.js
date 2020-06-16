@@ -16,15 +16,15 @@ class ReadyCheckPrompt extends Component {
   };
   onAcceptHandler = () => {
     console.log("-------------Check");
-    if (!this.state.clicked) {
-      console.log("Check");
-      this.setState({
-        clicked: true,
-      });
-      document.title = "Dashboard";
 
-      this.props.studentJoinChatroom(this.props.companyId);
-    }
+    console.log("Check");
+    this.setState({
+      clicked: true,
+    });
+    document.title = "Dashboard";
+
+    this.props.studentJoinChatroom(this.props.companyId);
+
     // this.this.props.history.push("/chat-room");
   };
 
