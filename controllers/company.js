@@ -108,7 +108,8 @@ module.exports = function(wsInstance) {
             }
             // if the user has not left the room themselves, then remove them from the room properly
             const user = await User.findById(room.sessionPartner)
-            if(user && user.sessionPartner == room.sessionPartner) {
+            console.log('Check: ', user.name, user.sessionPartner.toString() == room.sessionPartner.toString(), user.sessionPartner, room.sessionPartner)
+            if(user && user.sessionPartner.toString() == room._id.toString()) {
                 user.sessionPartner = null
                 user.inSession = false
                 await user.save()

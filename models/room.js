@@ -36,7 +36,7 @@ RoomSchema.methods.newSessionId = async function(_id) {
     return new Promise((resolve, reject) => {
         opentok.createSession({ mediaMode: 'routed' }, async (err, session) => {
             if(err) {
-                reject(err)
+                return reject(err)
             }
             this.sessionId = session.sessionId
             await this.save()
