@@ -10,13 +10,29 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 class ReadyCheckPrompt extends Component {
   // If the student accepts the queue, he will be redirected to the video chat room with the recruiter
-  onAcceptHandler = () => {
-    document.title = "Dashboard";
 
-    this.props.studentJoinChatroom(this.props.companyId);
+  state = {
+    clicked: false,
+  };
+  onAcceptHandler = () => {
+    if (!this.state.clicked) {
+      this.setState({
+        clicked: true,
+      });
+      document.title = "Dashboard";
+      this.props.onAcceptHandler();
+      this.props.studentJoinChatroom(this.props.companyId);
+    }
     // this.this.props.history.push("/chat-room");
   };
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps !== this.props) {
+  //     this.setState({
+  //       clicked: false,
+  //     });
+  //   }
+  // }
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
     document.title = "Dashboard";
