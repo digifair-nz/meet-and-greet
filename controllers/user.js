@@ -255,6 +255,7 @@ module.exports = function(wsInstance) {
                             expireTime: (new Date().getTime()/ 1000) + 300 * 60
                         })
                     }
+                    console.log('Sending user credentials: ' + room.sessionId)
                     return res.status(200).json({
                         message: `Success joining room as ${user.email}.`,
                         credentials: {
@@ -274,7 +275,7 @@ module.exports = function(wsInstance) {
             return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
         }
         catch (error) {
-            console.log(`Accept error: ${error}`)
+            console.log(`Accept error:`, error)
             return res.status(500).json({ message: error })
         }
     }
