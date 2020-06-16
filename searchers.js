@@ -85,7 +85,6 @@ module.exports = function(wsInstance) {
                     }
                     // make sure the user's websocket connection exists
                     let client
-                    console.log(wsInstance.getWss().clients)
                     for(const c of wsInstance.getWss().clients) {
                         if(c.jwt._id == user._id.toString()) {
                             client = c

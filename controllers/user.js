@@ -219,17 +219,20 @@ module.exports = function(wsInstance) {
             }
             // fail if the user is not available
             if(user.inSession) {
+                console.log(`User is in a session already: ${user.inSession}, ${user.name}`)
                 return res.status(403).json({ message: 'Failed to join session as user is already in a session' })
             }
             
             const index = queue.members.indexOf(req.payload._id)
             // fail if the user is not in the queue
             if(index == -1) {
+                console.log(`User is not queued: ${user.name}, ${queue._id}`)
                 return res.status(403).json({ message: 'Failed to join session as user is not queued.' })
             }
             // if the user is not at the front of the queue, check if the users ahead of them in the queue are occupied
             // if they are, then we can proceed as if they were at the front of the queue
             if(!await userIsEligibleToJoinSession(queue, index)) {
+                console.log(`User not eligible: ${user.name}`)
                 return res.status(403).json({ message: 'Failed to join session as user is not at the front of the queue' })
             }
             // at this point we know that the user is in first position to join any available room, so we check for an available room
@@ -272,6 +275,7 @@ module.exports = function(wsInstance) {
                 }
             }
             // if we are here then we know that there is no available room
+            console.log(`Session not available: ${user.name}`)
             return res.status(403).json({ message: 'Failed to join session as the session is currently not available.' })
         }
         catch (error) {

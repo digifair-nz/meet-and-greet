@@ -268,13 +268,6 @@ async function testSeed() {
         await room.newSessionId()
     }
 
-    const room1 = new Room({
-        eventId: event._id,
-        companyId: company1._id,
-        name: 'Room 1',
-        email: '1@gmail.com'
-    })
-
     event.companiesAttending = [company1._id, company2._id, company3._id]
     await event.save()
 
