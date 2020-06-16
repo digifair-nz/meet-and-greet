@@ -31,6 +31,11 @@ const wsInstance = expressWs(app, app.server, {
     }
 })
 app.ws('/', function(ws, req) {
+    for(const client of wsInstance.getWss().clients) {
+        if(client.jwt._id == req.jwt._id) {
+            client.close()
+        }
+    }
     ws.jwt = req.jwt
 
     ws.send(JSON.stringify({
