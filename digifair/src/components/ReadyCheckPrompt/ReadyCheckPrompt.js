@@ -22,7 +22,7 @@ class ReadyCheckPrompt extends Component {
         clicked: true,
       });
       document.title = "Dashboard";
-      this.props.onAcceptHandler();
+
       this.props.studentJoinChatroom(this.props.companyId);
     }
     // this.this.props.history.push("/chat-room");

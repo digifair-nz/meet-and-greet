@@ -54,178 +54,184 @@ class StudentDashboard extends Component {
   componentDidMount() {
     console.log("[STUDENT DASHBOARD] Mounted");
 
-    // Notification for mic and camera permission for the chatroom
-    navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(function (stream) {
-        stream.getTracks().forEach((track) => {
-          // Stop streaming after permission is granted
+    if (this.props.isStudent) {
+      // Notification for mic and camera permission for the chatroom
+      navigator.mediaDevices
+        .getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
+          stream.getTracks().forEach((track) => {
+            // Stop streaming after permission is granted
 
-          track.stop();
+            track.stop();
+          });
+        })
+        .catch(function (err) {
+          console.log(err);
+          alert(
+            "You need to grant microphone and camera permission for the interview if you want to participate."
+          );
         });
-      })
-      .catch(function (err) {
-        console.log(err);
-        alert(
-          "You need to grant microphone and camera permission for the interview if you want to participate."
-        );
-      });
 
-    // Make sure the user has given permission for microphone and camera
-    navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
-      switch (permissionStatus.state) {
-        case "denied":
-          //console.log("denied");
-          this.setState({
-            permissionGranted: false,
-          });
-          break;
-        case "granted":
-          this.setState({
-            permissionGranted: true,
-          });
-          break;
-        case "prompt":
-          //console.log("waiting...");
-          break;
-        default:
-          console.log("Internal error");
-          break;
-      }
-      permissionStatus.onchange = (e) => {
-        // detecting if the event is a change
-        if (e.type === "change") {
-          // checking what the new permissionStatus state is
-          const newState = e.target.state;
-          if (newState === "denied") {
-            this.setState({
-              permissionGranted: false,
-            });
-          } else if (newState === "granted") {
-            this.setState({
-              permissionGranted: true,
-            });
-          } else {
-            console.log("Thanks for reverting things back to normal");
-          }
-        }
-      };
-    });
-
-    // Make sure the user has given permission for microphone and camera
-    navigator.permissions
-      .query({ name: "microphone" })
-      .then((permissionStatus) => {
-        switch (permissionStatus.state) {
-          case "denied":
-            console.log("denied");
-            this.setState({
-              permissionGranted: false,
-            });
-            break;
-          case "granted":
-            this.setState({
-              permissionGranted: true,
-            });
-            break;
-          case "prompt":
-            console.log("waiting...");
-            break;
-          default:
-            console.log("internal error");
-            break;
-        }
-        permissionStatus.onchange = (e) => {
-          // detecting if the event is a change
-          if (e.type === "change") {
-            // checking what the new permissionStatus state is
-            const newState = e.target.state;
-            if (newState === "denied") {
+      // Make sure the user has given permission for microphone and camera
+      navigator.permissions
+        .query({ name: "camera" })
+        .then((permissionStatus) => {
+          switch (permissionStatus.state) {
+            case "denied":
+              //console.log("denied");
               this.setState({
                 permissionGranted: false,
               });
-            } else if (newState === "granted") {
+              break;
+            case "granted":
               this.setState({
                 permissionGranted: true,
               });
-            } else {
-              console.log("Thanks for reverting things back to normal");
-            }
+              break;
+            case "prompt":
+              //console.log("waiting...");
+              break;
+            default:
+              console.log("Internal error");
+              break;
           }
-        };
-      });
-
-    // Notification for ready check
-    let notificationGranted;
-    Notification.requestPermission().then(function (result) {
-      notificationGranted = result;
-    });
-
-    this.props.fetchCompanies();
-
-    //console.log("[STUDENT DASHBOARD] Mounted");
-
-    document.title = "Dashboard";
-
-    // Open a socket connection
-    // This page is only accessible to authenticated users but double check before making a connection
-    if (this.props.token !== null) {
-      var ws = new WebSocket(
-        // "ws://localhost:3000/?token=" + this.props.token
-        "wss://digifair-test.herokuapp.com/?token=" + this.props.token
-      );
-
-      setInterval(() => {
-        ws.send(
-          JSON.stringify({
-            messageType: "ping",
-          })
-        );
-      }, 30000);
-
-      // console.log("Socket Connection Opened!");
-      ws.onmessage = (message) => {
-        // dispatch update queue position
-        //console.log(message);
-        const packet = JSON.parse(message.data);
-        //console.log(packet.messageType);
-        if (this.props.companies !== null && packet.companyId !== null) {
-          // console.log(packet.companyId);
-
-          // Once the student reaches his turn
-          if (packet.messageType === "ready") {
-            // Find the company that is ready to chat and set the pop up
-            for (let i = 0; i < this.props.companies.length; i++) {
-              if (this.props.companies[i]._id === packet.companyId) {
+          permissionStatus.onchange = (e) => {
+            // detecting if the event is a change
+            if (e.type === "change") {
+              // checking what the new permissionStatus state is
+              const newState = e.target.state;
+              if (newState === "denied") {
                 this.setState({
-                  readyCompanyIndex: i,
-                  showReadyPromptPopUp: true,
+                  permissionGranted: false,
                 });
-                // Wait 10 seconds before closing the pop up.
-
-                // ****READY POP UP*****
-                if (notificationGranted) {
-                  // Notification
-                  const title = "Your Queue is Ready!";
-                  const body =
-                    "Google is ready for you. Accept or decline your queue";
-                  sendNotification(title, body);
-                }
-
-                break;
+              } else if (newState === "granted") {
+                this.setState({
+                  permissionGranted: true,
+                });
+              } else {
+                console.log("Thanks for reverting things back to normal");
               }
             }
-          } else {
-            // Otherwise update queue position for the specific company
-            this.props.updateQueuePosition(
-              packet.companyId,
-              packet.queuePosition
-            );
-          }
-        }
+          };
+        });
 
-        console.log(message);
-      };
+      // Make sure the user has given permission for microphone and camera
+      navigator.permissions
+        .query({ name: "microphone" })
+        .then((permissionStatus) => {
+          switch (permissionStatus.state) {
+            case "denied":
+              console.log("denied");
+              this.setState({
+                permissionGranted: false,
+              });
+              break;
+            case "granted":
+              this.setState({
+                permissionGranted: true,
+              });
+              break;
+            case "prompt":
+              console.log("waiting...");
+              break;
+            default:
+              console.log("internal error");
+              break;
+          }
+          permissionStatus.onchange = (e) => {
+            // detecting if the event is a change
+            if (e.type === "change") {
+              // checking what the new permissionStatus state is
+              const newState = e.target.state;
+              if (newState === "denied") {
+                this.setState({
+                  permissionGranted: false,
+                });
+              } else if (newState === "granted") {
+                this.setState({
+                  permissionGranted: true,
+                });
+              } else {
+                console.log("Thanks for reverting things back to normal");
+              }
+            }
+          };
+        });
+
+      // Notification for ready check
+      let notificationGranted;
+      Notification.requestPermission().then(function (result) {
+        notificationGranted = result;
+      });
+
+      this.props.fetchCompanies();
+
+      //console.log("[STUDENT DASHBOARD] Mounted");
+
+      document.title = "Dashboard";
+
+      // Open a socket connection
+      // This page is only accessible to authenticated users but double check before making a connection
+      if (this.props.token !== null) {
+        // Check that we haven't connected to the socket before
+
+        var ws = new WebSocket(
+          // "ws://localhost:3000/?token=" + this.props.token
+          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+        );
+
+        setInterval(() => {
+          ws.send(
+            JSON.stringify({
+              messageType: "ping",
+            })
+          );
+        }, 30000);
+
+        // console.log("Socket Connection Opened!");
+        ws.onmessage = (message) => {
+          // dispatch update queue position
+          //console.log(message);
+          const packet = JSON.parse(message.data);
+          //console.log(packet.messageType);
+          if (this.props.companies !== null && packet.companyId !== null) {
+            // console.log(packet.companyId);
+
+            // Once the student reaches his turn
+            if (packet.messageType === "ready") {
+              // Find the company that is ready to chat and set the pop up
+              for (let i = 0; i < this.props.companies.length; i++) {
+                if (this.props.companies[i]._id === packet.companyId) {
+                  this.setState({
+                    readyCompanyIndex: i,
+                    showReadyPromptPopUp: true,
+                  });
+                  // Wait 10 seconds before closing the pop up.
+
+                  // ****READY POP UP*****
+                  if (notificationGranted) {
+                    // Notification
+                    const title = "Your Queue is Ready!";
+                    const body =
+                      "Google is ready for you. Accept or decline your queue";
+                    sendNotification(title, body);
+                  }
+
+                  break;
+                }
+              }
+            } else {
+              // Otherwise update queue position for the specific company
+              this.props.updateQueuePosition(
+                packet.companyId,
+                packet.queuePosition
+              );
+            }
+          }
+
+          console.log(message);
+        };
+      }
     }
   }
 
@@ -240,6 +246,17 @@ class StudentDashboard extends Component {
       readyCompanyIndex: null,
     });
   };
+
+  // onAcceptHandler = () => {
+  //   //document.title = "Dashboard"; // Change back from notification tab name
+
+  //   //Temporarily disable the company he declined.
+
+  //   this.setState({
+  //     showReadyPromptPopUp: false,
+  //     readyCompanyIndex: null,
+  //   });
+  // };
 
   errorConfirmedHandler = () => {
     this.props.clearError();
@@ -321,6 +338,7 @@ class StudentDashboard extends Component {
                 }
                 //onClick={this.onClickModal}
                 onDeclineHandler={this.onDeclineHandler}
+                // onAcceptHandler={this.onAcceptHandler}
                 index={this.state.readyCompanyIndex}
               />
             </Modal>
@@ -382,6 +400,7 @@ const mapStateToProps = (state) => {
     token: state.user.token,
     credentials: state.user.credentials,
     event: state.event,
+    isStudent: state.user.isStudent,
   };
 };
 
