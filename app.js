@@ -31,13 +31,16 @@ const wsInstance = expressWs(app, app.server, {
     }
 })
 app.ws('/', function(ws, req) {
+    console.log('attempting connect')
     for(const client of wsInstance.getWss().clients) {
         if(client.jwt._id == req.jwt._id) {
+            console.log('closed client')
             client.close()
         }
     }
     ws.jwt = req.jwt
 
+    console.log('sending message')
     ws.send(JSON.stringify({
         messageType: 'connected',
     }))
