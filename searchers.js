@@ -23,7 +23,7 @@ module.exports = function(wsInstance) {
         },
         search: async function search() {
             try {
-                console.log(JSON.stringify(wsInstance.getWss().clients))
+                // console.log(JSON.stringify(wsInstance.getWss().clients))
                 let count = 0
                 for(const client of wsInstance.getWss().clients) {
                     count++
@@ -33,7 +33,7 @@ module.exports = function(wsInstance) {
                 await timeout(process.env.SEARCH_FREQUENCY)
                 // if the flag for searcher teardown has been set, stop searching
                 if(this.stopSearching) {
-                    // console.log('stopping here')
+                    console.log('stopping here')
                     return
                 }
 
@@ -41,7 +41,7 @@ module.exports = function(wsInstance) {
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
                 // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
                 // console.log(`Rooms: ${rooms}`)
-                // console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
+                console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
@@ -50,7 +50,7 @@ module.exports = function(wsInstance) {
                     }
                     return this.search()
                 }
-                // console.log('running three')
+                console.log('running three')
 
                 if(isGoogle) {
                     console.log('made it here for google')
