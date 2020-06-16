@@ -20,7 +20,7 @@ const initialState = {
 const fetchEvent = (state, action) => {
   return updateObject(state, {
     eventName: action.eventName,
-    eventExpiration: "June 14, 2020 22:24:00",
+    eventExpiration: "June 16, 2020 16:00:00",
   });
 };
 
