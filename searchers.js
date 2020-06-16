@@ -117,13 +117,9 @@ module.exports = function(wsInstance) {
                         activeNotificationsGlobal.splice(activeNotificationsGlobal.indexOf(user._id))
                     }, 10000)
                     console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
+                    console.log('Sent notification for user ' + user.name)
                     client.send(JSON.stringify({
                         messageType: 'ready',
-                        companyId: queue.companyId
-                    }))
-                    await timeout(1000)
-                    client.send(JSON.stringify({
-                        messageType: 'pog',
                         companyId: queue.companyId
                     }))
                     
