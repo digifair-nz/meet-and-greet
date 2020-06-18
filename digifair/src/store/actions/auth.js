@@ -48,6 +48,7 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("credentials");
   localStorage.removeItem("talkJSData");
+
   localStorage.removeItem("name");
   localStorage.removeItem("id");
 
@@ -97,10 +98,11 @@ export const fetchEvent = (eventName, eventExpiration) => {
 };
 
 export const auth = (eventId, email, password, isStudent) => {
+  console.log(email);
   return (dispatch) => {
     dispatch(authStart(eventId, true));
 
-    const authData = {
+    let authData = {
       email: email,
     };
 
