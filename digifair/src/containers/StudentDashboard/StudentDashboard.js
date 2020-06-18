@@ -165,10 +165,12 @@ class StudentDashboard extends Component {
       //   });
 
       // Notification for ready check
-      let notificationGranted;
-      Notification.requestPermission().then(function (result) {
-        notificationGranted = result;
-      });
+      // let notificationGranted;
+      // Notification.requestPermission().then(function (result) {
+      //   notificationGranted = result;
+      // });
+
+      let notificationGranted = true;
 
       this.props.fetchCompanies();
 
