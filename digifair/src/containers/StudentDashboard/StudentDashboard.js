@@ -38,7 +38,7 @@ class StudentDashboard extends Component {
   state = {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
-    permissionGranted: false,
+    permissionGranted: true,
     isQueuedToAll: false,
   };
 
@@ -56,107 +56,113 @@ class StudentDashboard extends Component {
 
     if (this.props.isStudent) {
       // Notification for mic and camera permission for the chatroom
-      navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function (stream) {
-          stream.getTracks().forEach((track) => {
-            // Stop streaming after permission is granted
+      // navigator.getMedia =
+      //   navigator.getUserMedia || // use the proper vendor prefix
+      //   navigator.webkitGetUserMedia ||
+      //   navigator.mozGetUserMedia ||
+      //   navigator.msGetUserMedia;
 
-            track.stop();
-          });
-        })
-        .catch(function (err) {
-          console.log(err);
-          alert(
-            "You need to grant microphone and camera permission for the interview if you want to participate."
-          );
-        });
+      // navigator.mediaDevices
+      //   .getUserMedia({ audio: true, video: true })
+      //   .then(function (stream) {
+      //     stream.getTracks().forEach((track) => {
+      //       // Stop streaming after permission is granted
 
-      // Make sure the user has given permission for microphone and camera
-      navigator.permissions
-        .query({ name: "camera" })
-        .then((permissionStatus) => {
-          switch (permissionStatus.state) {
-            case "denied":
-              //console.log("denied");
-              this.setState({
-                permissionGranted: false,
-              });
-              break;
-            case "granted":
-              this.setState({
-                permissionGranted: true,
-              });
-              break;
-            case "prompt":
-              //console.log("waiting...");
-              break;
-            default:
-              console.log("Internal error");
-              break;
-          }
-          permissionStatus.onchange = (e) => {
-            // detecting if the event is a change
-            if (e.type === "change") {
-              // checking what the new permissionStatus state is
-              const newState = e.target.state;
-              if (newState === "denied") {
-                this.setState({
-                  permissionGranted: false,
-                });
-              } else if (newState === "granted") {
-                this.setState({
-                  permissionGranted: true,
-                });
-              } else {
-                console.log("Thanks for reverting things back to normal");
-              }
-            }
-          };
-        });
+      //       track.stop();
+      //     });
+      //   })
+      //   .catch(function (err) {
+      //     console.log(err);
+      //     alert(
+      //       "You need to grant microphone and camera permission for the interview if you want to participate."
+      //     );
+      //   });
 
-      // Make sure the user has given permission for microphone and camera
-      navigator.permissions
-        .query({ name: "microphone" })
-        .then((permissionStatus) => {
-          switch (permissionStatus.state) {
-            case "denied":
-              console.log("denied");
-              this.setState({
-                permissionGranted: false,
-              });
-              break;
-            case "granted":
-              this.setState({
-                permissionGranted: true,
-              });
-              break;
-            case "prompt":
-              console.log("waiting...");
-              break;
-            default:
-              console.log("internal error");
-              break;
-          }
-          permissionStatus.onchange = (e) => {
-            // detecting if the event is a change
-            if (e.type === "change") {
-              // checking what the new permissionStatus state is
-              const newState = e.target.state;
-              if (newState === "denied") {
-                this.setState({
-                  permissionGranted: false,
-                });
-              } else if (newState === "granted") {
-                this.setState({
-                  permissionGranted: true,
-                });
-              } else {
-                console.log("Thanks for reverting things back to normal");
-              }
-            }
-          };
-        });
+      // // Make sure the user has given permission for microphone and camera
+      // navigator.permissions
+      //   .query({ name: "camera" })
+      //   .then((permissionStatus) => {
+      //     switch (permissionStatus.state) {
+      //       case "denied":
+      //         //console.log("denied");
+      //         this.setState({
+      //           permissionGranted: false,
+      //         });
+      //         break;
+      //       case "granted":
+      //         this.setState({
+      //           permissionGranted: true,
+      //         });
+      //         break;
+      //       case "prompt":
+      //         //console.log("waiting...");
+      //         break;
+      //       default:
+      //         console.log("Internal error");
+      //         break;
+      //     }
+      //     permissionStatus.onchange = (e) => {
+      //       // detecting if the event is a change
+      //       if (e.type === "change") {
+      //         // checking what the new permissionStatus state is
+      //         const newState = e.target.state;
+      //         if (newState === "denied") {
+      //           this.setState({
+      //             permissionGranted: false,
+      //           });
+      //         } else if (newState === "granted") {
+      //           this.setState({
+      //             permissionGranted: true,
+      //           });
+      //         } else {
+      //           console.log("Thanks for reverting things back to normal");
+      //         }
+      //       }
+      //     };
+      //   });
+
+      // // Make sure the user has given permission for microphone and camera
+      // navigator.permissions
+      //   .query({ name: "microphone" })
+      //   .then((permissionStatus) => {
+      //     switch (permissionStatus.state) {
+      //       case "denied":
+      //         console.log("denied");
+      //         this.setState({
+      //           permissionGranted: false,
+      //         });
+      //         break;
+      //       case "granted":
+      //         this.setState({
+      //           permissionGranted: true,
+      //         });
+      //         break;
+      //       case "prompt":
+      //         console.log("waiting...");
+      //         break;
+      //       default:
+      //         console.log("internal error");
+      //         break;
+      //     }
+      //     permissionStatus.onchange = (e) => {
+      //       // detecting if the event is a change
+      //       if (e.type === "change") {
+      //         // checking what the new permissionStatus state is
+      //         const newState = e.target.state;
+      //         if (newState === "denied") {
+      //           this.setState({
+      //             permissionGranted: false,
+      //           });
+      //         } else if (newState === "granted") {
+      //           this.setState({
+      //             permissionGranted: true,
+      //           });
+      //         } else {
+      //           console.log("Thanks for reverting things back to normal");
+      //         }
+      //       }
+      //     };
+      //   });
 
       // Notification for ready check
       let notificationGranted;
