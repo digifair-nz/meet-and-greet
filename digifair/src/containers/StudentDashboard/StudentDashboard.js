@@ -15,7 +15,8 @@ import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt
 import sendNotification from "../../components/Notification/Notification";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
-
+import digifairLogo from "../../assets/company_logos/digifair_icon_notification.png";
+import notificationSound from "../../assets/audio/anxious.mp3";
 // import logoutIcon from "../../assets/icons/logout.png";
 // CSS
 import classes from "./StudentDashboard.module.css";
@@ -38,7 +39,7 @@ class StudentDashboard extends Component {
   state = {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
-    permissionGranted: true,
+    //permissionGranted: true,
     isQueuedToAll: false,
   };
 
@@ -222,7 +223,21 @@ class StudentDashboard extends Component {
                     const title = "Your Queue is Ready!";
                     const body =
                       "Google is ready for you. Accept or decline your queue";
-                    sendNotification(title, body);
+                    //sendNotification(title, body);
+
+                    let notification = new Notification(title, {
+                      body: body,
+                      icon: digifairLogo,
+                    });
+                    const audio = new Audio(notificationSound);
+
+                    audio.play();
+
+                    notification.onclick = () => {
+                      document.title = "Dashboard";
+                      window.focus(); // Redirects to the window
+                    };
+                    document.title = "Digifair (1)";
                   }
 
                   break;
@@ -304,55 +319,40 @@ class StudentDashboard extends Component {
       companyCards = <Spinner />;
       readyCheckPopUp = null;
     } else {
-      if (!this.state.permissionGranted) {
-        companyCards = (
-          <span
-            style={{ textAlign: "center", gridColumnStart: 2, color: "red" }}
-          >
-            Please give permission for camera and microphone to participate in
-            the event
-          </span>
+      companyCards = this.props.companies.map((company, index) => {
+        // console.log(company);
+        return (
+          <CompanyCard
+            id={company._id}
+            index={index}
+            isQueued={company.isQueued}
+            logo={company.logoURL}
+            key={company._id}
+            hadSession={company.hadSession}
+            queuePosition={company.queuePosition}
+            onInfoClick={(event) => this.showInfoPopup(event, index)}
+            queuing={company.queuing}
+            description={company.description}
+          />
         );
-      } else {
-        companyCards = this.props.companies.map((company, index) => {
-          // console.log(company);
-          return (
-            <CompanyCard
-              id={company._id}
-              index={index}
-              isQueued={company.isQueued}
-              logo={company.logoURL}
-              key={company._id}
-              hadSession={company.hadSession}
-              queuePosition={company.queuePosition}
-              onInfoClick={(event) => this.showInfoPopup(event, index)}
-              queuing={company.queuing}
-              description={company.description}
-            />
-          );
-        });
-      }
+      });
+    }
 
-      if (this.state.readyCompanyIndex !== null) {
-        readyCheckPopUp = (
-          <Aux>
-            <Modal show={this.state.showReadyPromptPopUp}>
-              <ReadyCheckPrompt
-                logo={
-                  this.props.companies[this.state.readyCompanyIndex].logoURL
-                }
-                companyId={
-                  this.props.companies[this.state.readyCompanyIndex]._id
-                }
-                //onClick={this.onClickModal}
-                onDeclineHandler={this.onDeclineHandler}
-                // onAcceptHandler={this.onAcceptHandler}
-                index={this.state.readyCompanyIndex}
-              />
-            </Modal>
-          </Aux>
-        );
-      }
+    if (this.state.readyCompanyIndex !== null) {
+      readyCheckPopUp = (
+        <Aux>
+          <Modal show={this.state.showReadyPromptPopUp}>
+            <ReadyCheckPrompt
+              logo={this.props.companies[this.state.readyCompanyIndex].logoURL}
+              companyId={this.props.companies[this.state.readyCompanyIndex]._id}
+              //onClick={this.onClickModal}
+              onDeclineHandler={this.onDeclineHandler}
+              // onAcceptHandler={this.onAcceptHandler}
+              index={this.state.readyCompanyIndex}
+            />
+          </Modal>
+        </Aux>
+      );
     }
 
     return (
