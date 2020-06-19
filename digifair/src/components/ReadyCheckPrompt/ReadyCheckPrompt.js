@@ -17,24 +17,26 @@ class ReadyCheckPrompt extends Component {
   onAcceptHandler = () => {
     console.log("-------------Check");
 
-    console.log("Check");
-    this.setState({
-      clicked: true,
-    });
-    document.title = "Dashboard";
+    if (!this.state.clicked) {
+      console.log("Check");
+      this.setState({
+        clicked: true,
+      });
+      document.title = "Dashboard";
 
-    this.props.studentJoinChatroom(this.props.companyId);
+      this.props.studentJoinChatroom(this.props.companyId);
 
-    // this.this.props.history.push("/chat-room");
+      // this.this.props.history.push("/chat-room");
+    }
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevProps !== this.props) {
-  //     this.setState({
-  //       clicked: false,
-  //     });
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props) {
+      this.setState({
+        clicked: false,
+      });
+    }
+  }
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
     document.title = "Dashboard";

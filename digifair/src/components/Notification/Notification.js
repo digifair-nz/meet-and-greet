@@ -9,7 +9,9 @@ const sendNotification = (title, body) => {
     icon: digifairLogo,
   });
   const audio = new Audio(notificationSound);
+
   audio.play();
+
   notification.onclick = () => {
     document.title = "Dashboard";
     window.focus(); // Redirects to the window

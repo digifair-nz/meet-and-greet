@@ -38,7 +38,7 @@ class StudentDashboard extends Component {
   state = {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
-    permissionGranted: true,
+    permissionGranted: false,
     isQueuedToAll: false,
   };
 
@@ -55,6 +55,10 @@ class StudentDashboard extends Component {
     console.log("[STUDENT DASHBOARD] Mounted");
 
     if (this.props.isStudent) {
+      this.props.fetchCompanies();
+
+      document.title = "Dashboard";
+
       // Notification for mic and camera permission for the chatroom
       // navigator.getMedia =
       //   navigator.getUserMedia || // use the proper vendor prefix
@@ -165,18 +169,14 @@ class StudentDashboard extends Component {
       //   });
 
       // Notification for ready check
-      // let notificationGranted;
-      // Notification.requestPermission().then(function (result) {
-      //   notificationGranted = result;
-      // });
-
-      let notificationGranted = true;
-
-      this.props.fetchCompanies();
-
-      //console.log("[STUDENT DASHBOARD] Mounted");
-
-      document.title = "Dashboard";
+      let notificationGranted;
+      if (typeof Notification !== "undefined") {
+        Notification.requestPermission().then(function (result) {
+          notificationGranted = result;
+        });
+      } else {
+        notificationGranted = true;
+      }
 
       // Open a socket connection
       // This page is only accessible to authenticated users but double check before making a connection
