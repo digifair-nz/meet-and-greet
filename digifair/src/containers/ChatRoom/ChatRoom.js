@@ -104,7 +104,8 @@ class ChatRoom extends Component {
       allowKicking: false,
       searching: false,
       studentLeft: false,
-      showTutorial: true,
+      showTutorial: false,
+      buttonClicked: false, // This is a guard to prevent multiple clicking and spamming requests
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -340,7 +341,7 @@ class ChatRoom extends Component {
     //console.log(otCore);
     //console.log(this.state);
 
-    if (this.state.connections != null) {
+    if (this.state.connections != null && !this.state.buttonClicked) {
       if (
         !this.props.isStudent &&
         this.state.connections.length > 1 &&
@@ -362,7 +363,9 @@ class ChatRoom extends Component {
             // console.log(this.state);
             // console.log(this.state.connections[i]);
             // console.log(otCore.session);
-
+            this.setState({
+              clicked: true,
+            });
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
               localStorage.removeItem("studentLeft");
               this.props.kickStudent();

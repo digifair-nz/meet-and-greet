@@ -38,7 +38,7 @@ class StudentDashboard extends Component {
   state = {
     readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
-    permissionGranted: false,
+    permissionGranted: true,
     isQueuedToAll: false,
   };
 
