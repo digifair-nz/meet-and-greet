@@ -22,7 +22,7 @@ class TextChat extends Component {
           role: "Student",
           // email: "george@looney.net",
 
-          //welcomeMessage: "Hey there! How are you? :-)",
+          welcomeMessage: null,
         });
 
         if (!window.talkSession) {
@@ -38,7 +38,7 @@ class TextChat extends Component {
           role: "Recruiter",
           // email: "ronald@teflon.com",
 
-          //welcomeMessage: "Hey there! Love to chat :-)",
+          welcomeMessage: null,
         });
 
         // You control the ID of a conversation. oneOnOneId is a helper method that generates

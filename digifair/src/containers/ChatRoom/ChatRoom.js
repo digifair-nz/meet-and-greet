@@ -12,6 +12,7 @@ import classNames from "classnames";
 import Aux from "../../hoc/Auxiliary";
 import Button from "../../components/UI/Button/Button";
 import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
+import RecruiterTutorial from "../../components/TutorialSlider/RecruiterTutorial/RecruiterTutorial";
 import NameCard from "../../components/NameCard/NameCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import TextChat from "./TextChat/TextChat";
@@ -103,6 +104,7 @@ class ChatRoom extends Component {
       allowKicking: false,
       searching: false,
       studentLeft: false,
+      showTutorial: true,
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -119,6 +121,15 @@ class ChatRoom extends Component {
     // console.log("CHAT ROOM MOUNTED");
     // console.log(this.props.credentials);
     // console.log(this.props.isStudent);
+
+    let seenTutorial = localStorage.getItem("seenTutorial");
+    if (!seenTutorial) {
+      this.setState({
+        showTutorial: true,
+      });
+    }
+
+    document.title = "Session";
     console.log(
       "----------------------------- CREDENTIALS-----------------------------------"
     );
@@ -297,6 +308,20 @@ class ChatRoom extends Component {
     }
   }
 
+  // Tutorial shows initially automatically but can be open
+  showTutorial = () => {
+    this.setState({
+      showTutorial: true,
+    });
+  };
+
+  // Closing the tutorial
+  closeTutorial = () => {
+    this.setState({
+      showTutorial: false,
+    });
+    localStorage.setItem("seenTutorial", true);
+  };
   startCall() {
     this.setState({
       loading: false,
@@ -386,6 +411,7 @@ class ChatRoom extends Component {
   }
 
   leaveEvent = () => {
+    localStorage.removeItem("studentLeft");
     otCore.endCall();
     // Disconnect recruiter from the event
     // Don't allow the recruiter to leave the event unless the room is free
@@ -394,7 +420,7 @@ class ChatRoom extends Component {
   };
 
   inviteNextStudent = () => {
-    if (this.state.connections != null) {
+    if (this.state.connections != null && !this.state.searching) {
       if (this.state.connections.length < 2) {
         this.props.inviteNextStudent();
         this.setState({
@@ -464,6 +490,12 @@ class ChatRoom extends Component {
     console.log(this.state.connections);
     return (
       <div className={classes.ChatRoomContainer}>
+        {/*This shows the recruiter user a tutorial of the platform covering kicking, inviting, chatting and video controlling  */}
+        <RecruiterTutorial
+          closeTutorial={this.closeTutorial}
+          showTutorialSlider={this.state.showTutorial}
+        />
+
         <ErrorPopup
           show={this.props.error}
           modalClosed={this.errorConfirmedHandler}
@@ -483,7 +515,7 @@ class ChatRoom extends Component {
             <Aux>
               <Button
                 btnType="Danger"
-                btnStyle={{ padding: "padding: 10% 10%;" }}
+                btnStyle={{ height: "2vh" }}
                 clicked={this.leaveSession}
               >
                 Leave Session
@@ -491,12 +523,16 @@ class ChatRoom extends Component {
             </Aux>
           ) : (
             <Aux>
-              <Button btnType="Control">Tutorial</Button>
+              <Button clicked={this.showTutorial} btnType="Control">
+                Tutorial
+              </Button>
               {
                 <Button
                   clicked={this.inviteNextStudent}
                   disabled={
-                    !this.state.allowNextUser || this.state.allowKicking
+                    !this.state.allowNextUser ||
+                    this.state.allowKicking ||
+                    this.state.searching
                   }
                   btnType="Success"
                 >
