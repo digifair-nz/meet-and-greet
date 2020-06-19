@@ -54,7 +54,7 @@ class StudentDashboard extends Component {
 
   componentDidMount() {
     console.log("[STUDENT DASHBOARD] Mounted");
-
+    const audio = new Audio(notificationSound);
     if (this.props.isStudent) {
       this.props.fetchCompanies();
 
@@ -229,7 +229,7 @@ class StudentDashboard extends Component {
                       body: body,
                       icon: digifairLogo,
                     });
-                    const audio = new Audio(notificationSound);
+                 
 
                     audio.play();
 
