@@ -185,8 +185,8 @@ class StudentDashboard extends Component {
         // Check that we haven't connected to the socket before
 
         var ws = new WebSocket(
-          // "ws://localhost:3000/?token=" + this.props.token
-          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+          "ws://localhost:3000/?token=" + this.props.token
+          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
         );
 
         setInterval(() => {
@@ -229,7 +229,6 @@ class StudentDashboard extends Component {
                       body: body,
                       icon: digifairLogo,
                     });
-                 
 
                     audio.play();
 
@@ -345,6 +344,9 @@ class StudentDashboard extends Component {
             <ReadyCheckPrompt
               logo={this.props.companies[this.state.readyCompanyIndex].logoURL}
               companyId={this.props.companies[this.state.readyCompanyIndex]._id}
+              companyName={
+                this.props.companies[this.state.readyCompanyIndex].name
+              }
               //onClick={this.onClickModal}
               onDeclineHandler={this.onDeclineHandler}
               // onAcceptHandler={this.onAcceptHandler}

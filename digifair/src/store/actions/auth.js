@@ -176,6 +176,29 @@ export const setAuthRedirectPath = (path) => {
   };
 };
 
+// Before logging in, check if the event is still valid
+
+// Check with the server if the eventId is valid
+
+// If it is then auto log in
+
+// If it's not valid because there is a newer version of the event --> fetch new event id
+
+// else
+
+// no event exists anymore under that version
+
+export const checkEventIsValidStart = () => {};
+
+// Either new event or the current event is valid
+export const checkEventIsValidSuccess = () => {};
+
+// Either server error or no event exists
+export const checkEventIsValidFail = () => {};
+
+
+
+
 export const authCheckState = () => {
   return (dispatch) => {
     const eventId = localStorage.getItem("eventId");

@@ -232,9 +232,11 @@ const updateQueuePosition = (state, action) => {
   return updateObject(state, { companies: updatedCompanies });
 };
 
-// Disable Company for student (hadSession)
-// This is called when the student has had a session with the company.
-// Specifically, this is called when the student accepts to join the chatroom
+// Disable queueing to a company that prompted ready check that the student declined or didn't respond
+
+const temporaryQueueDisable = (state, action) => {};
+
+const queueEnable = (state, action) => {};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -272,6 +274,10 @@ const reducer = (state = initialState, action) => {
       return dequeueFail(state, action);
     case actionTypes.UPDATE_QUEUE_POSITION:
       return updateQueuePosition(state, action);
+    case actionTypes.TEMPORARY_QUEUE_DISABLE:
+      return state;
+    case actionTypes.QUEUE_ENABLE:
+      return state;
     case actionTypes.CLEAR_ERROR:
       return updateObject(state, { error: null });
     default:

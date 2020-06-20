@@ -146,3 +146,49 @@ export const fetchStudentData = () => {
       });
   };
 };
+
+/*
+ *
+ * fetchQueuedStudents gets the number of students queued for a specific company.
+ *
+ *
+ * This is executed on some interval or on page load.
+ *
+ */
+export const fetchQueuedStudentsNumStart = () => {
+  return {
+    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_START,
+  };
+};
+export const fetchQueuedStudentsNumSuccess = (queuedStudentsNum) => {
+  return {
+    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_SUCCESS,
+    queuedStudentsNum: queuedStudentsNum,
+  };
+};
+export const fetchQueuedStudentsNumFail = (error) => {
+  return {
+    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_FAIL,
+    error: error,
+  };
+};
+
+export const fetchQueuedStudentsNum = () => {
+  return (dispatch) => {
+    dispatch(fetchQueuedStudentsNumStart());
+
+    axios
+      .get("/company/student-details/")
+      .then((response) => {
+        console.log(response);
+
+        dispatch(
+          fetchQueuedStudentsNumSuccess(response.data.queuedStudentsNum)
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(fetchQueuedStudentsNumFail(err.response.data));
+      });
+  };
+};

@@ -1,5 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
+import { fetchQueuedStudentsNum } from "../actions/recruiterChatroom";
 
 /*
 
@@ -23,6 +24,7 @@ const initialState = {
   name: null,
   id: null,
   talkJSData: null, // for text chat (talk js)
+  queuedStudentsNum: null, // for recruiters --> Displays number of students queued for their company
 };
 
 /***********************************************
@@ -172,6 +174,7 @@ const recruiterInviteNextFail = (state, action) => {
   });
 };
 
+// Fetching TalkJS details when the student connects (name, id, appId etc.)
 const fetchStudentDataStart = (state, action) => {
   return updateObject(state, {
     loading: true,
@@ -186,6 +189,28 @@ const fetchStudentDataSuccess = (state, action) => {
 };
 
 const fetchStudentDataFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+// Fetching the number of students queued for the recruiter's specific company
+
+const fetchQueuedStudentsNumStart = (state, action) => {
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const fetchQueuedStudentsNumSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    talkJSData: action.queuedStudentsNum,
+  });
+};
+
+const fetchQueuedStudentsNumFail = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
@@ -244,7 +269,14 @@ const reducer = (state = initialState, action) => {
       return fetchStudentDataFail(state, action);
     case actionTypes.CLEAR_ERROR:
       return updateObject(state, { error: null });
-      return;
+    //--------- RECRUITER GETTING NUMBER OF STUDENTS QUEUED FOR THEIR COMPANY ----------------
+    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_START:
+      return fetchQueuedStudentsNumStart(state, action);
+    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_SUCCESS:
+      return fetchQueuedStudentsNumSuccess(state, action);
+    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_FAIL:
+      return fetchQueuedStudentsNumFail(state, action);
+
     default:
       return state;
   }

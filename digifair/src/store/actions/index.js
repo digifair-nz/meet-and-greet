@@ -27,6 +27,7 @@ export {
   kickStudent,
   inviteNextStudent,
   fetchStudentData,
+  fetchQueuedStudentsNum,
 } from "./recruiterChatroom";
 
 // Clear any errors in the state
