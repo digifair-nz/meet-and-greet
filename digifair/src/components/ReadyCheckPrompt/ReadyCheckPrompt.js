@@ -46,7 +46,10 @@ class ReadyCheckPrompt extends Component {
 
   timerExpireHandler = () => {
     //do something
-    alert("[Company Name] has sent you an invite, but you did not respond.");
+    alert(
+      this.props.companyName +
+        " has sent you an invite, but you did not respond."
+    );
     this.onDeclineHandler();
   };
 
