@@ -1,0 +1,89 @@
+.InfoCardContainer {
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  grid-column-gap: 10%;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0%;
+  left: 5%;
+  z-index: 100;
+  padding: 2% 5% 1% 5%;
+  font-family: "Roboto", sans-serif;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  text-align: center;
+}
+.SessionInfoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.InfoCardContainerClosed {
+  position: absolute;
+  bottom: 0%;
+  left: 5%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 100;
+  padding: 1vh 5%;
+  font-family: "Roboto", sans-serif;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.Icon {
+  height: 1.5vh;
+  margin-right: 5px;
+}
+
+.IconContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.TimerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.Arrow {
+  height: 2vh;
+  position: absolute;
+  top: 13%;
+  cursor: pointer;
+  left: 50%;
+  opacity: 0.6;
+
+  transform: translate(-50%, -50%);
+}
+.ArrowUp {
+  height: 2vh;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.EventInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ContainerTitle {
+  font-weight: 500;
+  padding-bottom: 10%;
+  font-size: 16px;
+}
+.EventName {
+  font-weight: 600;
+  padding-bottom: 5%;
+}

@@ -27,6 +27,7 @@ export const fetchCompanies = () => {
     axios
       .get("/user/")
       .then((response) => {
+        console.log(response);
         dispatch(fetchCompaniesSuccess(response.data));
       })
       .catch((err) => {

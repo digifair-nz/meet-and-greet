@@ -14,6 +14,7 @@ import Button from "../../components/UI/Button/Button";
 import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
 import RecruiterTutorial from "../../components/TutorialSlider/RecruiterTutorial/RecruiterTutorial";
 import NameCard from "../../components/NameCard/NameCard";
+import InfoCard from "../../components/InfoCard/InfoCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import TextChat from "./TextChat/TextChat";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
@@ -124,6 +125,14 @@ class ChatRoom extends Component {
     // console.log(this.props.isStudent);
 
     let seenTutorial = localStorage.getItem("seenTutorial");
+
+    let searching = localStorage.getItem("searching");
+
+    if (searching) {
+      this.setState({
+        searching: true,
+      });
+    }
     if (!seenTutorial) {
       this.setState({
         showTutorial: true,
@@ -233,7 +242,6 @@ class ChatRoom extends Component {
           // Clear students' credentials
           // Move them back to to the dashboard
           localStorage.removeItem("inRoom");
-          console.log("I got kicked :( ");
 
           otCore.off();
           otCore.endCall();
@@ -263,13 +271,12 @@ class ChatRoom extends Component {
         // Detect when the student loses connection from the session either by closing the tab or losing internet connection.
         // WARNING: When the student refreshes the tab or loses connection briefly, they might be kicked.
         otCore.on("connectionDestroyed", (event) => {
-          console.log(event);
           // If the student loses connection for 10 seconds we can notify the recruiter if he wants to disonnect the student permanently and change session
 
           setTimeout(() => {
             if (this.state.connections.length < 3) {
               alert(
-                "Looks like the student has lost a connection. You can disconnect the student permanently if you want to change sessions and invite next user."
+                "Looks like the student has lost a connection. You can disconnect the student permanently if you want to change sessions and then invite the next user."
               );
             }
           }, 10000);
@@ -281,8 +288,6 @@ class ChatRoom extends Component {
         });
       } else {
         otCore.on("connectionDestroyed", (event) => {
-          console.log(event);
-
           /*
         EXPERIMENTAL!!
 
@@ -295,9 +300,7 @@ class ChatRoom extends Component {
         });
       }
 
-      otCore.on("sessionDisconnected", (event) => {
-        console.log(event);
-      });
+      otCore.on("sessionDisconnected", (event) => {});
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -368,6 +371,7 @@ class ChatRoom extends Component {
             });
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
               localStorage.removeItem("studentLeft");
+              localStorage.removeItem("searching");
               this.props.kickStudent();
             });
             //this.props.kickStudent();
@@ -379,6 +383,7 @@ class ChatRoom extends Component {
         this.state.studentLeft
       ) {
         localStorage.removeItem("studentLeft");
+        localStorage.removeItem("searching");
         this.props.kickStudent();
       }
     }
@@ -386,8 +391,7 @@ class ChatRoom extends Component {
 
   leaveSession = () => {
     localStorage.removeItem("inRoom");
-    //console.log(otCore);
-    console.log(otCore);
+
     otCore.off();
     otCore.endCall();
     otCore.session.destroy();
@@ -415,6 +419,8 @@ class ChatRoom extends Component {
 
   leaveEvent = () => {
     localStorage.removeItem("studentLeft");
+
+    localStorage.removeItem("searching");
     otCore.endCall();
     // Disconnect recruiter from the event
     // Don't allow the recruiter to leave the event unless the room is free
@@ -426,6 +432,7 @@ class ChatRoom extends Component {
     if (this.state.connections != null && !this.state.searching) {
       if (this.state.connections.length < 2) {
         this.props.inviteNextStudent();
+        localStorage.setItem("searching", true);
         this.setState({
           searching: true,
         });
@@ -498,7 +505,15 @@ class ChatRoom extends Component {
           closeTutorial={this.closeTutorial}
           showTutorialSlider={this.state.showTutorial}
         />
-
+        {/*This shows the recruiter information regarding the session (number of students queued and session duration) and the event (event name and timer) */}
+        {!this.props.isStudent ? (
+          <InfoCard
+            eventName={this.props.event.eventName}
+            queuedStudentsNum={12}
+            eventExpiration={this.props.event.eventExpiration}
+            startTimer={this.state.connections.length > 1}
+          />
+        ) : null}
         <ErrorPopup
           show={this.props.error}
           modalClosed={this.errorConfirmedHandler}
@@ -518,7 +533,7 @@ class ChatRoom extends Component {
             <Aux>
               <Button
                 btnType="Danger"
-                btnStyle={{ height: "2vh" }}
+                btnStyle={{ height: "5vh" }}
                 clicked={this.leaveSession}
               >
                 Leave Session
@@ -533,8 +548,8 @@ class ChatRoom extends Component {
                 <Button
                   clicked={this.inviteNextStudent}
                   disabled={
-                    !this.state.allowNextUser ||
-                    this.state.allowKicking ||
+                    // !this.state.allowNextUser ||
+                    // this.state.allowKicking ||
                     this.state.searching
                   }
                   btnType="Success"
@@ -614,6 +629,7 @@ const mapStateToProps = (state) => {
     talkJSData: state.user.talkJSData,
     loadingTextChat: state.user.loading,
     error: state.user.error,
+    event: state.event,
   };
 };
 
@@ -624,6 +640,7 @@ const mapDispatchToProps = (dispatch) => {
     kickStudent: () => dispatch(actions.kickStudent()),
     inviteNextStudent: () => dispatch(actions.inviteNextStudent()),
     fetchStudentData: () => dispatch(actions.fetchStudentData()),
+    fetchQueuedStudentsNum: () => dispatch(actions.fetchQueuedStudentsNum()),
     clearError: () => dispatch(actions.clearError()),
   };
 };
