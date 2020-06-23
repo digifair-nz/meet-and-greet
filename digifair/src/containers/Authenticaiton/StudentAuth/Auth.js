@@ -251,7 +251,7 @@ class StudentAuth extends Component {
         className={this.state.isStudent ? 
         classes.BackgroundIllustration : 
         classes.BackgroundIllustrationCompany}>
-          {/* <img src={sot_logo} alt="summer of tech" className={classes.SOTLogo}></img> */}
+          <img src={sot_logo} alt="summer of tech" className={classes.SOTLogo}></img>
         </div>
       </div>
     );
