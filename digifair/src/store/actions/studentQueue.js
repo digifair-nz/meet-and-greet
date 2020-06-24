@@ -191,36 +191,9 @@ export const dequeueStudent = (companyId, index) => {
   };
 };
 
-/*
-NOTE: 
-This is initiated when the student either presses the decline button or doesn't respond to the pop up.
-The server automatically removes them from the queue after 10 seconds. 
-
-Disable the company for the user for 10 seconds as penalty.
-
-*/
-export const temporaryQueueDisable = (companyId, index) => {
-  return {
-    type: actionTypes.TEMPORARY_QUEUE_DISABLE,
-    companyId: companyId,
-    index: index,
-  };
-};
-
-export const queueEnable = (companyId, index) => {
-  return {
-    type: actionTypes.QUEUE_ENABLE,
-    companyId: companyId,
-    index: index,
-  };
-};
-
 export const declineJoinChatroom = (companyId, index) => {
   return (dispatch) => {
     dispatch(dequeueInit(companyId, index));
     dispatch(dequeueSuccess(companyId, index));
-    dispatch(temporaryQueueDisable(companyId, index));
-
-    setTimeout(dispatch(queueEnable(companyId, index)), 5000);
   };
 };

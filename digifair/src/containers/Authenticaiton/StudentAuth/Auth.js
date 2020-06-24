@@ -83,6 +83,9 @@ class StudentAuth extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.authenticated) {
       window.removeEventListener("keydown", this.onKeydown, false);
+      this.setState({
+        invalidForm: false,
+      });
     }
   }
 
@@ -111,10 +114,10 @@ class StudentAuth extends Component {
 
     //Better ux to let them finish typing and only show on submit
     if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      let pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
       isValid = pattern.test(value) && isValid;
     }
-
+    console.log(value);
     return isValid;
   };
 
@@ -145,6 +148,7 @@ class StudentAuth extends Component {
 
         // Dispatch auth action
         if (!this.state.invalidForm) {
+          console.log(this.state.controls.email.value);
           this.props.onAuth(
             this.state.eventId,
             this.state.controls.email.value,
@@ -247,11 +251,18 @@ class StudentAuth extends Component {
             </Button>
           )}
         </div>
-        <div 
-        className={this.state.isStudent ? 
-        classes.BackgroundIllustration : 
-        classes.BackgroundIllustrationCompany}>
-          <img src={sot_logo} alt="summer of tech" className={classes.SOTLogo}></img>
+        <div
+          className={
+            this.state.isStudent
+              ? classes.BackgroundIllustration
+              : classes.BackgroundIllustrationCompany
+          }
+        >
+          <img
+            src={sot_logo}
+            alt="summer of tech"
+            className={classes.SOTLogo}
+          ></img>
         </div>
       </div>
     );

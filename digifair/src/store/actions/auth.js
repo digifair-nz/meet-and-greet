@@ -1,5 +1,5 @@
 import axios from "../../axios-instance";
-
+import axiosPack from "axios";
 import * as actionTypes from "./actionTypes";
 import jwt from "jwt-decode"; // import dependency
 
@@ -45,13 +45,19 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("credentials");
-  localStorage.removeItem("talkJSData");
+  // localStorage.removeItem("token");
+  // localStorage.removeItem("credentials");
+  // localStorage.removeItem("talkJSData");
 
-  localStorage.removeItem("name");
-  localStorage.removeItem("id");
+  // localStorage.removeItem("name");
+  // localStorage.removeItem("inRoom");
 
+  // Only save eventId
+  const eventId = localStorage.getItem("eventId");
+  localStorage.clear();
+  localStorage.setItem("eventId", eventId);
+
+  window.location.reload(false);
   // Dequeue them from all companies if they are a student when they logout
 
   // localStorage.removeItem("expirationDate");
@@ -106,6 +112,7 @@ export const auth = (eventId, email, password, isStudent) => {
       email: email,
     };
 
+    console.log(authData);
     if (isStudent) {
       axios
         .post("/user/login/" + eventId, authData)
@@ -195,9 +202,6 @@ export const checkEventIsValidSuccess = () => {};
 
 // Either server error or no event exists
 export const checkEventIsValidFail = () => {};
-
-
-
 
 export const authCheckState = () => {
   return (dispatch) => {

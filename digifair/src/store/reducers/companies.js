@@ -274,10 +274,6 @@ const reducer = (state = initialState, action) => {
       return dequeueFail(state, action);
     case actionTypes.UPDATE_QUEUE_POSITION:
       return updateQueuePosition(state, action);
-    case actionTypes.TEMPORARY_QUEUE_DISABLE:
-      return state;
-    case actionTypes.QUEUE_ENABLE:
-      return state;
     case actionTypes.CLEAR_ERROR:
       return updateObject(state, { error: null });
     default:

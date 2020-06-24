@@ -107,6 +107,7 @@ class ChatRoom extends Component {
       studentLeft: false,
       showTutorial: false,
       buttonClicked: false, // This is a guard to prevent multiple clicking and spamming requests
+      studentConnected: false,
     };
     this.startCall = this.startCall.bind(this);
     this.endCall = this.endCall.bind(this);
@@ -124,9 +125,26 @@ class ChatRoom extends Component {
     // console.log(this.props.credentials);
     // console.log(this.props.isStudent);
 
+    // Check if a student has connected into a session
+
     let seenTutorial = localStorage.getItem("seenTutorial");
 
     let searching = localStorage.getItem("searching");
+
+    let studentConnected = localStorage.getItem("studentConnected");
+
+    if (studentConnected) {
+      this.setState({
+        studentConnected: true,
+      });
+      setTimeout(() => {
+        if (this.state.connections.length < 2) {
+          alert(
+            "Looks like the student has lost a connection. You can disconnect the student permanently if you want to change sessions and then invite the next user."
+          );
+        }
+      }, 10000);
+    }
 
     if (searching) {
       this.setState({
@@ -209,7 +227,11 @@ class ChatRoom extends Component {
           } else {
             // Recruiter has already joined
             //console.log("Another client connected.");
+
+            // The student has connected to the recruiter
             if (!this.props.isStudent) {
+              localStorage.setItem("studentConnected");
+              localStorage.removeItem("searching");
               this.props.fetchStudentData(); // Get student's data for talkJS
             }
 
@@ -227,6 +249,7 @@ class ChatRoom extends Component {
                   allowNextUser: false,
                   connections: connections,
                   searching: false,
+                  studentConnected: true,
                   allowKicking: true,
                   studentLeft: false,
                 });
@@ -372,6 +395,7 @@ class ChatRoom extends Component {
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
               localStorage.removeItem("studentLeft");
               localStorage.removeItem("searching");
+              localStorage.removeItem("studentConnected");
               this.props.kickStudent();
             });
             //this.props.kickStudent();
@@ -380,10 +404,11 @@ class ChatRoom extends Component {
       } else if (
         !this.props.isStudent &&
         // this.state.connections.length > 1 &&
-        this.state.studentLeft
+        this.state.studentConnected
       ) {
         localStorage.removeItem("studentLeft");
         localStorage.removeItem("searching");
+        localStorage.removeItem("studentConnected");
         this.props.kickStudent();
       }
     }
@@ -446,7 +471,7 @@ class ChatRoom extends Component {
   render() {
     let textChat = null;
     let nameCard = null;
-    if (this.props.talkJSData) {
+    if (this.props.talkJSData && this.state.connections.length > 1) {
       textChat = (
         <TextChat
           name={this.props.myName}
@@ -465,7 +490,22 @@ class ChatRoom extends Component {
         />
       );
     } else {
-      if (this.state.searching) {
+      if (
+        !this.state.searching &&
+        !(this.state.connections.length > 1) &&
+        this.state.studentConnected &&
+        !this.props.isStudent
+      ) {
+        nameCard = (
+          // This is the name of the person they are chatting with.
+
+          <NameCard
+            name={this.props.talkJSData.name + " has disonnected."}
+            isStudent={this.props.isStudent}
+            searching={this.state.searching}
+          />
+        );
+      } else if (this.state.searching) {
         nameCard = (
           // This is the name of the person they are chatting with.
 
@@ -503,7 +543,7 @@ class ChatRoom extends Component {
         {/*This shows the recruiter user a tutorial of the platform covering kicking, inviting, chatting and video controlling  */}
         <RecruiterTutorial
           closeTutorial={this.closeTutorial}
-          showTutorialSlider={this.state.showTutorial}
+          showTutorialSlider={this.state.showTutorial && !this.props.isStudent}
         />
         {/*This shows the recruiter information regarding the session (number of students queued and session duration) and the event (event name and timer) */}
         {!this.props.isStudent ? (
@@ -550,7 +590,8 @@ class ChatRoom extends Component {
                   disabled={
                     // !this.state.allowNextUser ||
                     // this.state.allowKicking ||
-                    this.state.searching
+                    //!this.state.searching
+                    this.state.studentConnected || this.state.searching
                   }
                   btnType="Success"
                 >
@@ -560,10 +601,11 @@ class ChatRoom extends Component {
               {/* <Button btnType="Control">Take a break</Button> */}
               <Button
                 disabled={
-                  this.state.searching || !this.state.allowKicking
-                  // this.state.connections.length < 2 ||
-                  // !this.state.allowKicking ||
-                  // !this.state.studentLeft
+                  // this.state.searching || !this.state.allowKicking
+                  // // this.state.connections.length < 2 ||
+                  // // !this.state.allowKicking ||
+                  // // !this.state.studentLeft
+                  this.state.searching || !this.state.studentConnected
                 }
                 clicked={this.kickStudent}
                 btnType="Danger"

@@ -24,6 +24,7 @@ const initialState = {
   name: null,
   id: null,
   talkJSData: null, // for text chat (talk js)
+  searching: false,
   queuedStudentsNum: null, // for recruiters --> Displays number of students queued for their company
 };
 
@@ -41,6 +42,7 @@ const authStart = (state, action) => {
 };
 
 const studentAuthSuccess = (state, action) => {
+  console.log(state);
   return updateObject(state, {
     token: action.idToken,
     credentials: action.credentials,
@@ -164,6 +166,7 @@ const recruiterInviteNextStart = (state, action) => {
 const recruiterInviteNextSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
+    searching: true,
   });
 };
 

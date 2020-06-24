@@ -50,10 +50,6 @@ export const STUDENT_JOIN_CHATROOM_START = "STUDENT_JOIN_CHATROOM_START";
 export const STUDENT_JOIN_CHATROOM_SUCCESS = "STUDENT_JOIN_CHATROOM_SUCCESS";
 export const STUDENT_JOIN_CHATROOM_FAIL = "STUDENT_JOIN_CHATROOM_FAIL";
 
-// If the student declines the ready check or doesn't respond in time
-export const TEMPORARY_QUEUE_DISABLE = "TEMPORARY_QUEUE_DISABLE";
-export const QUEUE_ENABLE = "QUEUE_ENABLE";
-
 // Recruiter Kick student from the session
 export const KICK_STUDENT_START = "KICK_STUDENT_START";
 export const KICK_STUDENT_SUCCESS = "KICK_STUDENT_SUCCESS";
