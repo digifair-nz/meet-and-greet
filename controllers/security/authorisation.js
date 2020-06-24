@@ -15,7 +15,7 @@ function auth(validType, failureMessage) {
                 req.payload = authorised
 
                 const event = await Event.findById(authorised.eventId)
-                if(!event || authorised.eventVersion != event.id) {
+                if(!event || authorised.eventVersion != event.version) {
                     return res.status(401).json({
                         reloginRequired: true,
                         message: 'Event has been refreshed by the administrators, please relogin.'
