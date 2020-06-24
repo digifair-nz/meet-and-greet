@@ -85,7 +85,15 @@ module.exports = function(wsInstance) {
         if(!queue) {
             return res.status(404).json({ message: 'Could not get status as queue could not be found.' })
         }
-        return res.status(200).json({ queueLength: queue.members.length })
+        const room = await Room.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
+        if(!room) {
+            return res.status(404).json({ message: 'Could not get status as room could not be found.' })
+        }
+        return res.status(200).json({
+            queueLength: queue.members.length,
+            roomIsSearching: !room.inSession,
+            roomHasSessionPartner: !!room.sessionPartner
+        })
     }
 
     /**
