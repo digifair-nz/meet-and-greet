@@ -452,6 +452,7 @@ module.exports = function(wsInstance) {
         enqueue,
         enqueueAll,
         dequeue,
+        dequeueAll,
         joinSession,
         leaveSession,
         broadcastQueueUpdate
