@@ -8,13 +8,14 @@ function auth(validType, failureMessage) {
         if(!token) return res.status(401).json('Access denied.')
 
         try {
+            console.log(token)
             const authorised = jwt.verify(token, process.env.TOKEN_SECRET)
 
             if(authorised.accountType == validType) {
                 req.payload = authorised
 
-                const id = (await Event.findById(authorised.eventId)).version
-                if(authorised.eventVersion != id) {
+                const event = await Event.findById(authorised.eventId)
+                if(!event || authorised.eventVersion != event.id) {
                     return res.status(401).json({
                         reloginRequired: true,
                         message: 'Event has been refreshed by the administrators, please relogin.'
@@ -29,6 +30,7 @@ function auth(validType, failureMessage) {
 
         }
         catch(err) {
+            console.log(err)
             return res.status(400).json({ message: 'Invalid token.' })
         }
     }
