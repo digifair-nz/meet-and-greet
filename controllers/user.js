@@ -112,43 +112,68 @@ module.exports = function(wsInstance) {
      * @param {ObjectId} userId The id of the user to enqueue
      */
     async function enqueueSingle(eventId, companyId, userId) {
-        let queue = await Queue.findOne({ eventId, companyId })
-        if(!queue) {
-            queue = await createQueue(eventId, companyId)
-        }
-        
-        // fail if the user is already queued
-        if(queue.members.includes(userId)) {
-            console.log('failed 1', queue._id)
-            return {
-                error: true,
-                status: 403,
-                message: 'Failed to enqueue as user is already in queue.',
-                critical: false
+        try {
+            let queue = await Queue.findOne({ eventId, companyId })
+            if(!queue) {
+                queue = await createQueue(eventId, companyId)
             }
-        }
-        
-        // fail if the user is attempting to queue more than once (not allowed)
-        console.log(queue.blacklist)
-        if(queue.blacklist.includes(userId)) {
-            console.log('failed 2', queue._id)
-            return {
-                error: true,
-                status: 403,
-                message: 'Failed to enqueue as user has previously had session with room.',
-                critical: false
+            
+            // fail if the user is already queued
+            if(queue.members.includes(userId)) {
+                console.log('failed 1', queue._id)
+                return {
+                    error: true,
+                    status: 403,
+                    message: 'Failed to enqueue as user is already in queue.',
+                    critical: false
+                }
             }
-        }
-        // add the user to the queue
-        queue.members.push(userId)
-        await queue.save()
+            
+            // fail if the user is attempting to queue more than once (not allowed)
+            console.log(queue.blacklist)
+            if(queue.blacklist.includes(userId)) {
+                console.log('failed 2', queue._id)
+                return {
+                    error: true,
+                    status: 403,
+                    message: 'Failed to enqueue as user has previously had session with room.',
+                    critical: false
+                }
+            }
+            // add the user to the queue
+            queue.members.push(userId)
+            await queue.save()
 
-        return {
-            error: false,
-            index: queue.members.length
+            return {
+                error: false,
+                index: queue.members.length
+            }
+        }
+        catch (error) {
+            return {
+                error: true,
+                critical: true,
+                message: error
+            }
         }
     }
     
+    async function dequeueAll(req, res) {
+        const queues = await Queue.find({ eventId: req.payload.eventId })
+        if(!queues) {
+            return res.status(404).json({ message: 'Failed to dequeue from all as companies were not found.' })
+        }
+        for(const queue of queues) {
+            console.log('here too')
+            const result = await dequeueSingle(req.payload.eventId, queue.companyId, req.payload._id)
+            if(result.error && result.critical) {
+                console.log(result.message)
+                return res.status(result.status).json({ message: result.message })
+            }
+        }
+        return res.status(200).json({ message: 'Successfully dequeued from all' })   
+    }
+
     /**
      * Attempt to dequeue the user represented by the payload id of the request to the queue represented by the id in req.params._id.
      * Fails if the queue cannot be found or the user is not queued.
@@ -165,26 +190,61 @@ module.exports = function(wsInstance) {
             return
         }
         try {
+            const result = await dequeueSingle(req.payload.eventId, req.params._id, req.payload._id)
+            
+            console.log('y ', result)
+            if(result.error) {
+                console.log(result.message)
+                return res.status(result.status).json({ message: result.message })
+            }
+            console.log(result.index)
+            return res.status(200).json({ message: result.message })
+        }
+        catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: error })
+        }
+    }
+
+    async function dequeueSingle(eventId, companyId, userId) {
+        try {
             // find the room in the database
-            const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.params._id })
+            const queue = await Queue.findOne({ eventId, companyId })
             if(!queue) {
-                return res.status(404).json({ message: 'Queue not found in dequeue attempt' })
+                return {
+                    error: true,
+                    status: 404,
+                    message: 'Queue not found in dequeue attempt.',
+                    critical: false
+                }
             }
             // fail if the user is not in the queue
-            const index = queue.members.indexOf(req.payload._id)
+            const index = queue.members.indexOf(userId)
             if(index == -1) {
-                return res.status(403).json({ message: 'Could not dequeue as user was not queued' })
+                return {
+                    error: true,
+                    status: 403,
+                    message: 'Could not dequeue as user was not queued.',
+                    critical: false
+                }
             }
             // remove the user from the queue
             queue.members.splice(index, 1)
             await queue.save()
-    
+
             // notify other queue members that their position in the queue may have changed
             broadcastQueueUpdate(queue)
-            return res.status(200).json({ message: 'Successfully dequeued from ' + queue.companyId })
+            return {
+                error: false,
+                message: 'Successfully dequeued from ' + queue.companyId
+            }
         }
         catch (error) {
-            return res.status(500).json({ message: error })
+            return {
+                error: true,
+                critical: true,
+                message: error
+            }
         }
     }
     
