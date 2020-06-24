@@ -21,7 +21,7 @@ module.exports = function(wsInstance) {
     router.post('/enqueue/:_id', authCtrl.asStudent, userCtrl.enqueue)
     router.post('/enqueue', authCtrl.asStudent, userCtrl.enqueueAll)
     router.post('/dequeue/:_id', authCtrl.asStudent, userCtrl.dequeue)
-    // router.post('/dequeue', authCtrl.asStudent, userCtrl.dequeueAll)
+    router.post('/dequeue', authCtrl.asStudent, userCtrl.dequeueAll)
     
     // endpoints for joining and leaving sessions
     router.post('/accept/:_id', authCtrl.asStudent, userCtrl.joinSession)
