@@ -1,5 +1,8 @@
 import React from "react";
 
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
+
 import Modal from "../UI/Modal/Modal";
 
 import errorIcon from "../../assets/icons/error.png";
@@ -13,6 +16,14 @@ This is shown when an error occurs
 */
 
 const errorPopup = (props) => {
+  //Incase the event has been reset, log the user out
+  if (props.error) {
+    if (props.error.reloginRequired) {
+      props.logout();
+    }
+  }
+
+  console.log(props.error);
   return (
     <Modal show={props.show} modalClosed={props.modalClosed}>
       <div className={classes.ErrorContainer}>
@@ -29,4 +40,11 @@ const errorPopup = (props) => {
     </Modal>
   );
 };
-export default errorPopup;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(actions.logout()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(errorPopup);
