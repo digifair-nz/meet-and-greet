@@ -12,6 +12,7 @@ module.exports = function(wsInstance) {
 
     router.post('/next', authCtrl.asCompany, companyCtrl.getNextStudent)
     router.post('/kick', authCtrl.asCompany, companyCtrl.kickStudent)
+    router.post('/status', authCtrl.asCompany, companyCtrl.getQueueStatus)
     router.get('/student-details', authCtrl.asCompany, companyCtrl.getStudentTalkJSDetails)
     // router.post('/end', companyCtrl.leaveRoom)
     

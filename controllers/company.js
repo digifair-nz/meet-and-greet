@@ -79,6 +79,15 @@ module.exports = function(wsInstance) {
         }
     }
 
+
+    async function getQueueStatus(req, res) {
+        const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
+        if(!queue) {
+            return res.status(404).json({ message: 'Could not get status as queue could not be found.' })
+        }
+        return res.status(200).json({ queueLength: queue.members.length })
+    }
+
     /**
      * Kicks the student from the given session and changes the session id so that the student is not able to reconnect, even if they have manually
      * saved their token.
@@ -333,6 +342,7 @@ module.exports = function(wsInstance) {
 
     return {
         createRoom,
+        getQueueStatus,
         kickStudent,
         getNextStudent,
         // findAndNotifyEligibleUsers,
