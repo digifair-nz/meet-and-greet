@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
+const Event = require('mongoose').model('Event')
 
 function auth(validType, failureMessage) {
-    return function(req, res, next) {
+    return async function(req, res, next) {
         const token = req.header('auth-token')
         
         if(!token) return res.status(401).json('Access denied.')
@@ -11,14 +12,24 @@ function auth(validType, failureMessage) {
 
             if(authorised.accountType == validType) {
                 req.payload = authorised
+
+                const id = (await Event.findById(authorised.eventId)).version
+                if(authorised.eventVersion != id) {
+                    return res.status(401).json({
+                        reloginRequired: true,
+                        message: 'Event has been refreshed by the administrators, please relogin.'
+                    })
+                }
+
                 next()
             }
             else {
-                return res.status(401).json(failureMessage)
+                return res.status(401).json({ message: failureMessage })
             }
+
         }
         catch(err) {
-            return res.status(400).json('Invalid token.')
+            return res.status(400).json({ message: 'Invalid token.' })
         }
     }
 }

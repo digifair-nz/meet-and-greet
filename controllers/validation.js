@@ -15,7 +15,7 @@ function isValid(schema) {
 function isValidArray(schema) {
     return function(source, res) {
         if(!source || !Array.isArray(source)) {
-            if(res) res.status(400).json('No object provided for validation.')
+            if(res) res.status(400).json({ message: 'No object provided for validation.' })
             return false
         }
         for(const s of source) {

@@ -18,6 +18,10 @@ const EventSchema = new mongoose.Schema({
     companiesAttending: {
         type: [mongoose.Types.ObjectId],
         default: []
+    },
+    version: {
+        type: Number,
+        default: 1
     }
 })
 

@@ -46,6 +46,7 @@ async function studentLogin(req, res) {
         _id: user._id,
         accountType: user.accountType,
         eventId: req.params._id,
+        eventVersion: event.version,
         port: process.env.PORT || 3000,
         name: user.name
     }, process.env.TOKEN_SECRET)
@@ -75,6 +76,7 @@ async function companyLogin(req, res) {
         _id: room._id,
         accountType: 'company',
         eventId: req.params._id,
+        eventVersion: event.version,
         name: room.name,
         companyId: room.companyId
     }, process.env.TOKEN_SECRET)
