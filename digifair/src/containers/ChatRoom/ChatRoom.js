@@ -103,7 +103,7 @@ class ChatRoom extends Component {
       loading: true,
       allowNextUser: true,
       allowKicking: false,
-      searching: false,
+      //searching: false,
       studentLeft: false,
       showTutorial: false,
       buttonClicked: false, // This is a guard to prevent multiple clicking and spamming requests
@@ -130,6 +130,10 @@ class ChatRoom extends Component {
     let seenTutorial = localStorage.getItem("seenTutorial");
 
     let searching = localStorage.getItem("searching");
+    if (searching) {
+      // Update global state
+      this.props.inviteNextStudentSuccess();
+    }
 
     let studentConnected = localStorage.getItem("studentConnected");
 
@@ -146,11 +150,12 @@ class ChatRoom extends Component {
       }, 10000);
     }
 
-    if (searching) {
-      this.setState({
-        searching: true,
-      });
-    }
+    // if (searching) {
+    //   this.setState({
+    //     searching: true,
+    //   });
+    // }
+
     if (!seenTutorial) {
       this.setState({
         showTutorial: true,
@@ -230,8 +235,10 @@ class ChatRoom extends Component {
 
             // The student has connected to the recruiter
             if (!this.props.isStudent) {
-              localStorage.setItem("studentConnected");
+              localStorage.setItem("studentConnected", true);
               localStorage.removeItem("searching");
+              this.props.stopSearch();
+
               this.props.fetchStudentData(); // Get student's data for talkJS
             }
 
@@ -248,7 +255,7 @@ class ChatRoom extends Component {
                 this.setState({
                   allowNextUser: false,
                   connections: connections,
-                  searching: false,
+                  //searching: false,
                   studentConnected: true,
                   allowKicking: true,
                   studentLeft: false,
@@ -325,6 +332,13 @@ class ChatRoom extends Component {
 
       otCore.on("sessionDisconnected", (event) => {});
     }
+
+    // Fetching the number of students queued to the recruiters' company
+    // if (!this.props.isStudent) {
+    //   setInterval(() => {
+    //     this.props.fetchQueueLength();
+    //   }, 15000);
+    // }
   }
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.isStudent) {
@@ -395,6 +409,7 @@ class ChatRoom extends Component {
             otCore.forceDisconnect(this.state.connections[i]).then(() => {
               localStorage.removeItem("studentLeft");
               localStorage.removeItem("searching");
+              this.props.stopSearch();
               localStorage.removeItem("studentConnected");
               this.props.kickStudent();
             });
@@ -408,6 +423,7 @@ class ChatRoom extends Component {
       ) {
         localStorage.removeItem("studentLeft");
         localStorage.removeItem("searching");
+        this.props.stopSearch();
         localStorage.removeItem("studentConnected");
         this.props.kickStudent();
       }
@@ -446,6 +462,7 @@ class ChatRoom extends Component {
     localStorage.removeItem("studentLeft");
 
     localStorage.removeItem("searching");
+    this.props.stopSearch();
     otCore.endCall();
     // Disconnect recruiter from the event
     // Don't allow the recruiter to leave the event unless the room is free
@@ -454,13 +471,13 @@ class ChatRoom extends Component {
   };
 
   inviteNextStudent = () => {
-    if (this.state.connections != null && !this.state.searching) {
+    if (this.state.connections != null && !this.props.searching) {
       if (this.state.connections.length < 2) {
         this.props.inviteNextStudent();
-        localStorage.setItem("searching", true);
-        this.setState({
-          searching: true,
-        });
+        // localStorage.setItem("searching", true);
+        // this.setState({
+        //   searching: true,
+        // });
       }
     }
   };
@@ -480,21 +497,34 @@ class ChatRoom extends Component {
         />
       );
 
-      nameCard = (
-        // This is the name of the person they are chatting with.
+      if (!this.state.studentLeft) {
+        nameCard = (
+          // This is the name of the person they are chatting with.
 
-        <NameCard
-          name={this.props.talkJSData.name}
-          isStudent={this.props.isStudent}
-          searching={this.state.searching}
-        />
-      );
+          <NameCard
+            name={this.props.talkJSData.name}
+            isStudent={this.props.isStudent}
+            searching={this.props.searching}
+          />
+        );
+      } else {
+        nameCard = (
+          // This is the name of the person they are chatting with.
+
+          <NameCard
+            name={this.props.talkJSData.name + " has disonnected."}
+            isStudent={this.props.isStudent}
+            searching={this.props.searching}
+          />
+        );
+      }
     } else {
       if (
-        !this.state.searching &&
+        !this.props.searching &&
         !(this.state.connections.length > 1) &&
         this.state.studentConnected &&
-        !this.props.isStudent
+        !this.props.isStudent &&
+        this.state.studentLeft
       ) {
         nameCard = (
           // This is the name of the person they are chatting with.
@@ -502,16 +532,16 @@ class ChatRoom extends Component {
           <NameCard
             name={this.props.talkJSData.name + " has disonnected."}
             isStudent={this.props.isStudent}
-            searching={this.state.searching}
+            searching={this.props.searching}
           />
         );
-      } else if (this.state.searching) {
+      } else if (this.props.searching) {
         nameCard = (
           // This is the name of the person they are chatting with.
 
           <NameCard
             isStudent={this.props.isStudent}
-            searching={this.state.searching}
+            searching={this.props.searching}
           />
         );
       } else {
@@ -549,7 +579,9 @@ class ChatRoom extends Component {
         {!this.props.isStudent ? (
           <InfoCard
             eventName={this.props.event.eventName}
-            queuedStudentsNum={12}
+            queuedStudentsNum={
+              this.props.queueLength ? this.props.queueLength : 999
+            }
             eventExpiration={this.props.event.eventExpiration}
             startTimer={this.state.connections.length > 1}
           />
@@ -565,7 +597,7 @@ class ChatRoom extends Component {
           drawerToggleClicked={false}
           controlsLocation="ChatRoom"
         >
-          {this.state.loading ? (
+          {this.state.loading || this.props.loading ? (
             <Aux>
               <Spinner spinnerColor="White" />
             </Aux>
@@ -591,7 +623,7 @@ class ChatRoom extends Component {
                     // !this.state.allowNextUser ||
                     // this.state.allowKicking ||
                     //!this.state.searching
-                    this.state.studentConnected || this.state.searching
+                    this.state.studentConnected || this.props.searching
                   }
                   btnType="Success"
                 >
@@ -605,7 +637,7 @@ class ChatRoom extends Component {
                   // // this.state.connections.length < 2 ||
                   // // !this.state.allowKicking ||
                   // // !this.state.studentLeft
-                  this.state.searching || !this.state.studentConnected
+                  this.props.searching || !this.state.studentConnected
                 }
                 clicked={this.kickStudent}
                 btnType="Danger"
@@ -664,14 +696,24 @@ class ChatRoom extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    credentials: state.user.credentials,
     isStudent: state.user.isStudent,
+
+    credentials: state.user.credentials,
+    talkJSData: state.user.talkJSData,
+
+    event: state.event,
+
     myName: state.user.name,
     myId: state.user.id,
-    talkJSData: state.user.talkJSData,
-    loadingTextChat: state.user.loading,
+
+    queueLength: state.user.queueLength,
+
     error: state.user.error,
-    event: state.event,
+
+    // Loading when request is made
+    loading: state.user.loading,
+
+    searching: state.user.searching,
   };
 };
 
@@ -681,8 +723,11 @@ const mapDispatchToProps = (dispatch) => {
     studentLeaveSession: () => dispatch(actions.studentLeaveChatroom()),
     kickStudent: () => dispatch(actions.kickStudent()),
     inviteNextStudent: () => dispatch(actions.inviteNextStudent()),
+    inviteNextStudentSuccess: () =>
+      dispatch(actions.inviteNextStudentSuccess()),
+    stopSearch: () => dispatch(actions.stopSearch()),
     fetchStudentData: () => dispatch(actions.fetchStudentData()),
-    fetchQueuedStudentsNum: () => dispatch(actions.fetchQueuedStudentsNum()),
+    fetchQueueLength: () => dispatch(actions.fetchQueueLength()),
     clearError: () => dispatch(actions.clearError()),
   };
 };

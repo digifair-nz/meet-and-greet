@@ -89,6 +89,8 @@ export const inviteNextStudent = () => {
       .then((response) => {
         console.log(response);
 
+        // Save the fact that the recruiter is now searching
+        localStorage.setItem("searching", true);
         dispatch(inviteNextStudentSuccess());
       })
       .catch((err) => {
@@ -96,6 +98,13 @@ export const inviteNextStudent = () => {
 
         dispatch(inviteNextStudentFail(err.response.data));
       });
+  };
+};
+
+// If the student joins, change state searching to false
+export const stopSearch = () => {
+  return {
+    type: actionTypes.STOP_SEARCH,
   };
 };
 
@@ -155,40 +164,54 @@ export const fetchStudentData = () => {
  * This is executed on some interval or on page load.
  *
  */
-export const fetchQueuedStudentsNumStart = () => {
+export const fetchQueueLengthStart = () => {
   return {
-    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_START,
+    type: actionTypes.FETCH_QUEUE_LENGTH_START,
   };
 };
-export const fetchQueuedStudentsNumSuccess = (queuedStudentsNum) => {
+export const fetchQueueLengthSuccess = (queuedStudentsNum) => {
   return {
-    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_SUCCESS,
+    type: actionTypes.FETCH_QUEUE_LENGTH_SUCCESS,
     queuedStudentsNum: queuedStudentsNum,
   };
 };
-export const fetchQueuedStudentsNumFail = (error) => {
+export const fetchQueueLengthFail = (error) => {
   return {
-    type: actionTypes.FETCH_QUEUED_STUDENTS_NUM_FAIL,
+    type: actionTypes.FETCH_QUEUE_LENGTH_FAIL,
     error: error,
   };
 };
 
-export const fetchQueuedStudentsNum = () => {
+export const fetchQueueLength = () => {
   return (dispatch) => {
-    dispatch(fetchQueuedStudentsNumStart());
+    dispatch(fetchQueueLengthStart());
 
     axios
-      .get("/company/student-details/")
+      .get("/company/status/")
       .then((response) => {
         console.log(response);
 
-        dispatch(
-          fetchQueuedStudentsNumSuccess(response.data.queuedStudentsNum)
-        );
+        //roomIsSearching -- >
+
+        // If the recruiter is searching
+        if (response.data.roomIsSearching) {
+          if (!localStorage.getItem("searching")) {
+            localStorage.setItem("searching", true);
+          }
+        }
+
+        // If the recruiter is in session with a student
+        if (response.data.roomHasSessionPartner) {
+          if (!localStorage.getItem("studentConnected")) {
+            localStorage.setItem("studentConnected", true);
+          }
+        }
+
+        dispatch(fetchQueueLengthSuccess(response.data.queueLength));
       })
       .catch((err) => {
         console.log(err);
-        dispatch(fetchQueuedStudentsNumFail(err.response.data));
+        dispatch(fetchQueueLengthFail(err.response.data));
       });
   };
 };

@@ -26,8 +26,10 @@ export { studentJoinChatroom, studentLeaveChatroom } from "./studentChatroom";
 export {
   kickStudent,
   inviteNextStudent,
+  inviteNextStudentSuccess,
   fetchStudentData,
-  fetchQueuedStudentsNum,
+  fetchQueueLength,
+  stopSearch,
 } from "./recruiterChatroom";
 
 // Clear any errors in the state

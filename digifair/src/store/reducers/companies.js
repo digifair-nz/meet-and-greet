@@ -232,12 +232,6 @@ const updateQueuePosition = (state, action) => {
   return updateObject(state, { companies: updatedCompanies });
 };
 
-// Disable queueing to a company that prompted ready check that the student declined or didn't respond
-
-const temporaryQueueDisable = (state, action) => {};
-
-const queueEnable = (state, action) => {};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     //refractor

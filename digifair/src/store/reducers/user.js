@@ -25,7 +25,7 @@ const initialState = {
   id: null,
   talkJSData: null, // for text chat (talk js)
   searching: false,
-  queuedStudentsNum: null, // for recruiters --> Displays number of students queued for their company
+  queueLength: null, // for recruiters --> Displays number of students queued for their company
 };
 
 /***********************************************
@@ -174,6 +174,7 @@ const recruiterInviteNextFail = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
+    searching: false,
   });
 };
 
@@ -209,7 +210,7 @@ const fetchQueuedStudentsNumStart = (state, action) => {
 const fetchQueuedStudentsNumSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
-    talkJSData: action.queuedStudentsNum,
+    queueLength: action.queueLength,
   });
 };
 
@@ -263,6 +264,10 @@ const reducer = (state = initialState, action) => {
       return recruiterInviteNextSuccess(state, action);
     case actionTypes.INVITE_NEXT_STUDENT_FAIL:
       return recruiterInviteNextFail(state, action);
+    case actionTypes.STOP_SEARCH:
+      return updateObject(state, {
+        searching: false,
+      });
     //--------- RECRUITER GETTING STUDENT'S INFORMATION ----------------
     case actionTypes.FETCH_STUDENT_DATA_START:
       return fetchStudentDataStart(state, action);
@@ -273,11 +278,11 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLEAR_ERROR:
       return updateObject(state, { error: null });
     //--------- RECRUITER GETTING NUMBER OF STUDENTS QUEUED FOR THEIR COMPANY ----------------
-    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_START:
+    case actionTypes.FETCH_QUEUE_LENGTH_START:
       return fetchQueuedStudentsNumStart(state, action);
-    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_SUCCESS:
+    case actionTypes.FETCH_QUEUE_LENGTH_SUCCESS:
       return fetchQueuedStudentsNumSuccess(state, action);
-    case actionTypes.FETCH_QUEUED_STUDENTS_NUM_FAIL:
+    case actionTypes.FETCH_QUEUE_LENGTH_FAIL:
       return fetchQueuedStudentsNumFail(state, action);
 
     default:
