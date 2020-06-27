@@ -1,9 +1,19 @@
 import * as actionTypes from "../actions/actionTypes";
+import cloneDeep from "lodash/cloneDeep";
 
 import { updateObject } from "../utility";
-const initialState = {
-  /// REFRACTOR FOR IS QUEUED?
 
+/*
+
+This reducer is responsible for the companies slice of the state 
+which includes the companies that the student sees and can queue too
+
+It contains information necessary to queue users or dequeue them or update 
+their queue position for specific queued companies
+
+*/
+
+const initialState = {
   companies: null,
   loading: false,
   error: null,
@@ -26,12 +36,7 @@ const fetchCompaniesSuccess = (state, action) => {
 
   // Initialize
   // later this will not be needed as I am getting isQueued and hadSession from fetching companies
-  action.companies.map((company) => {
-    company.hadSession = false;
-    company.isQueued = false;
-    company.queuing = false;
-    company.queuePos = null;
-  });
+  action.companies.map((company) => (company.queuing = false));
 
   // console.log(action.companies);
   return {
@@ -52,7 +57,86 @@ const fetchCompaniesFail = (state, action) => {
 /********************
 QUEUE/DEQUEUE STUDENT 
 ********************/
-// Queue
+
+// Queue to all
+const queueToAllStart = (state, action) => {
+  // Make all the companies load
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const queueToAllSuccess = (state, action) => {
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+    for (let i = 0; i < action.companies.length; i++) {
+      // Update their queuePositions and isQueued
+
+      if (company._id === action.companies[i].queueId) {
+        company.isQueued = true;
+        company.queuePosition = action.companies[i].queuePosition;
+      }
+      //return company;
+    }
+  });
+
+  return updateObject(state, {
+    loading: false,
+
+    companies: updatedCompanies,
+  });
+};
+
+const queueToAllFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+const dequeueFromAllStart = (state, action) => {
+  // Make all the companies load
+  return updateObject(state, {
+    loading: true,
+  });
+};
+
+const dequeueFromAllSuccess = (state, action) => {
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    if (company.isQueued && !company.hadSession) {
+      company.isQueued = false;
+      company.queuePosition = null;
+    }
+  });
+
+  return updateObject(state, {
+    loading: false,
+
+    companies: updatedCompanies,
+  });
+};
+
+const dequeueFromAllFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+  });
+};
+
+// Queue for a specific company
+
+/**
+ * UpdateCompanyQueuing allows to reduce duplicate code and is used by reducer functions.
+ * @param {Object} state
+ * @param {int} index the position of the company in the company list
+ * @param {boolean} queueStatus indicates whether the company is now queuing or not
+ */
 const updateCompanyQueuing = (state, index, queueStatus) => {
   // Returns an updated company queue status
   let updatedCompanies = [...state.companies]; // shallow copy of the state array
@@ -79,7 +163,7 @@ const queueSuccess = (state, action) => {
   let updatedCompany = { ...updatedCompanies[action.index] };
 
   updatedCompany.isQueued = true;
-
+  updatedCompany.queuePosition = action.queuePosition;
   updatedCompany.queuing = false;
   updatedCompanies[action.index] = updatedCompany;
 
@@ -89,7 +173,10 @@ const queueSuccess = (state, action) => {
 const queueFail = (state, action) => {
   let updatedCompanies = updateCompanyQueuing(state, action.index, false);
 
-  return updateObject(state, { companies: updatedCompanies });
+  return updateObject(state, {
+    companies: updatedCompanies,
+    error: action.error,
+  });
 };
 
 const dequeueInit = (state, action) => {
@@ -114,7 +201,10 @@ const dequeueSuccess = (state, action) => {
 
 const dequeueFail = (state, action) => {
   let updatedCompanies = updateCompanyQueuing(state, action.index, false);
-  return updateObject(state, { companies: updatedCompanies });
+  return updateObject(state, {
+    companies: updatedCompanies,
+    error: action.error,
+  });
 };
 
 /********************
@@ -122,9 +212,11 @@ UPDATE QUEUE POSITION
 ********************/
 const updateQueuePosition = (state, action) => {
   // given companyId and queuePos, update the current position of the student for a specific company
-  let updatedCompanies = [...state.companies];
-  let updatedCompany;
 
+  let updatedCompanies = [...state.companies];
+
+  let updatedCompany;
+  // console.log(action);
   // Find a specific company
   for (let i = 0; i < updatedCompanies.length; i++) {
     if (updatedCompanies[i]._id === action.companyId) {
@@ -150,7 +242,18 @@ const reducer = (state = initialState, action) => {
       return fetchCompaniesSuccess(state, action);
     case actionTypes.FETCH_COMPANIES_FAIL:
       return fetchCompaniesFail(state, action);
-
+    case actionTypes.QUEUE_TO_ALL_START:
+      return queueToAllStart(state, action);
+    case actionTypes.QUEUE_TO_ALL_SUCCESS:
+      return queueToAllSuccess(state, action);
+    case actionTypes.QUEUE_TO_ALL_FAIL:
+      return queueToAllFail(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_START:
+      return dequeueFromAllStart(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_SUCCESS:
+      return dequeueFromAllSuccess(state, action);
+    case actionTypes.DEQUEUE_FROM_ALL_FAIL:
+      return dequeueFromAllFail(state, action);
     case actionTypes.QUEUE_INIT:
       return queueInit(state, action);
     case actionTypes.QUEUE_SUCCESS:
@@ -165,6 +268,8 @@ const reducer = (state = initialState, action) => {
       return dequeueFail(state, action);
     case actionTypes.UPDATE_QUEUE_POSITION:
       return updateQueuePosition(state, action);
+    case actionTypes.CLEAR_ERROR:
+      return updateObject(state, { error: null });
     default:
       return state;
   }

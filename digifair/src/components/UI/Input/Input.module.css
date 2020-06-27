@@ -6,7 +6,19 @@
   border-radius: 50px;
 
   position: relative;
-  height: 4vh;
+  height: 4.5vh;
+  margin-bottom: 6%;
+}
+
+.InputCompany {
+  width: 100%;
+
+  box-sizing: border-box;
+  background-color: #fff8fb;
+  border-radius: 50px;
+
+  position: relative;
+  height: 4.5vh;
   margin-bottom: 6%;
 }
 
@@ -18,13 +30,16 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #ffc4dc inset !important;
   z-index: 1;
 }
+input::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
 
 .InputElement {
   outline: none;
   border: 0px solid rgba(255, 255, 255, 0);
   background-color: rgba(255, 255, 255, 0);
   font: inherit;
-  height: 4vh;
+  height: 4.5vh;
   box-sizing: border-box;
   padding: 10px;
   display: block;
@@ -32,7 +47,7 @@ input:-webkit-autofill:active {
   border-radius: 50px;
   /* background-color: #ffc4dc; */
   width: 80%;
-  left: 4vh;
+  left: 5vh;
   top: 0;
   position: absolute;
 }
@@ -48,8 +63,8 @@ input:-webkit-autofill:active {
 /* The circular key and user icon*/
 
 .IconWrapper {
-  width: 4vh;
-  height: 4vh;
+  width: 4.5vh;
+  height: 4.5vh;
   background-color: black;
   border-radius: 50%;
   position: relative;
@@ -68,4 +83,19 @@ input:-webkit-autofill:active {
 .Invalid {
   border: 1px solid red;
   background-color: #fda49a;
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-height: 481px) {
+    .Input {
+      height: 6vh;
+    }
+    .InputElement {
+      height: 6vh;
+    }
+    .IconWrapper {
+      height: 6vh;
+      width: 6vh;
+    }
+  }
 }

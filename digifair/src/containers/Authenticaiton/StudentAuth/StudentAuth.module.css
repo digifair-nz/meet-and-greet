@@ -6,12 +6,32 @@
   width: 100%;
 }
 
+.AuthContainerCompany {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100%;
+  height: 100%;
+  width: 100%;
+  background-color: #ffc4dc;
+}
+
+
 .BackgroundIllustration {
   background-image: url("../../../assets//screen-images/auth-screen.png");
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
+  position: relative;
+}
+
+.BackgroundIllustrationCompany {
+  background-image: url("../../../assets//screen-images/auth-screen-company.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+  position: relative;
 }
 
 /*
@@ -23,11 +43,12 @@ Form - Contains the title, error message and input fields (not the button)
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 }
 
 .Logo {
-  width: 22%;
-  margin-top: 5%;
+  width: 12%;
+  margin-top: 2%;
   padding-left: 2%;
   position: absolute;
   top: 0;
@@ -55,4 +76,109 @@ Form - Contains the title, error message and input fields (not the button)
   color: rgb(211, 32, 32);
   text-align: center;
   padding-bottom: 3%;
+}
+
+.SOTLogo {
+  opacity: 0.3;
+  width: 12vw;
+  position: absolute;
+  left: 5%;
+  top: 80%;
+}
+
+
+/*DISPLAY 1920 BY DEFAULT*/
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+  *{
+    font-size: 102%;
+  }
+}
+@media (min-height: 1000px) {
+  *{
+    font-size: 102%;
+  }
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+  *{
+    font-size: 107%;
+  }
+}
+@media (min-height: 2000px) {
+  *{
+    font-size: 107%;
+  }
+}
+
+
+
+
+@media only screen and (orientation: landscape) {
+
+  @media (max-aspect-ratio: 4/3){
+    .AuthContainer {
+      grid-template-columns: 60% 40%;
+      grid-template-rows: 100%;
+      height: 100%;
+      width: 100%;
+    }
+    .AuthContainerCompany{
+      grid-template-columns: 60% 40%;
+      grid-template-rows: 100%;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1366px) {
+    /*Ipad Pro */
+    .FormContainer {
+      width: 120%;
+      justify-self: center;
+    }
+  }
+
+  @media (max-height: 481px) {
+    /*Iphone 11 PRO */
+    .Logo{
+      width: 15%;
+    }
+
+  }
+
+}
+
+@media only screen and (orientation: portrait) {
+
+  .AuthContainer{
+    grid-template-columns: 100%;
+  }
+
+  .AuthContainerCompany{
+    grid-template-columns: 100%;
+  }
+  
+  .Logo{
+    width: 22%;
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px) {
+    .FormContainer {
+      width: 135%;
+      justify-self: center;
+      bottom: 5%;
+    }
+    .Logo{
+      width: 33%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+
+  }
 }

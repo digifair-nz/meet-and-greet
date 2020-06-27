@@ -1,13 +1,102 @@
 import * as actionTypes from "./actionTypes";
 
-import axios from "../../axios-orders";
+import instance from "../../axios-instance";
 
 /*
 
-QUEUE STUDENT TO A COMPANY 
+QUEUE STUDENT TO THE COMPANIES
 
 */
 
+export const queueToAllStart = () => {
+  return {
+    type: actionTypes.QUEUE_TO_ALL_START,
+  };
+};
+
+export const queueToAllSuccess = (companies) => {
+  // This will give back an array of company objects where...
+  // [ { companyId, queuePosition}....]
+  // Are all the companies that the student has succesfully queued to.
+
+  return {
+    type: actionTypes.QUEUE_TO_ALL_SUCCESS,
+    companies: companies,
+  };
+};
+
+export const queueToAllFail = (error) => {
+  return {
+    type: actionTypes.QUEUE_TO_ALL_FAIL,
+    error: error,
+  };
+};
+
+// This will enqueue the student to all available companies
+export const queueToAll = () => {
+  return (dispatch) => {
+    dispatch(queueToAllStart());
+
+    instance
+      .post("/user/enqueue/")
+
+      .then((res) => {
+        console.log(res);
+        dispatch(queueToAllSuccess(res.data.positions));
+      })
+      .catch((error) => {
+        dispatch(queueToAllFail(error.response.data));
+      });
+  };
+};
+
+export const dequeueFromAllStart = () => {
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_START,
+  };
+};
+
+export const dequeueFromAllSuccess = (companies) => {
+  // This will give back an array of company objects where...
+  // [ { companyId, queuePosition}....]
+  // Are all the companies that the student has succesfully queued to.
+
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_SUCCESS,
+    companies: companies,
+  };
+};
+
+export const dequeueFromAllFail = (error) => {
+  return {
+    type: actionTypes.DEQUEUE_FROM_ALL_FAIL,
+    error: error,
+  };
+};
+
+// This will enqueue the student to all available companies
+export const dequeueFromAll = () => {
+  return (dispatch) => {
+    dispatch(dequeueFromAllStart());
+
+    instance
+      .post("/user/dequeue/")
+
+      .then((res) => {
+        console.log(res);
+        dispatch(dequeueFromAllSuccess());
+      })
+      .catch((error) => {
+        dispatch(dequeueFromAllFail(error.response.data));
+      });
+  };
+};
+
+/**
+ * initialize queue to a specific comapny
+ * @param {string} companyId
+ * @param {int} index which is the position of the company in the array
+ */
 export const queueInit = (companyId, index) => {
   return {
     type: actionTypes.QUEUE_INIT,
@@ -16,11 +105,12 @@ export const queueInit = (companyId, index) => {
   };
 };
 
-export const queueSuccess = (companyId, index) => {
+export const queueSuccess = (companyId, index, queuePosition) => {
   return {
     type: actionTypes.QUEUE_SUCCESS,
     companyId: companyId,
     index: index,
+    queuePosition: queuePosition,
   };
 };
 
@@ -37,54 +127,17 @@ export const queueStudent = (companyId, index) => {
   // Company id will be an alphanumeric string used for making a request to an appropriate endpoint
   // index refers to the position in the state array (companies)
 
-  return (dispatch, getState) => {
-    // We also store the companies' states in local storage
-
+  return (dispatch) => {
     dispatch(queueInit(companyId, index));
 
-    axios
+    instance
       .post("/user/enqueue/" + companyId)
 
       .then((res) => {
-        // console.log(res);
-        let response = res.data; // This is where I get my initial queue position?
-
-        // Consider alternative approach where we only push queued things into the state
-        // We push company ids into the array simply.
-
-        // Get the companies from state
-        const companies = getState().companies.companies;
-
-        // This array will contain objects where each object is the company's status
-        // let companiesStatus = [];
-
-        // // Properties of interest for filtering
-        // const status = ["_id", "hadSession", "isQueued"];
-
-        // // Go through the companies state array
-        // for (let i = 0; i < companies.length; i++) {
-        //   // Extract the company with specific properties filtered
-
-        //   companiesStatus.push(
-        //     Object.keys(companies[i])
-        //       .filter((key) => status.includes(key))
-        //       .reduce((obj, key) => {
-        //         obj[key] = companies[i][key];
-        //         return obj;
-        //       }, {})
-        //   );
-        // }
-
-        // // Update the company that is queued
-        // companiesStatus[index].isQueued = true;
-
-        // Save the company statuses
-        // localStorage.setItem("companiesStatus", companiesStatus);
-
-        dispatch(queueSuccess(companyId, index));
+        dispatch(queueSuccess(companyId, index, res.data.queuePosition));
       })
       .catch((error) => {
-        dispatch(queueFail(companyId, index, error));
+        dispatch(queueFail(companyId, index, error.response.data));
       });
   };
 };
@@ -121,48 +174,26 @@ export const dequeueFail = (companyId, index, error) => {
 };
 
 export const dequeueStudent = (companyId, index) => {
-  return (dispatch, getState) => {
-    // console.log(companyId);
+  return (dispatch) => {
     dispatch(dequeueInit(companyId, index));
 
-    axios
+    instance
       .post("/user/dequeue/" + companyId)
 
       .then((res) => {
         // console.log(res);
-        let response = res.data; // This is where I get my initial queue position?
-
-        // const companies = getState().companies.companies;
-
-        // // This array will contain objects where each object is the company's status
-        // let companiesStatus = [];
-
-        // // Properties of interest for filtering
-        // const status = ["_id", "hadSession", "isQueued"];
-
-        // // Go through the companies state array
-        // for (let i = 0; i < companies.length; i++) {
-        //   // Extract the company with specific properties filtered
-        //   companiesStatus.push(
-        //     Object.keys(companies[i])
-        //       .filter((key) => status.includes(key))
-        //       .reduce((obj, key) => {
-        //         obj[key] = companies[i][key];
-        //         return obj;
-        //       }, {})
-        //   );
-        // }
-
-        // // Update the company that is queued
-        // companiesStatus[index].isQueued = true;
-
-        // // Save the company statuses
-        // localStorage.setItem("companiesStatus", companiesStatus);
 
         dispatch(dequeueSuccess(companyId, index));
       })
       .catch((error) => {
-        dispatch(dequeueFail(companyId, index, error));
+        dispatch(dequeueFail(companyId, index, error.response.data));
       });
+  };
+};
+
+export const declineJoinChatroom = (companyId, index) => {
+  return (dispatch) => {
+    dispatch(dequeueInit(companyId, index));
+    dispatch(dequeueSuccess(companyId, index));
   };
 };

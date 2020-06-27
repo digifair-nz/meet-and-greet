@@ -1,10 +1,12 @@
 /* HAMBURGER MENU */
 .ToggleMenu {
   font-size: 15px;
-  position: relative;
+  position: absolute;
+  right: 23px;
+  top: 60px;
   display: inline-block;
   width: 2em;
-  height: 2em;
+  height: 4em;
   cursor: pointer;
   transform: rotate(180deg);
 }
@@ -57,6 +59,7 @@
   transform: translateY(0.5em);
 }
 
+
 .ToggleMenu.ActiveMenu span:before {
   transform: translateY(-0.25em) translateX(0.9em) rotate(45deg) scaleX(0.6);
 }
@@ -67,30 +70,113 @@
 
   transform: translateY(0.25em) translateX(0.4em) rotate(-45deg) scaleX(0.6);
 }
+
+
+
+
+
+
+@media (min-width: 2049px) {
+  .ToggleMenu {
+    right: 25px;
+    top: 85px;
+    transform: scale(1.5);
+  }
+  .ToggleMenu.ActiveMenu{
+    transform: rotate(180deg) scale(1.5);
+  }
+}
+
+@media (min-width: 3839px) {
+  .ToggleMenu {
+    right: 48px;
+    top: 145px;
+    transform: scale(2);
+  }
+  .ToggleMenu.ActiveMenu{
+    transform: rotate(180deg) scale(2);
+  }
+}
+
+@media (max-width: 1600px){
+  .ToggleMenu {
+    right: 13px;
+    top: 45px;
+    /* transform: scale(1.5); */
+  }
+  .ToggleMenu.ActiveMenu{
+    /* transform: rotate(180deg) scale(1.5); */
+  }
+}
+
 @media only screen and (orientation: portrait) {
   @media (max-width: 1024px) {
+    .ToggleMenu {
+      right: 21px;
+      top: 70px;
+      transform: scale(1.2);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(180deg) scale(1.2);
+    }
   }
   @media (max-width: 768px) {
+    .ToggleMenu {
+      right: 9px;
+      top: 50px;
+      transform: scale(1);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(180deg) scale(1);
+    }
   }
 
   @media (max-width: 640px) {
   }
-  @media (max-width: 414px) {
-  }
-  @media (max-width: 375px) {
+
+  @media (max-width: 481px) {
     .ToggleMenu {
-      position: fixed;
-      top: 1%;
-      right: 5%;
+      right: 21px;
+      top: -5px;
+      transform: scale(1.2);
+    }
+    .ToggleMenu.ActiveMenu{
+      transform: rotate(-90deg) scale(1.2);
     }
   }
 }
 
 @media only screen and (orientation: landscape) {
   @media (max-width: 1366px) {
+    .ToggleMenu {
+      right: 14px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
+    }
+  }
+  @media (max-width: 1152px) {
+    .ToggleMenu {
+      right: 24px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
+    }
   }
 
   @media (max-width: 1024px) {
+    .ToggleMenu {
+      right: 13px;
+      top: 45px;
+      /* transform: scale(1.2); */
+    }
+    .ToggleMenu.ActiveMenu{
+      /* transform: rotate(180deg) scale(1.2); */
+    }
   }
   @media (max-width: 896px) {
   }

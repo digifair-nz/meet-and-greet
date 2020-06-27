@@ -1,0 +1,139 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0px;
+  right: 0px;
+  bottom: 0;
+  background-color: #ffc4dc;
+  /* -webkit-transition: 0.4s;
+  transition: 0.4s; */
+  border-radius: 34px;
+
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: black;
+  /* -webkit-transition: 0.4s;
+  transition: 0.4s; */
+}
+
+
+
+input:checked + .slider {
+  background-color: #e2508b;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #e2508b;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(17.5px);
+  -ms-transform: translateX(17.5px);
+  transform: translateX(17.5px);
+}
+
+/* Rounded sliders */
+/* .slider.round {
+  border-radius: 34px;
+} */
+
+
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+.switchIconCompany {
+  width: 17px;
+  height: 17px;
+  position: absolute;
+
+  top: 25%;
+  right: 16%;
+  bottom: 0;
+}
+
+.switchIconStudent {
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  top: 25%;
+  right: 12%;
+  bottom: 0;
+  top: 27%;
+  left: 15%;
+}
+
+.switchContainer {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+  /* grid-template-columns: 50% 20%; */
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+}
+.switchTitle {
+  white-space: nowrap;
+  padding-right: 5%;
+  width: 75%;
+}
+
+@media (min-width: 1500px){
+  input:checked + .slider:before {
+    -webkit-transform: translateX(19px);
+    -ms-transform: translateX(19px);
+    transform: translateX(19px);
+  }
+  .switchIconCompany{
+    right: 14%;
+  }
+}
+
+@media (min-width: 2400px){
+  input:checked + .slider:before {
+    -webkit-transform: translateX(21px);
+    -ms-transform: translateX(21px);
+    transform: translateX(21px);
+  }
+  .switchIconCompany {
+    right: 14%;
+  }
+}
+@media (min-width: 3000px){
+  input:checked + .slider:before {
+    -webkit-transform: translateX(25px);
+    -ms-transform: translateX(25px);
+    transform: translateX(25px);
+  }
+  
+  .switchIconStudent {
+    left: 13%;
+  }
+  .switchIconCompany {
+    right: 15%;
+  }
+}
+

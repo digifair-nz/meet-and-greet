@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes";
-import axios from "../../axios-orders";
+import axios from "../../axios-instance";
 
 export const fetchCompaniesStart = () => {
   return {
@@ -23,22 +23,15 @@ export const fetchCompaniesSuccess = (fetchedCompanies) => {
 export const fetchCompanies = () => {
   return (dispatch) => {
     dispatch(fetchCompaniesStart());
+
     axios
-      .get(
-        "/user/"
-        // headers: {
-        //   "auth-token": localStorage.getItem("token"),
-        // },
-      )
+      .get("/user/")
       .then((response) => {
-        // localStorage.setItem("token", token);
-        // console.log(response.data);
+        console.log(response);
         dispatch(fetchCompaniesSuccess(response.data));
       })
       .catch((err) => {
-        console.log(err);
-
-        dispatch(fetchCompaniesFail("Companies could not be fetched."));
+        dispatch(fetchCompaniesFail(err.response.data));
       });
   };
 };

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
 import classes from "./Toolbar.module.css";
-import Logo from "../../../assets/company_logos/digifair-white.png";
-import LogoIcon from "../../../assets/company_logos/digifair_icon_notification.png";
+import Logo from "../../../assets/company_logos/digifair-caps-cropped-full.png";
+import LogoIcon from "../../../assets/company_logos/digifair-icon-full.png";
 
 import Backdrop from "../../UI/Backdrop/Backdrop";
 import "./ToggleMenu.css";
@@ -25,6 +25,17 @@ class Toolbar extends Component {
     active: false, // When the menu is clicked
   };
 
+  componentDidMount() {
+    window.addEventListener("keydown", (e) => {
+      if (e.keyCode === 27) {
+        this.setState({
+          active: false,
+          menuClass: "ToggleMenu",
+        });
+      }
+    });
+  }
+
   // Refractor toggle button
   onMenuClick = () => {
     let className = "ToggleMenu";
@@ -38,6 +49,9 @@ class Toolbar extends Component {
       active: !this.state.active,
     });
   };
+
+  closeMenu = () => {};
+
   render() {
     // If the toolbar is minimized than logo is replaced with the icon
 
@@ -49,16 +63,15 @@ class Toolbar extends Component {
       add = classes.ChatRoom;
     }
 
-    // Toggle between an icon and a full logo for Digifair
-    let logo = !this.state.active ? (
-      <img
-        alt="Digifair White Icon"
-        className={classes.LogoIcon}
-        src={LogoIcon}
-      />
-    ) : (
-      <img alt="Digifair White logo" className={classes.Logo} src={Logo} />
-    );
+    // Toggle between an icon and a full logo for Digifair (by default show minimized logo)
+    let fullLogo = "none";
+
+    let logoIcon = "block";
+
+    if (this.state.active) {
+      logoIcon = "none";
+      fullLogo = "block";
+    }
 
     // Determines width and visability of children
     let toolbarClass = classes.ToolbarMin;
@@ -68,11 +81,21 @@ class Toolbar extends Component {
     return (
       <Aux>
         <header className={toolbarClass}>
-          {logo}
+          <img
+            style={{ display: logoIcon }}
+            alt="Digifair White Icon"
+            className={classes.LogoIcon}
+            src={LogoIcon}
+          />
+          <img
+            style={{ display: fullLogo }}
+            alt="Digifair White logo"
+            className={classes.Logo}
+            src={Logo}
+          />
           <div className={this.state.menuClass} onClick={this.onMenuClick}>
             <span></span>
           </div>
-
           <div className={classes.ControlsContainer + " " + add}>
             {/*Make this a child prop to allow for different buttons? */}
             {
@@ -83,8 +106,9 @@ class Toolbar extends Component {
           </div>
           <span className={classes.CreditsTitle}>Credits</span>
         </header>
-        {/* Dim the background when the menu opens */}
-        <Backdrop show={this.state.active} />
+
+        {/* Dim the background when the menu opens and close the menu when background is clicked*/}
+        <Backdrop show={this.state.active} clicked={this.onMenuClick} />
       </Aux>
     );
   }

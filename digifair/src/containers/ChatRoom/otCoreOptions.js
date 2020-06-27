@@ -20,24 +20,26 @@ export const otCoreOptions = {
     }[pubSub][type];
   },
   controlsContainer: "#controls",
-  packages: ["screenSharing"],
+  packages: ["screenSharing", "annotation"],
 
   //https://www.npmjs.com/package/opentok-accelerator-core#communication-options
   communication: {
     callProperties: null, // Using default
-    connectionLimit: null, // Possibly change to 2-3 for the production code
+    connectionLimit: 2, // Possibly change to 2-3 for the production code
   },
 
   screenSharing: {
     extensionID: "plocfffmbcclpdifaikiikgplfnepkpo",
-    annotation: true,
+    annotation: false,
+    appendControl: true,
     externalWindow: false,
     dev: true,
     screenProperties: {
       insertMode: "append",
       width: "100%",
+
       height: "100%",
-      showControls: false,
+      showControls: true,
       style: {
         buttonDisplayMode: "off",
       },
@@ -45,50 +47,64 @@ export const otCoreOptions = {
       fitMode: "cover", // Using default
     },
   },
+  annotation: {
+    colors: ["red"],
+    items: null,
+    absoluteParent: {
+      publisher: ".App-video-container",
+      subscriber: ".App-video-container",
+    },
+  },
 };
 
-/**
- * Build classes for container elements based on state
- * @param {Object} state
- */
-export const containerClasses = (state) => {
-  const { active, meta, localAudioEnabled, localVideoEnabled } = state;
-  const sharingScreen = meta ? !!meta.publisher.screen : false;
-  const viewingSharedScreen = meta ? meta.subscriber.screen : false;
-  const activeCameraSubscribers = meta ? meta.subscriber.camera : 0;
-  const activeCameraSubscribersGt2 = activeCameraSubscribers > 2;
-  const activeCameraSubscribersOdd = activeCameraSubscribers % 2;
-  const screenshareActive = viewingSharedScreen || sharingScreen;
-  return {
-    controlClass: classNames("App-control-container", { hidden: !active }),
-    localAudioClass: classNames("ots-video-control circle audio", {
-      hidden: !active,
-      muted: !localAudioEnabled,
-    }),
-    localVideoClass: classNames("ots-video-control circle video", {
-      hidden: !active,
-      muted: !localVideoEnabled,
-    }),
-    localCallClass: classNames("ots-video-control circle end-call", {
-      hidden: !active,
-    }),
-    cameraPublisherClass: classNames("video-container", {
-      hidden: !active,
-      small: !!activeCameraSubscribers || screenshareActive,
-      left: screenshareActive,
-    }),
-    screenPublisherClass: classNames("video-container", {
-      hidden: !active || !sharingScreen,
-    }),
-    cameraSubscriberClass: classNames(
-      "video-container",
-      { hidden: !active || !activeCameraSubscribers },
-      { "active-gt2": activeCameraSubscribersGt2 && !screenshareActive },
-      { "active-odd": activeCameraSubscribersOdd && !screenshareActive },
-      { small: screenshareActive }
-    ),
-    screenSubscriberClass: classNames("video-container", {
-      hidden: !viewingSharedScreen || !active,
-    }),
-  };
+export const otCoreOptions2 = {
+  streamContainers(pubSub, type, data, stream) {
+    return {
+      publisher: {
+        camera: "#cameraPublisherContainer",
+        screen: "#screenPublisherContainer",
+      },
+      subscriber: {
+        camera: "#cameraSubscriberContainer",
+        screen: "#screenSubscriberContainer",
+      },
+    }[pubSub][type];
+  },
+  controlsContainer: "#controls",
+  packages: ["screenSharing", "annotation"],
+
+  //https://www.npmjs.com/package/opentok-accelerator-core#communication-options
+  communication: {
+    callProperties: null, // Using default
+    connectionLimit: 2, // Possibly change to 2-3 for the production code
+  },
+
+  screenSharing: {
+    extensionID: "cfhdojbkjhnklbpkdaibdccddilifddb",
+    annotation: false,
+    appendControl: false,
+    controlsContainer: false,
+    externalWindow: false,
+    dev: true,
+    screenProperties: {
+      insertMode: "append",
+      width: "100%",
+
+      height: "100%",
+      showControls: true,
+      style: {
+        buttonDisplayMode: "off",
+      },
+      videoSource: "window",
+      fitMode: "cover", // Using default
+    },
+  },
+  annotation: {
+    colors: ["red"],
+    items: null,
+    absoluteParent: {
+      publisher: ".App-video-container",
+      subscriber: ".App-video-container",
+    },
+  },
 };

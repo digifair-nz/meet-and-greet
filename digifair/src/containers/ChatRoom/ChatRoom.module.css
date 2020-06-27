@@ -2,14 +2,54 @@
   display: grid;
   height: 100%;
   width: 100%;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
 }
 
 .VideoChatContainer {
-  background-color: gray;
-  margin-left: 7%;
+  background-color: white;
 }
 
 .TextChatContainer {
-  background-color: yellow;
+  background-color: white;
+}
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+    /*Ipad Pro */
+  }
+
+  @media (max-width: 768px) {
+    /*Ipad */
+  }
+  @media (max-width: 640px) {
+  }
+
+  @media (max-width: 560px) {
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px) {
+
+    /* .ChatRoomContainer {
+      display: flex;
+      flex-direction: column;
+    }*/
+
+    .VideoChatContainer {
+      margin-top: 0px;
+      padding-left: 0px;
+    }
+
+    /*
+    .TextChatContainer {
+      flex-grow: 1;
+    } */
+
+    
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+  }
 }

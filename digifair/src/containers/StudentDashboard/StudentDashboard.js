@@ -1,22 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
-import axios from "../../axios-orders";
 
 // Higher Order Components
 import Aux from "../../hoc/Auxiliary";
-import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
 // Components
 import Button from "../../components/UI/Button/Button";
 import CompanyCard from "../../components/CompanyCard/CompanyCard";
+import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
+import EventTimer from "../../components/EventTimer/EventTimer";
 import Modal from "../../components/UI/Modal/Modal";
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
-import sendNotification from "../../components/Notification/Notification";
+
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
+import StudentTutorial from "../../components/TutorialSlider/StudentTutorial/StudentTutorial";
+import digifairLogo from "../../assets/company_logos/digifair_icon_notification.png";
+import notificationSound from "../../assets/audio/anxious.mp3";
 
-import logoutIcon from "../../assets/icons/logout.png";
 // CSS
 import classes from "./StudentDashboard.module.css";
 
@@ -32,15 +34,15 @@ class StudentDashboard extends Component {
 
   It also manages the queue status by dispatching actions 
 
-
-  Author: Michael Shaimerden (michael@tadesign.co.nz)  May - 2020
   */
 
   state = {
-    q: [12, 13, 5, 3, 5],
-
-    readyCompanyIndex: 1, // company ready to chat
+    readyCompanyIndex: null, // company ready to chat
     showReadyPromptPopUp: false,
+    //permissionGranted: true,
+    isQueuedToAll: false,
+    buttonClicked: false,
+    showTutorial: true,
   };
 
   // Set default tab title on mounting
@@ -48,57 +50,191 @@ class StudentDashboard extends Component {
   // Get push notifications here
   // Change back to default
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return nextProps.token != this.props.token;
+  // }
+
   componentDidMount() {
-    // Company cards
-
-    this.props.fetchCompanies();
-
     console.log("[STUDENT DASHBOARD] Mounted");
+    const audio = new Audio(notificationSound);
 
-    document.title = "Dashboard";
+    // Tutorial
 
-    // Open a socket connection
-    // This page is only accessible to authenticated users but double check before making a connection
-    if (this.props.token !== null) {
-      const ws = new WebSocket(
-        "ws://localhost:3000/?token=" + this.props.token
-      );
-      console.log(ws);
-
-      console.log("Socket Connection Opened!");
-      ws.onmessage = function (message) {
-        // dispatch update queue position
-        console.log(message);
-      };
+    if (localStorage.getItem("seenTutorial")) {
+      this.setState({
+        showTutorial: true,
+      });
     }
-    // Notification
-    // let notificationGranted;
-    // Notification.requestPermission().then(function (result) {
-    //   notificationGranted = result;
-    // });
 
-    // // Maybe if they click on the notification it treats it as accept?
+    if (this.props.isStudent) {
+      this.props.fetchCompanies();
 
-    // // ****READY POP UP*****
-    // setTimeout(() => {
-    //   if (notificationGranted) {
-    //     // Notification
-    //     const title = "Your Queue is Ready!";
-    //     const body = "Google is ready for you. Accept or decline your queue";
-    //     sendNotification(title, body);
-    //   }
-    //   this.setState({
-    //     showReadyPromptPopUp: true,
-    //   });
-    // }, 10000);
+      document.title = "Dashboard";
+
+      // Notification for ready check
+      let notificationGranted;
+      if (typeof Notification !== "undefined") {
+        Notification.requestPermission().then(function (result) {
+          notificationGranted = result;
+        });
+      } else {
+        notificationGranted = true;
+      }
+
+      // Open a socket connection
+      // This page is only accessible to authenticated users but double check before making a connection
+      if (this.props.token !== null) {
+        // Check that we haven't connected to the socket before
+
+        var ws = new WebSocket(
+          "ws://localhost:3000/?token=" + this.props.token
+          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+        );
+
+        setInterval(() => {
+          ws.send(
+            JSON.stringify({
+              messageType: "ping",
+            })
+          );
+        }, 30000);
+
+        // console.log("Socket Connection Opened!");
+        ws.onmessage = (message) => {
+          // dispatch update queue position
+          //console.log(message);
+          const packet = JSON.parse(message.data);
+          //console.log(packet.messageType);
+          if (this.props.companies !== null && packet.companyId !== null) {
+            // console.log(packet.companyId);
+
+            // Once the student reaches his turn
+            if (packet.messageType === "ready") {
+              // Find the company that is ready to chat and set the pop up
+              for (let i = 0; i < this.props.companies.length; i++) {
+                if (this.props.companies[i]._id === packet.companyId) {
+                  this.setState({
+                    readyCompanyIndex: i,
+                    showReadyPromptPopUp: true,
+                  });
+                  // Wait 10 seconds before closing the pop up.
+
+                  // ****READY POP UP*****
+                  if (notificationGranted) {
+                    // Notification
+                    const title = "Your Queue is Ready!";
+                    const body =
+                      "Google is ready for you. Accept or decline your queue";
+                    //sendNotification(title, body);
+
+                    let notification = new Notification(title, {
+                      body: body,
+                      icon: digifairLogo,
+                    });
+
+                    audio.play();
+
+                    notification.onclick = () => {
+                      document.title = "Dashboard";
+                      window.focus(); // Redirects to the window
+                    };
+                    document.title = "Digifair (1)";
+                  }
+
+                  break;
+                }
+              }
+            } else {
+              // Otherwise update queue position for the specific company
+              this.props.updateQueuePosition(
+                packet.companyId,
+                packet.queuePosition
+              );
+            }
+          }
+
+          console.log(message);
+        };
+      }
+    }
   }
 
+  showTutorial = () => {
+    this.setState({
+      showTutorial: true,
+    });
+  };
+  closeTutorial = () => {
+    localStorage.setItem("seenTutorial", true);
+    this.setState({
+      showTutorial: false,
+    });
+  };
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
     document.title = "Dashboard"; // Change back from notification tab name
+
+    //Temporarily disable the company he declined.
+
     this.setState({
       showReadyPromptPopUp: false,
+      readyCompanyIndex: null,
     });
+  };
+
+  // onAcceptHandler = () => {
+  //   //document.title = "Dashboard"; // Change back from notification tab name
+
+  //   //Temporarily disable the company he declined.
+
+  //   this.setState({
+  //     showReadyPromptPopUp: false,
+  //     readyCompanyIndex: null,
+  //   });
+  // };
+
+  errorConfirmedHandler = () => {
+    this.props.clearError();
+  };
+
+  dequeueFromAll = () => {
+    let flag = false;
+    //Check if the student has eligible companies to dequeue from
+    for (let i = 0; i < this.props.companies.length; i++) {
+      if (
+        this.props.companies[i].isQueued &&
+        !this.props.companies[i].hadSession
+      ) {
+        flag = true;
+      }
+    }
+
+    if (flag && this.state.isQueuedToAll) {
+      this.setState({
+        isQueuedToAll: false,
+      });
+      this.props.dequeueFromAll();
+    }
+  };
+
+  queueToAll = () => {
+    let flag = false;
+    //Check if the student has eligible companies to queue for
+    for (let i = 0; i < this.props.companies.length; i++) {
+      if (
+        !this.props.companies[i].isQueued &&
+        !this.props.companies[i].hadSession
+      ) {
+        flag = true;
+      }
+    }
+
+    if (flag && !this.state.isQueuedToAll) {
+      this.setState({
+        isQueuedToAll: true,
+      });
+      this.props.queueToAll();
+    }
   };
 
   // Fetch companies logic and spinner
@@ -119,21 +255,28 @@ class StudentDashboard extends Component {
             logo={company.logoURL}
             key={company._id}
             hadSession={company.hadSession}
-            queuePosition={this.state.q[index]}
+            queuePosition={company.queuePosition}
             onInfoClick={(event) => this.showInfoPopup(event, index)}
             queuing={company.queuing}
             description={company.description}
           />
         );
       });
+    }
+
+    if (this.state.readyCompanyIndex !== null) {
       readyCheckPopUp = (
         <Aux>
           <Modal show={this.state.showReadyPromptPopUp}>
             <ReadyCheckPrompt
               logo={this.props.companies[this.state.readyCompanyIndex].logoURL}
               companyId={this.props.companies[this.state.readyCompanyIndex]._id}
-              onClick={this.onClickModal}
+              companyName={
+                this.props.companies[this.state.readyCompanyIndex].name
+              }
+              //onClick={this.onClickModal}
               onDeclineHandler={this.onDeclineHandler}
+              // onAcceptHandler={this.onAcceptHandler}
               index={this.state.readyCompanyIndex}
             />
           </Modal>
@@ -141,28 +284,50 @@ class StudentDashboard extends Component {
       );
     }
 
-    if (this.props.error) {
-      companyCards = (
-        <h1 className={classes.ErrorMessage}>{this.props.error}</h1>
-      );
-    }
     return (
       <Aux>
+        <StudentTutorial
+          closeTutorial={this.closeTutorial}
+          showTutorialSlider={this.state.showTutorial}
+        />
+        <ErrorPopup
+          show={this.props.error}
+          modalClosed={this.errorConfirmedHandler}
+          error={this.props.error}
+        />
         <Toolbar
           isAuth={true}
           drawerToggleClicked={false}
           controlsLocation="StudentDashboard"
         >
-          <Button btnType="Control">Queue All</Button>
-          <Button btnType="Control">Dequeue All</Button>
-          <Button iconType="Logout" btnType="Logout">
+          <Button btnType="Control" clicked={this.showTutorial}>
+            Tutorial
+          </Button>
+          <Button
+            disabled={this.state.isQueuedToAll}
+            btnType="Control"
+            clicked={this.queueToAll}
+          >
+            Queue All
+          </Button>
+          <Button clicked={this.dequeueFromAll} btnType="Control">
+            Dequeue All
+          </Button>
+          <Button
+            clicked={this.props.logout}
+            iconType="Logout"
+            btnType="Logout"
+          >
             Logout
           </Button>
         </Toolbar>
 
         <div className={classes.Event}>
-          {/* <h1 className={classes.EventTitle}>CV Clinic July 2020</h1>
-          <h1 className={classes.EventTime}>Event Timer : Live Participants</h1> */}
+          <div className={classes.BackgroundMask}></div>
+          <h1 className={classes.EventTitle}>{this.props.event.eventName}</h1>
+          <h1 className={classes.EventTime}>
+            <EventTimer eventExpiration={this.props.event.eventExpiration} />
+          </h1>
           <div className={classes.CompanyCardContainer}>{companyCards}</div>
         </div>
         {readyCheckPopUp}
@@ -176,17 +341,23 @@ const mapStateToProps = (state) => {
   return {
     companies: state.companies.companies,
     error: state.companies.error,
-    token: state.studentAuth.token,
+    token: state.user.token,
+    credentials: state.user.credentials,
+    event: state.event,
+    isStudent: state.user.isStudent,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCompanies: () => dispatch(actions.fetchCompanies()),
+    updateQueuePosition: (companyId, queuePosition) =>
+      dispatch(actions.updateQueuePosition(companyId, queuePosition)),
+    logout: () => dispatch(actions.logout()),
+    clearError: () => dispatch(actions.clearError()),
+    queueToAll: () => dispatch(actions.queueToAll()),
+    dequeueFromAll: () => dispatch(actions.dequeueFromAll()),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withErrorHandler(StudentDashboard, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(StudentDashboard);

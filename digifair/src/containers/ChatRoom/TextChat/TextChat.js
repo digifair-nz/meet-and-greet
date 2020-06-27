@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+
 import Talk from "talkjs";
 
 class TextChat extends Component {
@@ -9,33 +9,36 @@ class TextChat extends Component {
     this.inbox = undefined;
   }
 
+  // shouldComponentUpdate() {
+
+  // }
   componentDidMount() {
     // Promise can be `then`ed multiple times
     Talk.ready
       .then(() => {
         const me = new Talk.User({
-          id: "123415231",
-          name: "George Looney",
+          id: this.props.id,
+          name: this.props.name,
           role: "Student",
-          email: "george@looney.net",
+          // email: "george@looney.net",
 
-          welcomeMessage: "Hey there! How are you? :-)",
+          welcomeMessage: null,
         });
 
         if (!window.talkSession) {
           window.talkSession = new Talk.Session({
-            appId: "tlKy3Mz6",
+            appId: this.props.talkJSData.appId,
             me: me,
           });
         }
 
         const other = new Talk.User({
-          id: "543121",
-          name: "John Motor",
+          id: this.props.talkJSData.id,
+          name: this.props.talkJSData.name,
           role: "Recruiter",
-          email: "ronald@teflon.com",
+          // email: "ronald@teflon.com",
 
-          welcomeMessage: "Hey there! Love to chat :-)",
+          welcomeMessage: null,
         });
 
         // You control the ID of a conversation. oneOnOneId is a helper method that generates
@@ -48,14 +51,9 @@ class TextChat extends Component {
         conversation.setParticipant(me);
         conversation.setParticipant(other);
 
-        this.inbox = window.talkSession.createInbox({
-          selected: conversation,
-          showFeedHeader: false,
+        this.inbox = window.talkSession.createPopup(conversation);
 
-          // showChatHeader: false,
-        });
-
-        this.inbox.setFeedFilter();
+        // this.inbox.setFeedFilter();
         this.inbox.mount(this.container);
       })
       .catch((e) => console.error(e));
@@ -73,9 +71,7 @@ class TextChat extends Component {
         <div
           style={{ height: "100%", width: "100%" }}
           ref={(c) => (this.container = c)}
-        >
-          Loading...
-        </div>
+        ></div>
       </span>
     );
   }

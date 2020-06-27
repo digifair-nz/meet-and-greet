@@ -1,0 +1,72 @@
+.Countdown {
+    position: relative;
+    margin: auto;
+    /* margin-top: 100px; */
+    height: 80px;
+    width: 80px;
+    text-align: center;
+}
+
+.CountdownNumber {
+    color: red;
+    display: inline-block;
+    line-height: 80px;
+    font-size: 25px;
+    animation-name: NumberAnimation;
+    /* animation-duration: 10s; */
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+svg circle {
+    stroke-dasharray: 226px;
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 8px;
+    /* stroke: lightgray; */
+    fill: none;
+    animation-name: CountdownAnimation;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+        /* animation: CountdownAnimation 10s linear 1 forwards; */
+    /* animation-iteration-count: 1 */
+}
+
+
+@keyframes CountdownAnimation {
+    0% {
+        stroke-dashoffset: 0px;
+        stroke: green;
+    }
+    50% {
+        stroke-dashoffset: 113px;
+        stroke: orangered;
+    }
+    100% {
+        stroke-dashoffset: 226px;
+        stroke: red;
+    }
+}
+
+
+@keyframes NumberAnimation {
+    0% {
+        color: black;
+    }
+    33% {
+        color: black;
+    }
+    100% {
+        color: red;
+    }
+}
+
+

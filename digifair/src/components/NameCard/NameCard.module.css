@@ -1,0 +1,161 @@
+.NameCardContainer {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  align-items: center;
+  width: auto;
+  height: 8%;
+  background-color: rgba(255, 255, 255, 1);
+  padding-left: 5%;
+  padding-right: 5%;
+  opacity: 0.5;
+  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 2s; /* Firefox < 16 */
+  -ms-animation: fadein 2s; /* Internet Explorer */
+  -o-animation: fadein 2s; /* Opera < 12.1 */
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+.userIcon {
+  width: 4vh;
+  height: 4vh;
+  display: block;
+  position: relative;
+}
+
+.SearchingTitle {
+  margin-left: 20px;
+}
+
+
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+}
+
+/*
+
+16:9 aspect ratio resolutions: 1024×576, 1152×648, 1280×720, 1366×768, 1600×900, 1920×1080, 2560×1440 and 3840×2160
+*/
+
+@media only screen and (orientation: portrait) {
+  @media (max-width: 1024px) {
+    /*Ipad Pro */
+  }
+
+  @media (max-width: 768px) {
+    /*Ipad */
+  }
+  @media (max-width: 640px) {
+  }
+
+  @media (max-width: 560px) {
+  }
+
+  /*480px is max phone size*/
+  @media (max-width: 481px) {
+    .NameCardContainer{
+      top: 12%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    /*Iphone X */
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 2560px) {
+  }
+
+  @media (max-width: 1920px) {
+  }
+
+  @media (max-width: 1600px) {
+  }
+
+  @media (max-width: 1366px) {
+  }
+  @media (max-width: 1280px) {
+  }
+
+  @media (max-width: 1152px) {
+  }
+
+  @media (max-width: 1024px) {
+    /*Ipad */
+  }
+
+  @media (max-width: 896px) {
+    /*Iphone 11 PRO */
+  }
+
+  @media (max-width: 823px) {
+  }
+
+  @media (max-width: 812px) {
+  }
+
+  @media (max-width: 736px) {
+  }
+}

@@ -7,12 +7,19 @@ import userIcon from "../../../assets/icons/white-user.png";
 const input = (props) => {
   const inputClasses = [classes.InputElement];
 
+  let autoCompleteType = "email";
+
+  if (props.elementConfig.type === "password") {
+    autoCompleteType = "current-password";
+  }
+
   let inputElement = (
     <input
       className={inputClasses.join(" ")}
       {...props.elementConfig}
       value={props.value}
       onChange={props.changed}
+      autoComplete={autoCompleteType}
     />
   );
 
@@ -34,8 +41,9 @@ const input = (props) => {
     alt = "User icon";
   }
 
+
   return (
-    <div className={classes.Input}>
+    <div className={props.isStudent ? classes.Input : classes.InputCompany}>
       <div className={classes.IconWrapper}>
         <img alt={alt} className={classes.InputIcon} src={icon} />
       </div>

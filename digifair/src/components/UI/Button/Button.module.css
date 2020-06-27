@@ -15,6 +15,7 @@
   margin: 2%;
   position: relative;
   transition: ease-in-out 100ms;
+  /* height: 70px; */
 }
 /* .Button:hover {
   transform: scale(1.1);
@@ -47,6 +48,7 @@ ADD MORE ANIMATION HERE
 .Button:disabled {
   color: #ccc;
   cursor: not-allowed;
+  background-color: #2c4f1b;
 }
 
 .Control {

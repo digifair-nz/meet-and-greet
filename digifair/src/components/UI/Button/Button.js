@@ -2,7 +2,7 @@ import React from "react";
 
 import classes from "./Button.module.css";
 
-import logoutIcon from "../../../assets/icons/logout.png";
+// import logoutIcon from "../../../assets/icons/logout.png";
 // The btnType refers to the class of the button which will change it's appearence
 // The iconType has the following options: "None"(default),"Logout","Queue","Dequeue"
 const button = (props) => {
@@ -16,6 +16,7 @@ const button = (props) => {
   return (
     <button
       disabled={props.disabled}
+      style={props.btnStyle}
       className={[classes.Button, classes[props.btnType]].join(" ")}
       onClick={props.clicked}
     >
