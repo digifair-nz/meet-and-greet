@@ -1,0 +1,426 @@
+.SliderContainer {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto", sans-serif;
+  /* padding: 10%; */
+  padding-bottom: 10%;
+  position: relative;
+  background-color: white;
+  border-radius: 25px;
+}
+
+.SliderContainer:before,
+.SliderContainer:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(
+    45deg,
+    #e2508b,
+    #e2508b,
+    #ff0067,
+    #ff0067,
+    blue,
+    #ff0067,
+    #e2508b,
+    #ff0067,
+    #e2508b,
+    #e2508b
+  );
+  background-size: 400%;
+  width: 100%;
+  height: 100%;
+
+  z-index: -1;
+  border-radius: 25px;
+  animation: glow 20s linear infinite;
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.SliderContainer:after {
+  filter: blur(30px);
+}
+
+.SlideTitle {
+  text-transform: uppercase;
+  font-family: "Roboto", sans-serif;
+  font-family: 14px;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+/* 
+
+Slider Counter (shows what slide you are on and how many are in total)
+
+*/
+.SlideCounter {
+  position: absolute;
+  top: 5%;
+  font-weight: 500;
+  font-size: 20px;
+  right: 5%;
+}
+
+/* 
+
+Control Buttons (Next and Previous)
+
+*/
+
+.ControlButtonNext {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  background-color: black;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  border: none;
+  padding: 2% 3%;
+  margin-left: auto;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 2.5px;
+  margin-right: auto;
+}
+.ControlButtonNext:focus {
+  outline: none;
+}
+
+.ControlButtonPrev {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  background-color: black;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  border: none;
+  padding: 2% 3%;
+  margin-left: auto;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 2.5px;
+  margin-right: auto;
+}
+.ControlButtonPrev:focus {
+  outline: none;
+}
+
+/* 
+
+Slide 1 - Intro slider
+
+*/
+.RelaxedWorkerImage {
+  width: 30%;
+  padding-top: 5%;
+}
+
+/* 
+
+Slide 2 - Disonnecting and Inviting Users
+
+*/
+
+.DigifairCompanyCard {
+  width: 30%;
+
+  padding: 5%;
+}
+
+/*
+ DEFAULT CLASS ( STUDENT NOT QUEUED ) 
+*/
+.CompanyCard {
+  width: 30vh;
+
+  height: 15vh;
+  display: flex;
+  animation: fadein 0.5s linear;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  cursor: url("../../../assets/icons/enter-door.png"), auto;
+  animation: fadeIn ease 1s;
+}
+
+.CompanyCard:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.CompanyLogo {
+  width: 50%;
+}
+
+.CardHeader {
+  position: absolute;
+  top: 0;
+
+  width: 100%;
+}
+
+.InfoIcon {
+  height: 20px;
+
+  padding: 3%;
+  position: absolute;
+  left: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+.StatusCircle {
+  height: 19px;
+  border-radius: 100%;
+  width: 19px;
+  background-color: #4cc911;
+  position: absolute;
+  margin: 3%;
+  right: 0;
+}
+
+.QueuePosition {
+  padding-left: 5px;
+  animation: fadeIn ease 0.5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.Slide1 {
+  text-align: center;
+}
+
+.IconText {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.GreenCircle {
+  height: 17px;
+  width: 17px;
+  background-color: #4cc911;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.SliderInfoIcon {
+  height: 17px;
+  width: 17px;
+
+  margin-right: 10px;
+}
+
+.ButtonContainer {
+  width: 100%;
+  height: 100%;
+
+  text-align: left;
+  padding-top: 10%;
+  padding-bottom: 5%;
+  display: grid;
+  grid-template-columns: 30% 50%;
+  grid-template-rows: 50% 50%;
+  justify-content: center;
+  align-items: center;
+  row-gap: 10%;
+}
+.ButtonText {
+  padding-left: 10%;
+}
+
+.ButtonSize {
+  height: 5vh;
+}
+.Button {
+  background-color: #bf3b33;
+  border: none;
+  color: white;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5%;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+}
+
+.Button:focus {
+  outline: none;
+}
+.TextContainer {
+  padding: 0% 10% 5% 10%;
+  line-height: 2;
+}
+
+/* 
+
+Slide 5 - Webcam and Microphone
+
+*/
+.BrowserPrompt {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-top: 2%;
+  width: 30%;
+  margin-bottom: 2%;
+}
+
+/* 
+
+Slide 6 - Video Controls
+
+*/
+
+.VideoControlsContainer {
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  grid-row: 100%;
+  grid-column-gap: 20%;
+  padding-bottom: 5%;
+  padding-top: 5%;
+  justify-content: center;
+}
+
+.MicIcon {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+  background-position: center;
+  background-color: black;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-image: url("https://assets.tokbox.com/solutions/images/icon-mic.png");
+}
+.CameraIcon {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+  background-position: center;
+  background-color: black;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-image: url("https://assets.tokbox.com/solutions/images/icon-video.png");
+}
+
+.ScreenShareIcon {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+  background-position: center;
+  background-color: black;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-image: url("https://assets.tokbox.com/solutions/images/icon-screen-share.png");
+}
+
+/* 
+
+Slide 7 - Text Chat
+
+*/
+
+.TextChatIcon {
+  padding-bottom: 3%;
+  cursor: pointer;
+}
+
+/* 
+
+Slide 8 - Session Information
+
+*/
+
+.sessionCardContainer {
+  display: grid;
+  grid-template-columns: 30% 50%;
+  grid-template-rows: 100%;
+  padding-top: 5%;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  padding-bottom: 15%;
+}
+.NameCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10%;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  margin-right: 3%;
+}
+
+.StudentUserIcon {
+  height: 2vh;
+  margin-right: 10px;
+}
+
+/* 
+
+Slide 9 - Alerts
+
+*/
+
+.ErrorIcon {
+  height: 6vh;
+  width: 6vh;
+  padding-bottom: 5%;
+}
+
+/* 
+
+Slide 10 - Outro
+
+*/
+
+.DigifairLogo {
+  height: 5vh;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}

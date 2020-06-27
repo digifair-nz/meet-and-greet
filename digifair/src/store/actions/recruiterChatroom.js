@@ -169,10 +169,10 @@ export const fetchQueueLengthStart = () => {
     type: actionTypes.FETCH_QUEUE_LENGTH_START,
   };
 };
-export const fetchQueueLengthSuccess = (queuedStudentsNum) => {
+export const fetchQueueLengthSuccess = (queueLength) => {
   return {
     type: actionTypes.FETCH_QUEUE_LENGTH_SUCCESS,
-    queuedStudentsNum: queuedStudentsNum,
+    queueLength: queueLength,
   };
 };
 export const fetchQueueLengthFail = (error) => {
@@ -187,7 +187,7 @@ export const fetchQueueLength = () => {
     dispatch(fetchQueueLengthStart());
 
     axios
-      .get("/company/status/")
+      .get("/company/status")
       .then((response) => {
         console.log(response);
 

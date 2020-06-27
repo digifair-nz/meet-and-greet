@@ -4,7 +4,7 @@ import Aux from "../../../hoc/Auxiliary";
 import Button from "../../UI/Button/Button";
 import Modal from "../../UI/Modal/Modal";
 
-import classes from "./Recruiter.module.css";
+import classes from "./RecruiterTutorial.module.css";
 
 import relaxedWorker from "../../../assets/screen-images/relaxed-worker.png";
 import textChatIcon from "../../../assets/icons/talkJsIcon.png";

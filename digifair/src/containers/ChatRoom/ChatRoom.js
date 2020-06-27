@@ -239,6 +239,7 @@ class ChatRoom extends Component {
               localStorage.removeItem("searching");
               this.props.stopSearch();
 
+              //NOTE: Maybe check if the student is not already connected?
               this.props.fetchStudentData(); // Get student's data for talkJS
             }
 
@@ -333,12 +334,11 @@ class ChatRoom extends Component {
       otCore.on("sessionDisconnected", (event) => {});
     }
 
-    // Fetching the number of students queued to the recruiters' company
-    // if (!this.props.isStudent) {
-    //   setInterval(() => {
-    //     this.props.fetchQueueLength();
-    //   }, 15000);
-    // }
+    //Fetching the number of students queued to the recruiters' company
+    if (!this.props.isStudent) {
+      this.props.fetchQueueLength();
+      setInterval(() => this.props.fetchQueueLength(), 15000);
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.isStudent) {
@@ -579,9 +579,7 @@ class ChatRoom extends Component {
         {!this.props.isStudent ? (
           <InfoCard
             eventName={this.props.event.eventName}
-            queuedStudentsNum={
-              this.props.queueLength ? this.props.queueLength : 999
-            }
+            queuedStudentsNum={this.props.queueLength}
             eventExpiration={this.props.event.eventExpiration}
             startTimer={this.state.connections.length > 1}
           />

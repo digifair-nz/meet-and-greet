@@ -12,15 +12,15 @@ import ErrorPopup from "../../components/ErrorPopup/ErrorPopup";
 import EventTimer from "../../components/EventTimer/EventTimer";
 import Modal from "../../components/UI/Modal/Modal";
 import ReadyCheckPrompt from "../../components/ReadyCheckPrompt/ReadyCheckPrompt";
-import sendNotification from "../../components/Notification/Notification";
+
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
+import StudentTutorial from "../../components/TutorialSlider/StudentTutorial/StudentTutorial";
 import digifairLogo from "../../assets/company_logos/digifair_icon_notification.png";
 import notificationSound from "../../assets/audio/anxious.mp3";
-// import logoutIcon from "../../assets/icons/logout.png";
+
 // CSS
 import classes from "./StudentDashboard.module.css";
-import eventTimer from "../../components/EventTimer/EventTimer";
 
 //Redux
 
@@ -41,6 +41,8 @@ class StudentDashboard extends Component {
     showReadyPromptPopUp: false,
     //permissionGranted: true,
     isQueuedToAll: false,
+    buttonClicked: false,
+    showTutorial: true,
   };
 
   // Set default tab title on mounting
@@ -55,119 +57,19 @@ class StudentDashboard extends Component {
   componentDidMount() {
     console.log("[STUDENT DASHBOARD] Mounted");
     const audio = new Audio(notificationSound);
+
+    // Tutorial
+
+    if (localStorage.getItem("seenTutorial")) {
+      this.setState({
+        showTutorial: true,
+      });
+    }
+
     if (this.props.isStudent) {
       this.props.fetchCompanies();
 
       document.title = "Dashboard";
-
-      // Notification for mic and camera permission for the chatroom
-      // navigator.getMedia =
-      //   navigator.getUserMedia || // use the proper vendor prefix
-      //   navigator.webkitGetUserMedia ||
-      //   navigator.mozGetUserMedia ||
-      //   navigator.msGetUserMedia;
-
-      // navigator.mediaDevices
-      //   .getUserMedia({ audio: true, video: true })
-      //   .then(function (stream) {
-      //     stream.getTracks().forEach((track) => {
-      //       // Stop streaming after permission is granted
-
-      //       track.stop();
-      //     });
-      //   })
-      //   .catch(function (err) {
-      //     console.log(err);
-      //     alert(
-      //       "You need to grant microphone and camera permission for the interview if you want to participate."
-      //     );
-      //   });
-
-      // // Make sure the user has given permission for microphone and camera
-      // navigator.permissions
-      //   .query({ name: "camera" })
-      //   .then((permissionStatus) => {
-      //     switch (permissionStatus.state) {
-      //       case "denied":
-      //         //console.log("denied");
-      //         this.setState({
-      //           permissionGranted: false,
-      //         });
-      //         break;
-      //       case "granted":
-      //         this.setState({
-      //           permissionGranted: true,
-      //         });
-      //         break;
-      //       case "prompt":
-      //         //console.log("waiting...");
-      //         break;
-      //       default:
-      //         console.log("Internal error");
-      //         break;
-      //     }
-      //     permissionStatus.onchange = (e) => {
-      //       // detecting if the event is a change
-      //       if (e.type === "change") {
-      //         // checking what the new permissionStatus state is
-      //         const newState = e.target.state;
-      //         if (newState === "denied") {
-      //           this.setState({
-      //             permissionGranted: false,
-      //           });
-      //         } else if (newState === "granted") {
-      //           this.setState({
-      //             permissionGranted: true,
-      //           });
-      //         } else {
-      //           console.log("Thanks for reverting things back to normal");
-      //         }
-      //       }
-      //     };
-      //   });
-
-      // // Make sure the user has given permission for microphone and camera
-      // navigator.permissions
-      //   .query({ name: "microphone" })
-      //   .then((permissionStatus) => {
-      //     switch (permissionStatus.state) {
-      //       case "denied":
-      //         console.log("denied");
-      //         this.setState({
-      //           permissionGranted: false,
-      //         });
-      //         break;
-      //       case "granted":
-      //         this.setState({
-      //           permissionGranted: true,
-      //         });
-      //         break;
-      //       case "prompt":
-      //         console.log("waiting...");
-      //         break;
-      //       default:
-      //         console.log("internal error");
-      //         break;
-      //     }
-      //     permissionStatus.onchange = (e) => {
-      //       // detecting if the event is a change
-      //       if (e.type === "change") {
-      //         // checking what the new permissionStatus state is
-      //         const newState = e.target.state;
-      //         if (newState === "denied") {
-      //           this.setState({
-      //             permissionGranted: false,
-      //           });
-      //         } else if (newState === "granted") {
-      //           this.setState({
-      //             permissionGranted: true,
-      //           });
-      //         } else {
-      //           console.log("Thanks for reverting things back to normal");
-      //         }
-      //       }
-      //     };
-      //   });
 
       // Notification for ready check
       let notificationGranted;
@@ -185,8 +87,8 @@ class StudentDashboard extends Component {
         // Check that we haven't connected to the socket before
 
         var ws = new WebSocket(
-          // "ws://localhost:3000/?token=" + this.props.token
-          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+          "ws://localhost:3000/?token=" + this.props.token
+          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
         );
 
         setInterval(() => {
@@ -257,6 +159,17 @@ class StudentDashboard extends Component {
     }
   }
 
+  showTutorial = () => {
+    this.setState({
+      showTutorial: true,
+    });
+  };
+  closeTutorial = () => {
+    localStorage.setItem("seenTutorial", true);
+    this.setState({
+      showTutorial: false,
+    });
+  };
   // If the student declines the queue he will be ejected from the queue and close the pop up
   onDeclineHandler = () => {
     document.title = "Dashboard"; // Change back from notification tab name
@@ -285,9 +198,23 @@ class StudentDashboard extends Component {
   };
 
   dequeueFromAll = () => {
-    alert(
-      "Not live for the beta test, sorry. There is only like 3 companies though u lazy goose, just dequeue manually please. "
-    );
+    let flag = false;
+    //Check if the student has eligible companies to dequeue from
+    for (let i = 0; i < this.props.companies.length; i++) {
+      if (
+        this.props.companies[i].isQueued &&
+        !this.props.companies[i].hadSession
+      ) {
+        flag = true;
+      }
+    }
+
+    if (flag && this.state.isQueuedToAll) {
+      this.setState({
+        isQueuedToAll: false,
+      });
+      this.props.dequeueFromAll();
+    }
   };
 
   queueToAll = () => {
@@ -359,6 +286,10 @@ class StudentDashboard extends Component {
 
     return (
       <Aux>
+        <StudentTutorial
+          closeTutorial={this.closeTutorial}
+          showTutorialSlider={this.state.showTutorial}
+        />
         <ErrorPopup
           show={this.props.error}
           modalClosed={this.errorConfirmedHandler}
@@ -369,6 +300,9 @@ class StudentDashboard extends Component {
           drawerToggleClicked={false}
           controlsLocation="StudentDashboard"
         >
+          <Button btnType="Control" clicked={this.showTutorial}>
+            Tutorial
+          </Button>
           <Button
             disabled={this.state.isQueuedToAll}
             btnType="Control"

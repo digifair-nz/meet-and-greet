@@ -17,6 +17,8 @@ class App extends Component {
   componentDidMount() {
     // check users local storage for a token and try to sign them in automatically
     // Also check credentials for a room session and redirect to the room if credentials are found
+
+    
     this.props.onTryAutoSignUp();
     console.log(this.props.hasCredentials);
     // localStorage.getItem("event")
