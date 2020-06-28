@@ -10,6 +10,7 @@ import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import sot_logo from "../../../assets/company_logos/logo-sot-clear.png";
+import Auxiliary from "../../../hoc/Auxiliary"
 
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
@@ -173,19 +174,46 @@ class StudentAuth extends Component {
       });
     }
 
-    let form = formElementsArray.map((formElement) => (
+    // let form = formElementsArray.map((formElement) => (
+    //   <Input
+    //     key={formElement.id}
+    //     changed={(event) => this.inputChangedHandler(event, formElement.id)}
+    //     elementType={formElement.config.elementType}
+    //     elementConfig={formElement.config.elementConfig}
+    //     value={formElement.config.value}
+    //     shouldValidate={formElement.config.validation}
+    //     invalid={!formElement.config.valid}
+    //     touched={formElement.config.touched}
+    //     isStudent={this.state.isStudent}
+    //   />
+    // ));
+
+    let form = (
+      <Auxiliary>
       <Input
-        key={formElement.id}
-        changed={(event) => this.inputChangedHandler(event, formElement.id)}
-        elementType={formElement.config.elementType}
-        elementConfig={formElement.config.elementConfig}
-        value={formElement.config.value}
-        shouldValidate={formElement.config.validation}
-        invalid={!formElement.config.valid}
-        touched={formElement.config.touched}
+        key={formElementsArray[0].id}
+        changed={(event) => this.inputChangedHandler(event, formElementsArray[0].id)}
+        elementType={formElementsArray[0].config.elementType}
+        elementConfig={formElementsArray[0].config.elementConfig}
+        value={formElementsArray[0].config.value}
+        shouldValidate={formElementsArray[0].config.validation}
+        invalid={!formElementsArray[0].config.valid}
+        touched={formElementsArray[0].config.touched}
         isStudent={this.state.isStudent}
       />
-    ));
+      <Input
+        key={formElementsArray[1].id}
+        changed={(event) => this.inputChangedHandler(event, formElementsArray[1].id)}
+        elementType={formElementsArray[1].config.elementType}
+        elementConfig={formElementsArray[1].config.elementConfig}
+        value={formElementsArray[1].config.value}
+        shouldValidate={formElementsArray[1].config.validation}
+        invalid={!formElementsArray[1].config.valid}
+        touched={formElementsArray[1].config.touched}
+        isStudent={this.state.isStudent}
+      />
+      </Auxiliary>
+    );
 
     let authed = null;
 
