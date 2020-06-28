@@ -183,8 +183,6 @@ class StudentAuth extends Component {
       config: this.state.controls.email,
     };
 
-    console.log("HERE 1");
-    console.log(formElementsArray[0].config);
 
     formElementsArray[1] = {
       id: "password",

@@ -287,6 +287,7 @@ class StudentDashboard extends Component {
     return (
       <Aux>
         <StudentTutorial
+          className={classes.Tutorial}
           closeTutorial={this.closeTutorial}
           showTutorialSlider={this.state.showTutorial}
         />

@@ -262,7 +262,7 @@ class RecruiterSlider extends Component {
         </span>
         <img src={DigifairLogo} className={classes.DigifairLogo} />
         <span className={classes.TextChatLabel}>
-          Brought to you by Peter G., Michael S. and Jiaru L. from Big Commit
+          Brought to you by Peter G., Michael S. and Mercury L. from Big Commit
           Labs.
         </span>
         <button onClick={this.prevSlide} className={classes.ControlButtonPrev}>
