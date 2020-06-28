@@ -167,13 +167,30 @@ class StudentAuth extends Component {
   };
   render() {
     const formElementsArray = [];
-    for (let key in this.state.controls) {
-      formElementsArray.push({
-        id: key,
-        config: this.state.controls[key],
-      });
-    }
+    // for (let key in this.state.controls) {
+    //   console.log(key);
+    //   formElementsArray.push({
+    //     id: key,
+    //     config: this.state.controls[key],
+    //   });
+    // }
 
+    // console.log("HERE 0");
+    // console.log(this.state.controls.email);
+
+    formElementsArray[0] = {
+      id: "email",
+      config: this.state.controls.email,
+    };
+
+    console.log("HERE 1");
+    console.log(formElementsArray[0].config);
+
+    formElementsArray[1] = {
+      id: "password",
+      config: this.state.controls.password,
+    };
+    
     // let form = formElementsArray.map((formElement) => (
     //   <Input
     //     key={formElement.id}
