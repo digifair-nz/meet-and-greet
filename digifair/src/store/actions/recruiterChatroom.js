@@ -197,6 +197,7 @@ export const fetchQueueLength = () => {
         if (response.data.roomIsSearching) {
           if (!localStorage.getItem("searching")) {
             localStorage.setItem("searching", true);
+            dispatch(inviteNextStudentSuccess());
           }
         }
 
