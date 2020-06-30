@@ -1106,3 +1106,32 @@ Form - Contains the title, error message and input fields (not the button)
       width: 25%;
     }
 }
+
+
+
+
+/* ----------- Apple Watch ----------- */
+@media
+  (max-device-width: 42mm)
+  and (min-device-width: 38mm) { 
+
+
+    
+    .Logo{
+      width: 80%;
+      justify-self: center;
+      align-self: center;
+    }
+}
+
+
+/* ----------- Moto 360 Watch ----------- */
+@media 
+  (max-device-width: 218px)
+  and (max-device-height: 281px) { 
+    .Logo{
+      width: 80%;
+      justify-self: center;
+      align-self: center;
+    }
+}
