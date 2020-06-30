@@ -307,39 +307,6 @@ Form - Contains the title, error message and input fields (not the button)
 
 /* ----------- iPhone 5, 5S, 5C and 5SE ----------- */
 
-/* Portrait and Landscape */
-@media only screen 
-  and (min-device-width: 320px) 
-  and (max-device-width: 568px)
-  and (-webkit-min-device-pixel-ratio: 2) {
-    .AuthContainer{
-      display:none;
-    }
-
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-
-}
 
 /* Portrait */
 @media only screen 
@@ -405,49 +372,13 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 
 }
 
 /* ----------- iPhone 6, 6S, 7 and 8 ----------- */
 
-/* Portrait and Landscape */
-@media only screen 
-  and (min-device-width: 375px) 
-  and (max-device-width: 667px) 
-  and (-webkit-min-device-pixel-ratio: 2) { 
-    .AuthContainer{
-      display:none;
-    }
-
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-
-
-    
-}
-
 /* Portrait */
 @media only screen 
   and (min-device-width: 375px) 
@@ -513,46 +444,14 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 
 }
 
 /* ----------- iPhone 6+, 7+ and 8+ ----------- */
 
-/* Portrait and Landscape */
-@media only screen 
-  and (min-device-width: 414px) 
-  and (max-device-width: 736px) 
-  and (-webkit-min-device-pixel-ratio: 3) { 
-    .AuthContainer{
-      display:none;
-    }
 
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-
-}
 
 /* Portrait */
 @media only screen 
@@ -619,47 +518,13 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 
 }
 
 /* ----------- iPhone X ----------- */
 
-/* Portrait and Landscape */
-@media only screen 
-  and (min-device-width: 375px) 
-  and (max-device-width: 812px) 
-  and (-webkit-min-device-pixel-ratio: 3) { 
-    .AuthContainer{
-      display:none;
-    }
-
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-
-}
-
 /* Portrait */
 @media only screen 
   and (min-device-width: 375px) 
@@ -725,7 +590,7 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 
 }
@@ -736,38 +601,7 @@ Form - Contains the title, error message and input fields (not the button)
 
 /* ----------- Galaxy S3 ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 360px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 2) {
-    .AuthContainer{
-      display:none;
-    }
 
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-}
 
 /* Portrait */
 @media screen 
@@ -833,44 +667,12 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
 
 /* ----------- Galaxy S4, S5 and Note 3 ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 320px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 3) {
-    .AuthContainer{
-      display:none;
-    }
-
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-}
 
 /* Portrait */
 @media screen 
@@ -936,44 +738,12 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
 
 /* ----------- Galaxy S6 ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 360px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 4) {
-    .AuthContainer{
-      display:none;
-    }
-
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-}
 
 /* Portrait */
 @media screen 
@@ -1039,7 +809,7 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
 
@@ -1047,38 +817,7 @@ Form - Contains the title, error message and input fields (not the button)
 
 /* ----------- Google Pixel ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 360px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 3) {
-    .AuthContainer{
-      display:none;
-    }
 
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-}
 
 /* Portrait */
 @media screen 
@@ -1144,44 +883,13 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
 
 /* ----------- Google Pixel XL ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 360px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 4) {
-    .AuthContainer{
-      display:none;
-    }
 
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-}
 
 /* Portrait */
 @media screen 
@@ -1247,7 +955,7 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
 
@@ -1257,39 +965,7 @@ Form - Contains the title, error message and input fields (not the button)
 
 /* ----------- HTC One ----------- */
 
-/* Portrait and Landscape */
-@media screen 
-  and (device-width: 360px) 
-  and (device-height: 640px) 
-  and (-webkit-device-pixel-ratio: 3) {
-    .AuthContainer{
-      display:none;
-    }
 
-    .AuthContainerCompany{
-      display: none;
-    }
-
-    .MobileOnly{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10%;
-      font-size: 1.7em;
-      text-align: center;
-      padding-bottom: 2%;
-      text-transform: uppercase;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    
-    .Logo{
-      width: 40%;
-    }
-
-}
 
 /* Portrait */
 @media screen 
@@ -1355,6 +1031,6 @@ Form - Contains the title, error message and input fields (not the button)
     }
     
     .Logo{
-      width: 40%;
+      width: 25%;
     }
 }
