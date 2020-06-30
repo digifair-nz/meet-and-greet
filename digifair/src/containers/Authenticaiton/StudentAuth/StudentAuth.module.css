@@ -145,7 +145,7 @@ Form - Contains the title, error message and input fields (not the button)
     }
   }
 
-  @media (max-height: 481px) {
+  /* @media (max-width: 481px) {
 
     .AuthContainer{
       display:none;
@@ -173,7 +173,7 @@ Form - Contains the title, error message and input fields (not the button)
     .Logo{
       width: 25%;
     }
-  }
+  } */
 
 }
 
