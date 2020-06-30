@@ -203,21 +203,17 @@ const fetchStudentDataFail = (state, action) => {
 // Fetching the number of students queued for the recruiter's specific company
 
 const fetchQueuedStudentsNumStart = (state, action) => {
-  return updateObject(state, {
-    loading: true,
-  });
+  return state;
 };
 
 const fetchQueuedStudentsNumSuccess = (state, action) => {
   return updateObject(state, {
-    loading: false,
     queueLength: action.queueLength,
   });
 };
 
 const fetchQueuedStudentsNumFail = (state, action) => {
   return updateObject(state, {
-    loading: false,
     error: action.error,
   });
 };
