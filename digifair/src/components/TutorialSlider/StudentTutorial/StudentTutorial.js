@@ -63,7 +63,7 @@ class RecruiterSlider extends Component {
           <CompanyDescription
             show={this.state.showInfoPopup}
             description={
-              "Digifair is a small start up developed by three Auckland Uni students: Peter Goedeke, Michael Shaimerden and Jiaru Lin. Our goal was to connect students and company recruiters digitally to help connect market with talent."
+              "Digifair is a small start up developed by three Auckland Uni students: Peter Goedeke, Michael Shaimerden and Mercury Lin. Our goal was to connect students and company recruiters digitally to help connect market with talent."
             }
             logo={DigifairLogo}
             closeModal={this.onClickModal}
