@@ -62,7 +62,7 @@ class StudentDashboard extends Component {
 
     if (localStorage.getItem("seenTutorial")) {
       this.setState({
-        showTutorial: true,
+        showTutorial: false,
       });
     }
 

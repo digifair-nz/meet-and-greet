@@ -20,7 +20,7 @@ import CompanyDescription from "../../CompanyDescription/CompanyDescription";
 
 class RecruiterSlider extends Component {
   state = {
-    currentSlider: 4,
+    currentSlider: 0,
     showInfoPopup: false,
   };
 

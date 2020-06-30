@@ -105,7 +105,7 @@ class ChatRoom extends Component {
       allowKicking: false,
       //searching: false,
       studentLeft: false,
-      showTutorial: false,
+      showTutorial: true,
       buttonClicked: false, // This is a guard to prevent multiple clicking and spamming requests
       studentConnected: false,
     };
@@ -156,9 +156,9 @@ class ChatRoom extends Component {
     //   });
     // }
 
-    if (!seenTutorial) {
+    if (seenTutorial) {
       this.setState({
-        showTutorial: true,
+        showTutorial: false,
       });
     }
 
@@ -327,7 +327,7 @@ class ChatRoom extends Component {
         */
           setTimeout(() => {
             window.location.reload(false);
-          }, 2000);
+          }, 1000);
         });
       }
 
