@@ -1034,3 +1034,75 @@ Form - Contains the title, error message and input fields (not the button)
       width: 25%;
     }
 }
+
+
+
+/* ----------- Windows Phone ----------- */
+
+
+
+/* Portrait */
+@media screen 
+  and (device-width: 480px) 
+  and (device-height: 800px)  
+  and (orientation: portrait) {
+    .AuthContainer{
+      display:none;
+    }
+
+    .AuthContainerCompany{
+      display: none;
+    }
+
+    .MobileOnly{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      font-size: 1.7em;
+      text-align: center;
+      padding-bottom: 2%;
+      text-transform: uppercase;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+    
+    .Logo{
+      width: 40%;
+    }
+}
+
+/* Landscape */
+@media screen 
+  and (device-width: 480px) 
+  and (device-height: 800px) 
+  and (orientation: landscape) {
+    .AuthContainer{
+      display:none;
+    }
+
+    .AuthContainerCompany{
+      display: none;
+    }
+
+    .MobileOnly{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      font-size: 1.7em;
+      text-align: center;
+      padding-bottom: 2%;
+      text-transform: uppercase;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+    
+    .Logo{
+      width: 25%;
+    }
+}
