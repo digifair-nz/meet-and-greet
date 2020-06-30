@@ -99,7 +99,7 @@ const setAuthRedirectPath = (state, action) => {
 // Joining chatroom
 
 const studentJoinChatroomStart = (state, action) => {
-  return state;
+  return updateObject(state, { loading: true });
   // return updateObject(state, { authRedirectPath: action.path });
 };
 
@@ -107,11 +107,12 @@ const studentJoinChatroomSuccess = (state, action) => {
   return updateObject(state, {
     credentials: action.credentials,
     talkJSData: action.talkJSData,
+    loading: false,
   });
 };
 
 const studentJoinChatroomFail = (state, action) => {
-  return updateObject(state, { error: action.error });
+  return updateObject(state, { error: action.error, loading: false });
 };
 
 // leaving chatroom
