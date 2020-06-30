@@ -39,7 +39,7 @@ class RecruiterSlider extends Component {
 
     slides[0] = (
       <Aux>
-        <h1>Welcome to DIGIFAIR</h1>
+        <h1 className={classes.WelcomeMessage}>Welcome to DIGIFAIR</h1>
         <span>
           This short tutorial will walk you through all of the features of this
           application.

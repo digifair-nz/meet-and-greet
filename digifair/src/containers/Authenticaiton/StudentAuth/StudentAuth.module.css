@@ -86,6 +86,10 @@ Form - Contains the title, error message and input fields (not the button)
   top: 80%;
 }
 
+.MobileOnly{
+  display: none;
+}
+
 
 /*DISPLAY 1920 BY DEFAULT*/
 
@@ -142,11 +146,33 @@ Form - Contains the title, error message and input fields (not the button)
   }
 
   @media (max-height: 481px) {
-    /*Iphone 11 PRO */
-    .Logo{
-      width: 15%;
+
+    .AuthContainer{
+      display:none;
     }
 
+    .AuthContainerCompany{
+      display: none;
+    }
+
+    .MobileOnly{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      font-size: 1.7em;
+      text-align: center;
+      padding-bottom: 2%;
+      text-transform: uppercase;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+    
+    .Logo{
+      width: 25%;
+    }
   }
 
 }
@@ -167,13 +193,32 @@ Form - Contains the title, error message and input fields (not the button)
 
   /*480px is max phone size*/
   @media (max-width: 481px) {
-    .FormContainer {
-      width: 135%;
-      justify-self: center;
-      bottom: 5%;
+
+    .AuthContainer{
+      display:none;
     }
+
+    .AuthContainerCompany{
+      display: none;
+    }
+
+    .MobileOnly{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      font-size: 1.7em;
+      text-align: center;
+      padding-bottom: 2%;
+      text-transform: uppercase;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+    
     .Logo{
-      width: 33%;
+      width: 40%;
     }
   }
 
