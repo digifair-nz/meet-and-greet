@@ -78,6 +78,37 @@ class CompanyCard extends Component {
     console.log(this.props.hadSession);
     // If the student has talked to a recruiter from this company, disable queuing ability
     let currentClass = classes.CompanyCard;
+
+    // Used for the name gradient effect.
+
+    // Each name gets the color based on the index position
+
+    const colors = [
+      "#e2508b",
+      "#B533B5",
+
+      "#6700ff",
+      "#6B03FC",
+      "#7D0EEA",
+      "#0056ff",
+    ];
+
+    let nameColor;
+
+    if (this.props.index < 3) {
+      nameColor = colors[0];
+    } else if (this.props.index < 6) {
+      nameColor = colors[1];
+    } else if (this.props.index < 9) {
+      nameColor = colors[2];
+    } else if (this.props.index < 12) {
+      nameColor = colors[3];
+    } else if (this.props.index < 15) {
+      nameColor = colors[4];
+    } else if (this.props.index < 19) {
+      nameColor = colors[5];
+    }
+
     // console.log(
     //   "[COMPANY CARD] render: " + this.props.id + " " + this.state.showInfoPopup
     // );
@@ -109,6 +140,7 @@ class CompanyCard extends Component {
             description={this.props.description}
             logo={this.props.logo}
             closeModal={this.onClickModal}
+            name={this.props.name}
           />
         </Modal>
 
@@ -149,14 +181,21 @@ class CompanyCard extends Component {
           {
             this.props.queuing | (this.props.logo == null) ? (
               <Spinner />
-            ) : null /* Show the spinner while the use sends a queue/dequeue request */
+            ) : (
+              <span
+                style={{ color: nameColor }}
+                className={classes.ReviewersName}
+              >
+                {this.props.name}
+              </span>
+            ) /* Show the spinner while the use sends a queue/dequeue request */
           }
-          <img
+          {/* <img
             src={this.props.logo}
             className={classes.CompanyLogo}
             style={{ display: logoDisplay }}
             alt="Company Logo"
-          />
+          /> */}
         </div>
       </Aux>
     );

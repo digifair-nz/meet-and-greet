@@ -62,13 +62,14 @@ class ReadyCheckPrompt extends Component {
     return (
       <div className={classes.PromptContainer}>
         {redirect}
-        <img
+        {/* <img
           className={classes.Logo}
           src={this.props.logo}
           alt="Company logo"
-        />
+        /> */}
+        <span className={classes.Name}>{this.props.companyName}</span>
         <div className={classes.ContentContainer}>
-          <span>The company is ready for you!</span>
+          <span>This reviewer is ready for you!</span>
           <CountdownTimer onTimerEnd={this.timerExpireHandler} />
           <span>Ready?</span>
         </div>

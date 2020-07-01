@@ -20,11 +20,12 @@ class CompanyDescription extends Component {
         className={classes.DescriptionContainer}
       >
         <img className={classes.CloseIcon} src={closeIcon} alt="Close button" />
-        <img
+        {/* <img
           alt="Company logo"
           className={classes.Logo}
           src={this.props.logo}
-        />
+        /> */}
+        <span className={classes.Logo}>{this.props.name}</span>
         <div className={classes.DescriptionText}>{this.props.description}</div>
       </div>
     );

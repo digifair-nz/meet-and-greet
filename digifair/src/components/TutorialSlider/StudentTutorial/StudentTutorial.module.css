@@ -13,7 +13,6 @@
   height: 450px;
 }
 
-
 .SliderContainer:before,
 .SliderContainer:after {
   content: "";
@@ -42,7 +41,7 @@
   animation: glow 20s linear infinite;
 }
 
-.SlideContent{
+.SlideContent {
   padding: 0px 5%;
   margin-top: 17%;
   justify-content: center;
@@ -87,7 +86,7 @@
   top: 3%;
   /* text-transform: uppercase;
   font-family: "Roboto", sans-serif;*/
-  font-family: 14px; 
+  font-family: 14px;
   /* letter-spacing: 2px; */
   font-weight: 550;
 }
@@ -217,6 +216,10 @@ Slide 2 - Disonnecting and Inviting Users
   width: 50%;
 }
 
+.ReviewersName {
+  font-size: 20px;
+  color: red;
+}
 .CardHeader {
   position: absolute;
   top: 0;
@@ -469,38 +472,33 @@ Slide 10 - Outro
 } */
 /* 2K+ resolution */
 @media (min-width: 2049px) {
-  .SliderContainer{
+  .SliderContainer {
     height: 700px;
   }
-  
 }
 
 /* 4K+ resolution */
 @media (min-width: 3839px) {
-  .SliderContainer{
+  .SliderContainer {
     height: 900px;
   }
 }
 
-
 @media only screen and (orientation: portrait) {
-
-  @media (max-height: 1500px){
-    .SliderContainer{
+  @media (max-height: 1500px) {
+    .SliderContainer {
       height: 700px;
     }
   }
 
-  @media (max-height: 1000px){
-    .SliderContainer{
+  @media (max-height: 1000px) {
+    .SliderContainer {
       height: 500px;
     }
   }
 }
 
-
 @media only screen and (orientation: landscape) {
-
   /* @media (max-width: 1500px){
     .SliderContainer{
       height: 700px;

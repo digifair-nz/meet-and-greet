@@ -209,7 +209,7 @@ class StudentDashboard extends Component {
       }
     }
 
-    if (flag && this.state.isQueuedToAll) {
+    if (flag) {
       this.setState({
         isQueuedToAll: false,
       });
@@ -259,6 +259,7 @@ class StudentDashboard extends Component {
             onInfoClick={(event) => this.showInfoPopup(event, index)}
             queuing={company.queuing}
             description={company.description}
+            name={company.name}
           />
         );
       });

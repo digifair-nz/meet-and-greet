@@ -38,6 +38,9 @@
   width: 50%;
 }
 
+.ReviewersName {
+  font-size: 2em;
+}
 /*
  ACTIVE CLASS ( STUDENT HAS QUEUED ) -- Glowing border effect applied
 */

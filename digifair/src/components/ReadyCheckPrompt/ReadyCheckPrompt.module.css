@@ -10,6 +10,11 @@
   width: 30%;
   padding: 5%;
 }
+.Name{
+  padding-top: 5%;
+  padding-bottom: 3%;
+  font-size: 30px;
+}
 .ButtonContainer {
   width: 100%;
   display: flex;
