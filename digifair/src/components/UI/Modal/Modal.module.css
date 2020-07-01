@@ -19,6 +19,24 @@
   margin-right: auto;
 }
 
+
+
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+  .Modal{
+    top: 15%;
+  }
+  
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+  .Modal{
+    top: 30%;
+  }
+}
+
+
 /*
 --------------
 MOBILE and TABLET
@@ -26,12 +44,22 @@ MOBILE and TABLET
 */
 
 @media only screen and (orientation: portrait) {
+  /* @media (max-width: 1400px) {
+    .Modal {
+      width: 70%;
+    }
+  } */
+
   @media (max-width: 1024px) {
+    .Modal {
+      width: 70%;
+    }
   }
 
   @media (max-width: 768px) {
     .Modal {
-      width: 90%;
+      top: 15%;
+      width: 65%;
     }
   }
   @media (max-width: 640px) {
@@ -47,9 +75,23 @@ MOBILE and TABLET
 
 @media only screen and (orientation: landscape) {
   @media (max-width: 1366px) {
+    .Modal{
+      width: 70%;
+    }
+  }
+
+  @media (max-width: 1280px) {
+    .Modal{
+      width: 70%;
+      top: 11%;
+    }
   }
 
   @media (max-width: 1024px) {
+    .Modal {
+      width: 70%;
+      top: 15%;
+    }
   }
   @media (max-width: 896px) {
     /*Iphone 11 PRO */

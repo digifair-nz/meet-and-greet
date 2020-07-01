@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Button from "../UI/Button/Button";
 import classes from "./ReadyCheckPrompt.module.css";
 import CountdownTimer from "./CountdownTimer/CountdownTimer";
+import Spinner from "../UI/Spinner/Spinner";
 
 import { Redirect } from "react-router-dom";
 
@@ -71,18 +72,22 @@ class ReadyCheckPrompt extends Component {
           <CountdownTimer onTimerEnd={this.timerExpireHandler} />
           <span>Ready?</span>
         </div>
-        <div className={classes.ButtonContainer}>
-          <Button
-            onClick={this.props.onClick}
-            clicked={this.onAcceptHandler}
-            btnType="Accept"
-          >
-            Accept
-          </Button>
-          <Button clicked={this.onDeclineHandler} btnType="Decline">
-            Decline
-          </Button>
-        </div>
+        {this.props.loading ? (
+          <Spinner />
+        ) : (
+          <div className={classes.ButtonContainer}>
+            <Button
+              onClick={this.props.onClick}
+              clicked={this.onAcceptHandler}
+              btnType="Accept"
+            >
+              Accept
+            </Button>
+            <Button clicked={this.onDeclineHandler} btnType="Decline">
+              Decline
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
@@ -92,6 +97,7 @@ const mapStateToProps = (state) => {
   return {
     credentials: state.user.credentials,
     error: state.user.error,
+    loading: state.user.loading,
   };
 };
 

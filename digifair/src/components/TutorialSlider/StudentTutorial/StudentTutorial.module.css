@@ -10,7 +10,9 @@
   position: relative;
   background-color: white;
   border-radius: 25px;
+  height: 450px;
 }
+
 
 .SliderContainer:before,
 .SliderContainer:after {
@@ -40,6 +42,17 @@
   animation: glow 20s linear infinite;
 }
 
+.SlideContent{
+  padding: 0px 5%;
+  margin-top: 17%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3%;
+  /* bottom: 15%; */
+}
+
 @keyframes glow {
   0% {
     background-position: 0 0;
@@ -58,11 +71,25 @@
 }
 
 .SlideTitle {
+  justify-self: start;
+  position: absolute;
+  top: 3%;
   text-transform: uppercase;
   font-family: "Roboto", sans-serif;
   font-family: 14px;
   letter-spacing: 2px;
   font-weight: 400;
+}
+
+.WelcomeMessage {
+  justify-self: start;
+  position: absolute;
+  top: 3%;
+  /* text-transform: uppercase;
+  font-family: "Roboto", sans-serif;*/
+  font-family: 14px; 
+  /* letter-spacing: 2px; */
+  font-weight: 550;
 }
 
 /* 
@@ -130,8 +157,10 @@ Slide 1 - Intro slider
 
 */
 .RelaxedWorkerImage {
-  width: 30%;
+  width: 40%;
+  height: auto;
   padding-top: 5%;
+  object-fit: contain;
 }
 
 /* 
@@ -142,8 +171,9 @@ Slide 2 - Disonnecting and Inviting Users
 
 .DigifairCompanyCard {
   width: 30%;
-
+  justify-self: center;
   padding: 5%;
+  margin-right: 0;
 }
 
 /*
@@ -301,9 +331,10 @@ Slide 5 - Webcam and Microphone
 
 */
 .BrowserPrompt {
+  object-fit: contain;
   border: 1px solid rgba(0, 0, 0, 0.2);
   margin-top: 2%;
-  width: 30%;
+  width: 50%;
   margin-bottom: 2%;
 }
 
@@ -314,6 +345,11 @@ Slide 6 - Video Controls
 */
 
 .VideoControlsContainer {
+  /* background-color: orchid; */
+  /* justify-self: center; */
+  justify-items: center;
+  margin: auto;
+  width: 50%;
   display: grid;
   grid-template-columns: 30% 30% 30%;
   grid-row: 100%;
@@ -423,4 +459,57 @@ Slide 10 - Outro
   height: 5vh;
   padding-top: 5%;
   padding-bottom: 5%;
+}
+
+/* 
+@media (max-width: 1000px){
+  .SliderContainer{
+    transform: scale(0.5);
+  }
+} */
+/* 2K+ resolution */
+@media (min-width: 2049px) {
+  .SliderContainer{
+    height: 700px;
+  }
+  
+}
+
+/* 4K+ resolution */
+@media (min-width: 3839px) {
+  .SliderContainer{
+    height: 900px;
+  }
+}
+
+
+@media only screen and (orientation: portrait) {
+
+  @media (max-height: 1500px){
+    .SliderContainer{
+      height: 700px;
+    }
+  }
+
+  @media (max-height: 1000px){
+    .SliderContainer{
+      height: 500px;
+    }
+  }
+}
+
+
+@media only screen and (orientation: landscape) {
+
+  /* @media (max-width: 1500px){
+    .SliderContainer{
+      height: 700px;
+    }
+  }
+
+  @media (max-width: 1000px){
+    .SliderContainer{
+      height: 500px;
+    }
+  } */
 }

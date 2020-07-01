@@ -79,7 +79,6 @@ module.exports = function(wsInstance) {
         }
     }
 
-
     async function getQueueStatus(req, res) {
         const queue = await Queue.findOne({ eventId: req.payload.eventId, companyId: req.payload.companyId })
         if(!queue) {
@@ -132,7 +131,6 @@ module.exports = function(wsInstance) {
             }
             // remove the user as the session partner
             room.sessionPartner = null
-            room.save()
             // empty room and generate a new session id so that the student cannot rejoin the call
             const sessionId = await room.newSessionId()
             const token = opentok.generateToken(room.sessionId, {

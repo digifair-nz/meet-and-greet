@@ -62,7 +62,7 @@ class StudentDashboard extends Component {
 
     if (localStorage.getItem("seenTutorial")) {
       this.setState({
-        showTutorial: true,
+        showTutorial: false,
       });
     }
 
@@ -87,8 +87,8 @@ class StudentDashboard extends Component {
         // Check that we haven't connected to the socket before
 
         var ws = new WebSocket(
-          "ws://localhost:3000/?token=" + this.props.token
-          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+          // "ws://localhost:3000/?token=" + this.props.token
+          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
         );
 
         setInterval(() => {
@@ -287,6 +287,7 @@ class StudentDashboard extends Component {
     return (
       <Aux>
         <StudentTutorial
+          className={classes.Tutorial}
           closeTutorial={this.closeTutorial}
           showTutorialSlider={this.state.showTutorial}
         />

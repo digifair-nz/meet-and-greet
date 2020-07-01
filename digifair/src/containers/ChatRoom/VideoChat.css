@@ -3,9 +3,6 @@
   width: 100%;
 }
 
-
-
-
 #opentok_canvas {
   opacity: 0.6; /*This makes the annotations more transparent (like a highlighter)*/
 }
@@ -52,7 +49,6 @@
   background-image: url(https://assets.tokbox.com/solutions/images/icon-mic.png);
 }
 
-.App-control-container .ots-video-control.audio:hover,
 .App-control-container .ots-video-control.audio.muted {
   background-image: url(https://assets.tokbox.com/solutions/images/icon-muted-mic.png);
 }
