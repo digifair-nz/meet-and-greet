@@ -19,6 +19,8 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import TextChat from "./TextChat/TextChat";
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
+import notificationSound from "../../assets/audio/studentJoining.mp3";
+
 // Redux actions
 import * as actions from "../../store/actions/index";
 
@@ -126,6 +128,7 @@ class ChatRoom extends Component {
     // console.log(this.props.isStudent);
 
     // Check if a student has connected into a session
+    const audio = new Audio(notificationSound);
 
     let seenTutorial = localStorage.getItem("seenTutorial");
 
@@ -198,7 +201,7 @@ class ChatRoom extends Component {
             inRoom
           ) {
             alert(
-              "Looks like you are no longer in a session with a recruiter. Please leave this room and get back to the main event (leave session button in the menu)"
+              "Looks like you are no longer in a session with a reviewer. Please leave this room and get back to the main event (leave session button in the menu)"
             );
           }
         }, 5000);
@@ -235,6 +238,7 @@ class ChatRoom extends Component {
 
             // The student has connected to the recruiter
             if (!this.props.isStudent) {
+              audio.play();
               localStorage.setItem("studentConnected", true);
               localStorage.removeItem("searching");
               this.props.stopSearch();

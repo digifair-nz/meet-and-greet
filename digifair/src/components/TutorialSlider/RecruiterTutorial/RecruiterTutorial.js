@@ -63,7 +63,7 @@ class RecruiterSlider extends Component {
 
     slides[1] = (
       <Aux>
-        <h1 className={classes.SlideTitle}>Disconnecting Users</h1>
+        <h1 className={classes.SlideTitle}>Disconnecting Students</h1>
         <div className={classes.SlideContent}>
           <span>
             The session control buttons can be found on the slider menu on the
@@ -80,7 +80,7 @@ class RecruiterSlider extends Component {
             <span>
               <strong>
                 You should always disconnect the session before finding the next
-                user.
+                student.
               <br />
               </strong>
             It is possible that students lose connection or leave the session
@@ -101,20 +101,20 @@ class RecruiterSlider extends Component {
 
     slides[2] = (
       <Aux>
-        <h1 className={classes.SlideTitle}>Inviting the Next User</h1>
+        <h1 className={classes.SlideTitle}>Inviting the Next Student</h1>
         <div className={classes.SlideContent}>
           <div className={classes.ButtonContainer}>
             <button
               style={{ backgroundColor: "#60bf33", color: "black" }}
               className={classes.Button}
             >
-              Invite Next User
+              Invite Next Student
           </button>
 
             <span className={classes.ButtonText}>
               This button is responsible for opening your room for the next queued
-              user. After you have kicked the user and jumped to a new session,
-              when you are ready you can get next user.
+              student. After you have kicked the student and jumped to a new session,
+              when you are ready you can get next student.
           </span>
           </div>
           <div className={classes.TextContainer}>
@@ -171,7 +171,7 @@ class RecruiterSlider extends Component {
           <br />
           You can exchange messages through this chat during the session
           duration. <br />
-          Your conversation is not stored and no user can see the previous
+          Your conversation is not stored and no student can see the previous
           conversation.
         </span>
 

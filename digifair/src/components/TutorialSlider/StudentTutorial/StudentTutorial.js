@@ -63,7 +63,7 @@ class RecruiterSlider extends Component {
           <CompanyDescription
             show={this.state.showInfoPopup}
             description={
-              "Digifair is a small start up developed by three Auckland Uni students: Peter Goedeke, Michael Shaimerden and Mercury Lin. Our goal was to connect students and company recruiters digitally to help connect market with talent."
+              "Digifair is a small start up developed by three Auckland Uni students: Peter Goedeke, Michael Shaimerden and Mercury Lin. Our goal was to connect students and company reviewers digitally to help connect market with talent."
             }
             logo={DigifairLogo}
             closeModal={this.onClickModal}
@@ -214,11 +214,11 @@ class RecruiterSlider extends Component {
           </button>
 
             <span className={classes.ButtonText}>
-              Once you are in a session with the recruiter, this button will be
+              Once you are in a session with the reviewer, this button will be
               available to you for disconnecting from the session and come back
               the main event dashboard.
             <strong>
-                However it is advised that you allow recruiter to disconnect you.
+                However it is advised that you allow reviewer to disconnect you.
             </strong>
             </span>
           </div>
@@ -261,7 +261,7 @@ class RecruiterSlider extends Component {
 
             <span className={classes.ButtonText}>
               Once you click on this, you will be redirected to the company room
-            where you will see the recruiter.{" "}
+            where you will see the reviewer.{" "}
               <strong style={{ color: "red" }}>
                 If it will be your first time, make sure you allow usage of your
                 webcam and microphone if you have those otherwise you will not
@@ -308,7 +308,7 @@ class RecruiterSlider extends Component {
             It is important that you allow this application to use those features
             if you have a web-camera and a microphone. <br />
             <strong style={{ color: "red" }}>
-              If you won't allow, you won't be able to connect to a recruiter.
+              If you won't allow, you won't be able to connect to a reviewer.
             </strong>
           </span>
           <br />
@@ -358,7 +358,7 @@ class RecruiterSlider extends Component {
           <img src={textChatIcon} className={classes.TextChatIcon} />
           <span className={classes.TextChatLabel}>
             This text bubble icon will appear when you have connected to the
-            session with a recruiter.
+            session with a reviewer.
           <br />
           You can exchange messages through this chat during the session
           duration. <br />
@@ -394,8 +394,8 @@ class RecruiterSlider extends Component {
               <span>James Bond</span>
             </div>
             <span>
-              This card will appear when you have connected with a recruiter on
-              the center top of your screen. It shows the recruiter's name.
+              This card will appear when you have connected with a reviewer on
+              the center top of your screen. It shows the reviewer's name.
             </span>
           </div>
         </div>

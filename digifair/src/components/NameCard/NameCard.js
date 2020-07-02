@@ -28,7 +28,7 @@ const nameCard = (props) => {
     );
     name = <span>{props.name}</span>;
   } else {
-    props.isStudent ? (userType = "recruiter...") : (userType = "student...");
+    props.isStudent ? (userType = "reviewer...") : (userType = "student...");
     name = (
       <span className={classes.SearchingTitle}>Searching for a {userType}</span>
     );
