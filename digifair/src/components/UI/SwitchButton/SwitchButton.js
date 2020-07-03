@@ -8,7 +8,7 @@ const switchButton = (props) => {
   return (
     <div className="switchContainer">
       <span className="switchTitle">
-        I'm a {props.isStudent ? "Student" : "Recruiter"}
+        I'm a {props.isStudent ? "Student" : "Reviewer"}
       </span>
       <label className="switch">
         <input onClick={props.switchUser} type="checkbox" />

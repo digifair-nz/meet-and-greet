@@ -47,11 +47,11 @@ svg circle {
         stroke: green;
     }
     50% {
-        stroke-dashoffset: 113px;
+        stroke-dashoffset: 170px;
         stroke: orangered;
     }
     100% {
-        stroke-dashoffset: 226px;
+        stroke-dashoffset: 339px;
         stroke: red;
     }
 }

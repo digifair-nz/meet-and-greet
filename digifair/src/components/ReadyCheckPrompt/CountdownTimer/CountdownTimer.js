@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import classes from "./CountdownTimer.module.css";
 
-const COUNTDOWN_TIME = 10;
+const COUNTDOWN_TIME = 15;
 
 class CountdownTimer extends Component {
   state = {
