@@ -82,8 +82,8 @@ Form - Contains the title, error message and input fields (not the button)
   opacity: 0.3;
   width: 12vw;
   position: absolute;
-  left: 5%;
-  top: 80%;
+  left: 36%;
+  top: 82%;
 }
 
 .MobileOnly{
