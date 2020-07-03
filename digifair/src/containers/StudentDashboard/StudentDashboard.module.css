@@ -27,6 +27,12 @@
   padding-top: 3%;
   margin-left: 2%;
   text-align: center;
+  font-size: 1.7em;
+  text-align: center;
+  padding-bottom: 2%;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 .EventTime {
   width: 100%;
