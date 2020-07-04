@@ -88,11 +88,7 @@ class StudentDashboard extends Component {
 
         var ws = new WebSocket(
           // "ws://localhost:3000/?token=" + this.props.token
-<<<<<<< Updated upstream
           "wss://digifair-test.herokuapp.com/?token=" + this.props.token
-=======
-          "wss://digifair.app/?token=" + this.props.token
->>>>>>> Stashed changes
         );
 
         setInterval(() => {
