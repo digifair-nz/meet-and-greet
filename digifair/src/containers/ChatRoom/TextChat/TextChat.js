@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import messageSound from "../../../assets/audio/swiftly.mp3";
 import Talk from "talkjs";
 
 class TextChat extends Component {
@@ -7,6 +8,9 @@ class TextChat extends Component {
     super(props);
 
     this.inbox = undefined;
+    this.state = {
+      opened: false,
+    };
   }
 
   // shouldComponentUpdate() {
@@ -14,6 +18,9 @@ class TextChat extends Component {
   // }
   componentDidMount() {
     // Promise can be `then`ed multiple times
+
+    const audio = new Audio(messageSound);
+
     Talk.ready
       .then(() => {
         const me = new Talk.User({
@@ -55,6 +62,26 @@ class TextChat extends Component {
 
         // this.inbox.setFeedFilter();
         this.inbox.mount(this.container);
+
+        // Play a sound when a message is recieved.
+        this.inbox.on("open", () => {
+          this.setState({
+            opened: true,
+          });
+        });
+
+        this.inbox.on("close", () => {
+          this.setState({
+            opened: false,
+          });
+        });
+
+        var hidden = this.state.opened;
+        window.talkSession.on("message", () => {
+          if (!this.state.opened) {
+            audio.play();
+          }
+        });
       })
       .catch((e) => console.error(e));
   }
