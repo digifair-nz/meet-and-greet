@@ -45,22 +45,12 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
-  // localStorage.removeItem("token");
-  // localStorage.removeItem("credentials");
-  // localStorage.removeItem("talkJSData");
-
-  // localStorage.removeItem("name");
-  // localStorage.removeItem("inRoom");
-
   // Only save eventId
   const eventId = localStorage.getItem("eventId");
   localStorage.clear();
   localStorage.setItem("eventId", eventId);
 
   window.location.reload(false);
-  // Dequeue them from all companies if they are a student when they logout
-
-  // localStorage.removeItem("expirationDate");
 
   return {
     type: actionTypes.AUTH_LOGOUT,
@@ -84,14 +74,6 @@ export const recruiterAuthSuccess = (
   };
 };
 
-export const checkAuthTimeout = (expirationTime) => {
-  return (dispatch) => {
-    // setTimeout(() => {
-    //   // dispatch(studentLogout());
-    // }, expirationTime * 1000); // Expiration time should be based on the event expiration time
-  };
-};
-
 /**************
 EVENT FETCHING
 ***************/
@@ -104,7 +86,6 @@ export const fetchEvent = (eventName, eventExpiration) => {
 };
 
 export const auth = (eventId, email, password, isStudent) => {
-  console.log(email);
   return (dispatch) => {
     dispatch(authStart(eventId, true));
 
@@ -112,15 +93,10 @@ export const auth = (eventId, email, password, isStudent) => {
       email: email,
     };
 
-    console.log(authData);
     if (isStudent) {
       axios
         .post("/user/login/" + eventId, authData)
         .then((response) => {
-          // const expirationDate = new Date(
-          //   new Date().getTime() + response.data.expiresIn * 1000
-          // );
-          console.log(response);
           const token = response.headers["auth-token"];
           const name = jwt(token).name;
           const id = jwt(token)._id;
@@ -131,22 +107,17 @@ export const auth = (eventId, email, password, isStudent) => {
           localStorage.setItem("id", id);
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
-          // localStorage.setItem("expirationDate", expirationDate);
 
           dispatch(fetchEvent(event.name, event.eventExpiration));
           dispatch(studentAuthSuccess(token, name, id, null, null));
-          // dispatch(studentCheckAuthTimeout(response.data.expiresIn));
         })
         .catch((err) => {
-          // console.log(err.headers);
-          console.log(err.response);
           dispatch(authFail(err.response.data));
         });
     } else {
       axios
         .post("/company/login/" + eventId, authData)
         .then((response) => {
-          // console.log(response);
           const token = response.headers["auth-token"];
 
           const credentials = response.data.credentials;
@@ -165,11 +136,8 @@ export const auth = (eventId, email, password, isStudent) => {
           dispatch(fetchEvent(event.name, event.eventExpiration));
 
           dispatch(recruiterAuthSuccess(token, name, id, credentials, null));
-          // dispatch(recruiterCheckAuthTimeout(response.data.expiresIn));
         })
         .catch((err) => {
-          // console.log(err.headers);
-
           dispatch(authFail(err.response.data));
         });
     }
@@ -220,7 +188,6 @@ export const authCheckState = () => {
 
     let creds = null;
     if (credentials != null) {
-      //console.log(creds);
       creds = JSON.parse(credentials);
     }
 
@@ -242,10 +209,7 @@ export const authCheckState = () => {
 
     if (token != null) {
       isStudent = jwt(token).accountType === "student";
-      // console.log(decodedToken);
     }
-
-    // console.log(creds);
 
     if (token) {
       dispatch(fetchEvent(eventDetails.name, eventDetails.eventExpiration));
@@ -258,26 +222,6 @@ export const authCheckState = () => {
       } else {
         dispatch(studentAuthSuccess(token, name, id, null, talkjsData)); // only student can have no credentials at any point. Recruiter user will always be in sessions
       }
-
-      // dispatch(
-      //   studentCheckAuthTimeout(
-      //     (expirationDate.getTime() - new Date().getTime()) / 1000
-      //   )
-      // );
-      // dispatch(studentLogout());
-    } //else {
-    // const expirationDate = new Date(localStorage.getItem("expirationDate"));
-    // if (expirationDate <= new Date()) {
-    //   // dispatch(studentLogout());
-    // } else {
-    //   const userId = localStorage.getItem("userId");
-    //   dispatch(studentAuthSuccess(token, userId));
-    //   dispatch(
-    //     studentCheckAuthTimeout(
-    //       (expirationDate.getTime() - new Date().getTime()) / 1000
-    //     )
-    //   );
-    // }
-    //}
+    }
   };
 };

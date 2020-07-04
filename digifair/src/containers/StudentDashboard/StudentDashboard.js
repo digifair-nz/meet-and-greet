@@ -55,7 +55,6 @@ class StudentDashboard extends Component {
   // }
 
   componentDidMount() {
-    console.log("[STUDENT DASHBOARD] Mounted");
     const audio = new Audio(notificationSound);
 
     // Tutorial
@@ -87,8 +86,8 @@ class StudentDashboard extends Component {
         // Check that we haven't connected to the socket before
 
         var ws = new WebSocket(
-          "ws://localhost:3000/?token=" + this.props.token
-          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+          // "ws://localhost:3000/?token=" + this.props.token
+          "wss://digifair.app/?token=" + this.props.token
         );
 
         setInterval(() => {
@@ -99,15 +98,12 @@ class StudentDashboard extends Component {
           );
         }, 30000);
 
-        // console.log("Socket Connection Opened!");
         ws.onmessage = (message) => {
           // dispatch update queue position
-          //console.log(message);
-          const packet = JSON.parse(message.data);
-          //console.log(packet.messageType);
-          if (this.props.companies !== null && packet.companyId !== null) {
-            // console.log(packet.companyId);
 
+          const packet = JSON.parse(message.data);
+
+          if (this.props.companies !== null && packet.companyId !== null) {
             // Once the student reaches his turn
             if (packet.messageType === "ready") {
               // Find the company that is ready to chat and set the pop up
@@ -152,8 +148,6 @@ class StudentDashboard extends Component {
               );
             }
           }
-
-          console.log(message);
         };
       }
     }
@@ -246,7 +240,6 @@ class StudentDashboard extends Component {
       readyCheckPopUp = null;
     } else {
       companyCards = this.props.companies.map((company, index) => {
-        // console.log(company);
         return (
           <CompanyCard
             id={company._id}

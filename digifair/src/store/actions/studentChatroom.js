@@ -41,12 +41,11 @@ export const studentJoinChatroom = (companyId) => {
       .then((response) => {
         //console.log(response);
         const credentials = response.data.credentials;
-        console.log(credentials);
-        // console.log(credentials);
+
         // Save credentials to local storage
         const talkJSData = response.data.talkJSData;
         // expect recruiter talkJS data
-        console.log(talkJSData);
+
         // extract talkJSdata and save the object in local storage
         localStorage.setItem("talkJSData", JSON.stringify(talkJSData));
         //Don't forget to retrieve data from auth check state
@@ -107,7 +106,6 @@ export const studentLeaveChatroom = () => {
     axios
       .post("/user/end/")
       .then((response) => {
-        console.log(response);
         dispatch(studentLeaveChatroomSuccess());
       })
       .catch((err) => {

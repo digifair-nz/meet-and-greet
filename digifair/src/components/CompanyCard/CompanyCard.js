@@ -49,7 +49,7 @@ class CompanyCard extends Component {
 
   onCardClick = () => {
     // Prevent multiple queue requests
-    // console.log("Company card is queued: " + this.props.isQueued);
+
     if (!this.props.hadSession && !this.props.isQueued && !this.props.queuing) {
       this.props.queueToCompany(this.props.id, this.props.index);
     } else if (this.props.isQueued && !this.props.queuing) {
@@ -75,7 +75,6 @@ class CompanyCard extends Component {
   };
 
   render() {
-    console.log(this.props.hadSession);
     // If the student has talked to a recruiter from this company, disable queuing ability
     let currentClass = classes.CompanyCard;
 
@@ -108,10 +107,6 @@ class CompanyCard extends Component {
     } else if (this.props.index < 19) {
       nameColor = colors[5];
     }
-
-    // console.log(
-    //   "[COMPANY CARD] render: " + this.props.id + " " + this.state.showInfoPopup
-    // );
 
     // Activate the glow when the person is queued or disable if the person had session
     if (this.props.isQueued) {

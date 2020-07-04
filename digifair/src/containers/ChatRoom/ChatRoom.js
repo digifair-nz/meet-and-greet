@@ -123,10 +123,6 @@ class ChatRoom extends Component {
   };
 
   componentDidMount() {
-    // console.log("CHAT ROOM MOUNTED");
-    // console.log(this.props.credentials);
-    // console.log(this.props.isStudent);
-
     // Check if a student has connected into a session
     const audio = new Audio(notificationSound);
 
@@ -166,10 +162,6 @@ class ChatRoom extends Component {
     }
 
     document.title = "Session";
-    console.log(
-      "----------------------------- CREDENTIALS-----------------------------------"
-    );
-    console.log(this.props.credentials);
 
     if (this.props.credentials) {
       if (!this.props.isStudent) {
@@ -220,7 +212,6 @@ class ChatRoom extends Component {
         if (event.connection.connectionId != this.state.connectionId) {
           // Check if this is an initial connection (for the recruiter)
           if (this.state.connectionId === null) {
-            //console.log("I have connected");
             let connections = []; // Initially there are no connections
             connections.push(event.connection); // push his connection
 
@@ -234,7 +225,6 @@ class ChatRoom extends Component {
             });
           } else {
             // Recruiter has already joined
-            //console.log("Another client connected.");
 
             // The student has connected to the recruiter
             if (!this.props.isStudent) {
@@ -273,7 +263,6 @@ class ChatRoom extends Component {
       // Student Client Kicked
       if (this.props.isStudent) {
         otCore.on("sessionDisconnected", (event) => {
-          //console.log(event);
           // Clear students' credentials
           // Move them back to to the dashboard
           localStorage.removeItem("inRoom");
@@ -382,9 +371,6 @@ class ChatRoom extends Component {
   }
 
   kickStudent() {
-    //console.log(otCore);
-    //console.log(this.state);
-
     if (this.state.connections != null && !this.state.buttonClicked) {
       if (
         !this.props.isStudent &&
@@ -404,9 +390,7 @@ class ChatRoom extends Component {
             this.state.connectionId != this.state.connections[i].connectionId
           ) {
             //Kick the student with a different connection id
-            // console.log(this.state);
-            // console.log(this.state.connections[i]);
-            // console.log(otCore.session);
+
             this.setState({
               clicked: true,
             });
@@ -571,7 +555,7 @@ class ChatRoom extends Component {
       screenSubscriberClass,
     } = containerClasses(this.state);
 
-    console.log(this.state.connections);
+
     return (
       <div className={classes.ChatRoomContainer}>
         {/*This shows the recruiter user a tutorial of the platform covering kicking, inviting, chatting and video controlling  */}

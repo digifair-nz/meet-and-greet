@@ -16,10 +16,7 @@ class ReadyCheckPrompt extends Component {
     clicked: false,
   };
   onAcceptHandler = () => {
-    console.log("-------------Check");
-
     if (!this.state.clicked) {
-      console.log("Check");
       this.setState({
         clicked: true,
       });

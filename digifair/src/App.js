@@ -6,6 +6,7 @@ import * as actions from "./store/actions/index";
 
 import StudentDashboard from "./containers/StudentDashboard/StudentDashboard";
 import Auth from "./containers/Authenticaiton/StudentAuth/Auth";
+import EventFinder from "./containers/EventFinder/EventFinder";
 import ChatRoom from "./containers/ChatRoom/ChatRoom";
 // HOC
 import Layout from "./hoc/Layout/Layout";
@@ -18,11 +19,7 @@ class App extends Component {
     // check users local storage for a token and try to sign them in automatically
     // Also check credentials for a room session and redirect to the room if credentials are found
 
-    
     this.props.onTryAutoSignUp();
-    console.log(this.props.hasCredentials);
-    // localStorage.getItem("event")
-    console.log(this.props.eventId);
   }
 
   render() {
@@ -36,6 +33,7 @@ class App extends Component {
       <Switch>
         <Route path="/sign-in/:id" component={Auth} exact />
         {/* <Route path="/" component={StudentDashboard} exact /> */}
+        <Route path="/sign-in" component={EventFinder} exact />
         <Redirect to={urlWithEventId} />
       </Switch>
     );

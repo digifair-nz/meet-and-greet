@@ -39,7 +39,6 @@ export const kickStudent = () => {
     axios
       .post("/company/kick/")
       .then((response) => {
-        console.log(response);
         const credentials = response.data.credentials;
         localStorage.removeItem("credentials");
 
@@ -50,8 +49,6 @@ export const kickStudent = () => {
         dispatch(kickStudentSuccess(response.data.credentials));
       })
       .catch((err) => {
-        console.log(err);
-
         dispatch(kickStudentFail(err.response.data));
       });
   };
@@ -87,8 +84,6 @@ export const inviteNextStudent = () => {
     axios
       .post("/company/next/")
       .then((response) => {
-        console.log(response);
-
         // Save the fact that the recruiter is now searching
         localStorage.setItem("searching", true);
         dispatch(inviteNextStudentSuccess());
@@ -140,8 +135,6 @@ export const fetchStudentData = () => {
     axios
       .get("/company/student-details/")
       .then((response) => {
-        console.log(response);
-
         // Get name, appId and student's id for text chat
         const talkJSData = response.data.talkJSData;
         localStorage.setItem("talkJSData", JSON.stringify(talkJSData));
@@ -189,8 +182,6 @@ export const fetchQueueLength = () => {
     axios
       .get("/company/status")
       .then((response) => {
-        console.log(response);
-
         //roomIsSearching -- >
 
         // If the recruiter is searching

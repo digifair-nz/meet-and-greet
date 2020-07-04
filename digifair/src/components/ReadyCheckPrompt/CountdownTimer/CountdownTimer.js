@@ -14,7 +14,6 @@ class CountdownTimer extends Component {
         clearInterval(this.timer);
         this.props.onTimerEnd();
       } else {
-        console.log(this.state.seconds);
         this.setState((prevState) => {
           return {
             seconds: prevState.seconds - 1,

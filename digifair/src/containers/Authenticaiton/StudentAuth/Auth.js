@@ -10,7 +10,7 @@ import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import sot_logo from "../../../assets/company_logos/logo-sot-clear.png";
-import Auxiliary from "../../../hoc/Auxiliary"
+import Aux from "../../../hoc/Auxiliary";
 
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
@@ -55,8 +55,6 @@ class StudentAuth extends Component {
   };
 
   componentDidMount() {
-    console.log("AUTH CONTAINER MOUNTED");
-
     const eventId = this.props.match.params.id;
 
     this.setState({
@@ -118,7 +116,7 @@ class StudentAuth extends Component {
       let pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
       isValid = pattern.test(value) && isValid;
     }
-    console.log(value);
+
     return isValid;
   };
 
@@ -149,7 +147,6 @@ class StudentAuth extends Component {
 
         // Dispatch auth action
         if (!this.state.invalidForm) {
-          console.log(this.state.controls.email.value);
           this.props.onAuth(
             this.state.eventId,
             this.state.controls.email.value,
@@ -167,22 +164,11 @@ class StudentAuth extends Component {
   };
   render() {
     const formElementsArray = [];
-    // for (let key in this.state.controls) {
-    //   console.log(key);
-    //   formElementsArray.push({
-    //     id: key,
-    //     config: this.state.controls[key],
-    //   });
-    // }
-
-    // console.log("HERE 0");
-    // console.log(this.state.controls.email);
 
     formElementsArray[0] = {
       id: "email",
       config: this.state.controls.email,
     };
-
 
     formElementsArray[1] = {
       id: "password",
@@ -204,10 +190,12 @@ class StudentAuth extends Component {
     // ));
 
     let form = (
-      <Auxiliary>
+      <Aux>
         <Input
           key={formElementsArray[0].id}
-          changed={(event) => this.inputChangedHandler(event, formElementsArray[0].id)}
+          changed={(event) =>
+            this.inputChangedHandler(event, formElementsArray[0].id)
+          }
           elementType={formElementsArray[0].config.elementType}
           elementConfig={formElementsArray[0].config.elementConfig}
           value={formElementsArray[0].config.value}
@@ -218,7 +206,9 @@ class StudentAuth extends Component {
         />
         <Input
           key={formElementsArray[1].id}
-          changed={(event) => this.inputChangedHandler(event, formElementsArray[1].id)}
+          changed={(event) =>
+            this.inputChangedHandler(event, formElementsArray[1].id)
+          }
           elementType={formElementsArray[1].config.elementType}
           elementConfig={formElementsArray[1].config.elementConfig}
           value={formElementsArray[1].config.value}
@@ -227,12 +217,11 @@ class StudentAuth extends Component {
           touched={formElementsArray[1].config.touched}
           isStudent={this.state.isStudent}
         />
-      </Auxiliary>
+      </Aux>
     );
 
     let authed = null;
 
-    // console.log(this.props.token == null);
     if (this.props.authenticated) {
       authed = <Redirect to={this.props.authRedirectPath} />;
     }
@@ -251,15 +240,15 @@ class StudentAuth extends Component {
     }
 
     return (
-
-      <Auxiliary>
+      <Aux>
         <div className={classes.MobileOnly}>
           <img
             className={classes.Logo}
             src={digifairLogo}
             alt="Digifair Black and White Logo"
           />
-        Please use a <strong>computer</strong> or <strong>tablet</strong> to attend this event!
+          Please use a <strong>computer</strong> or <strong>tablet</strong> to
+          attend this event!
         </div>
 
         <div
@@ -269,8 +258,6 @@ class StudentAuth extends Component {
               : classes.AuthContainerCompany
           }
         >
-
-
           {
             authed /*This causes authenticated users to be redirected to the root */
           }
@@ -279,7 +266,6 @@ class StudentAuth extends Component {
             src={digifairLogo}
             alt="Digifair Black and White Logo"
           />
-
 
           <div className={classes.FormContainer}>
             <form
@@ -301,13 +287,13 @@ class StudentAuth extends Component {
             {this.props.loading ? (
               <Spinner />
             ) : (
-                <Button
-                  clicked={(event) => this.submitHandler(event)}
-                  btnType="Accept"
-                >
-                  Sign in
-                </Button>
-              )}
+              <Button
+                clicked={(event) => this.submitHandler(event)}
+                btnType="Accept"
+              >
+                Sign in
+              </Button>
+            )}
           </div>
           <div
             className={
@@ -323,7 +309,7 @@ class StudentAuth extends Component {
             ></img>
           </div>
         </div>
-      </Auxiliary>
+      </Aux>
     );
   }
 }

@@ -13,7 +13,6 @@ class CompanyDescription extends Component {
   }
 
   render() {
-    //console.log("COMPANY DESCRIPTION");
     return (
       <div
         onClick={this.props.closeModal}

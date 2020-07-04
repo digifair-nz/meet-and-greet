@@ -27,7 +27,6 @@ class SessionInfoCard extends Component {
   // }
 
   startTimer = () => {
-    console.log(this.props.startTimer);
     // Might consider saving duration
     if (this.props.startTimer) {
       this.timer = setInterval(() => {
