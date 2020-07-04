@@ -41,7 +41,7 @@ module.exports = function(wsInstance) {
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
                 // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
                 // console.log(`Rooms: ${rooms}`)
-                console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
+                console.log(`Rooms ${this.eventId} ${this.companyId} ${rooms.length}: ${rooms.map(room => room.inSession)}`)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
@@ -114,7 +114,7 @@ module.exports = function(wsInstance) {
                         }
                         userCtrl.broadcastQueueUpdate(updatedQueue)
                         activeNotificationsGlobal.splice(activeNotificationsGlobal.indexOf(user._id))
-                    }, 10000)
+                    }, process.env.NOTIFICATION_DURATION)
                     console.log(user._id, this.activeNotifications, this.activeNotifications.includes(user._id), availableRooms)
                     console.log('Sent notification for user ' + user.name)
                     client.send(JSON.stringify({
