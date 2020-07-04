@@ -20,7 +20,7 @@ class Toolbar extends Component {
 
   */
   state = {
-    minimized: true, // Refers to the toolbar
+    minimized: false, // Refers to the toolbar
     menuClass: "ToggleMenu",
     active: false, // When the menu is clicked
   };

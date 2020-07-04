@@ -107,11 +107,11 @@ class RecruiterSlider extends Component {
         <h1 className={classes.WelcomeMessage}>Welcome to DIGIFAIR</h1>
         <div className={classes.SlideContent}>
           <span>
-            This short tutorial will walk you through all of the features of this
-            application.
+            This short tutorial will walk you through all of the features of
+            this application.
           </span>
           <br />
-          
+
           <img
             src={relaxedWorker}
             alt="Digital worker on a hammock with a computer and a plant"
@@ -135,20 +135,17 @@ class RecruiterSlider extends Component {
         <h1 className={classes.SlideTitle}>Queuing and Dequeuing</h1>
 
         <div className={classes.SlideContent}>
-
           <span>
             You can queue for a specific company by clicking on the company card
-          in the dashboard. Once queued, simply click again if you wish
-          to dequeue.
+            in the dashboard. Once queued, simply click again if you wish to
+            dequeue.
           </span>
-        
+
           <div className={classes.DigifairCompanyCard}>{companyCard}</div>
           <div className={classes.TextContainer}>
             <div className={classes.IconText}>
               <div className={classes.GreenCircle}></div>
-              <span>
-                Green circle means you are eligible to queue. 
-            </span>
+              <span>Green circle means you are eligible to queue.</span>
             </div>
             <div className={classes.IconText}>
               <img
@@ -156,9 +153,7 @@ class RecruiterSlider extends Component {
                 src={informationIcon}
                 alt="Information icon"
               />
-              <span>
-                Presents additional information on the company. 
-            </span>
+              <span>Presents additional information on the company.</span>
             </div>
 
             <div className={classes.IconText}>
@@ -168,8 +163,8 @@ class RecruiterSlider extends Component {
                 src={userIcon}
               />
               <span>
-                Queueing replaces green circle with your position in queue. 
-            </span>
+                Queueing replaces green circle with your position in queue.
+              </span>
             </div>
           </div>
         </div>
@@ -186,14 +181,13 @@ class RecruiterSlider extends Component {
       <Aux>
         <h1 className={classes.SlideTitle}>Control Buttons</h1>
         <div className={classes.SlideContent}>
-
           <span>
             Control buttons are found in the toolbar menu on your left (click on
             the hamburger).
           </span>
-            <span>
-              You can also display this tutorial again and logout when you have
-              finished the event.
+          <span>
+            You can also display this tutorial again and logout when you have
+            finished the event.
           </span>
           <div className={classes.ButtonContainer}>
             <button
@@ -201,25 +195,25 @@ class RecruiterSlider extends Component {
               className={classes.Button}
             >
               Queue All
-          </button>
+            </button>
 
             <span className={classes.ButtonText}>
               You can queue and dequeue from all companies simultaneously.
-          </span>
+            </span>
             <button
               style={{ backgroundColor: "##bf3b33", color: "white" }}
               className={classes.Button}
             >
               Disconnect
-          </button>
+            </button>
 
             <span className={classes.ButtonText}>
               Once you are in a session with the reviewer, this button will be
               available to you for disconnecting from the session and come back
               the main event dashboard.
-            <strong>
+              <strong>
                 However it is advised that you allow reviewer to disconnect you.
-            </strong>
+              </strong>
             </span>
           </div>
         </div>
@@ -236,16 +230,15 @@ class RecruiterSlider extends Component {
       <Aux>
         <h1 className={classes.SlideTitle}>Ready Check</h1>
         <div className={classes.SlideContent}>
-
           <span className={classes.TextChatLabel}>
             Once it is your turn, you must accept or decline the company's
-          invitation. <br />
+            invitation. <br />
             <strong>You will have 10 seconds to do so.</strong>
             <br />
             <strong style={{ color: "red" }}>
               Please allow notifications as we will send you an audio and web
               alert when you need to accept your turn.
-          </strong>
+            </strong>
           </span>
           <div className={classes.ButtonContainer}>
             <button
@@ -257,16 +250,16 @@ class RecruiterSlider extends Component {
               className={classes.Button}
             >
               Accept
-          </button>
+            </button>
 
             <span className={classes.ButtonText}>
               Once you click on this, you will be redirected to the company room
-            where you will see the reviewer.{" "}
+              where you will see the reviewer.{" "}
               <strong style={{ color: "red" }}>
                 If it will be your first time, make sure you allow usage of your
                 webcam and microphone if you have those otherwise you will not
                 connect!
-            </strong>
+              </strong>
             </span>
             <button
               style={{
@@ -277,12 +270,12 @@ class RecruiterSlider extends Component {
               className={classes.Button}
             >
               Decline
-          </button>
+            </button>
 
             <span className={classes.ButtonText}>
               If you decline or do not accept in time, you will be removed from
               the queue and won't be able to queue again for 10 seconds.
-          </span>
+            </span>
           </div>
         </div>
         <button onClick={this.prevSlide} className={classes.ControlButtonPrev}>
@@ -305,8 +298,8 @@ class RecruiterSlider extends Component {
               once.
             </strong>
             <br />
-            It is important that you allow this application to use those features
-            if you have a web-camera and a microphone. <br />
+            It is important that you allow this application to use those
+            features if you have a web-camera and a microphone. <br />
             <strong style={{ color: "red" }}>
               If you won't allow, you won't be able to connect to a reviewer.
             </strong>
@@ -328,7 +321,6 @@ class RecruiterSlider extends Component {
       <Aux>
         <h1 className={classes.SlideTitle}>Video Controls</h1>
         <div className={classes.SlideContent}>
-
           <div className={classes.VideoControlsContainer}>
             <div className={classes.MicIcon}></div>
             <div className={classes.CameraIcon}></div>
@@ -336,8 +328,9 @@ class RecruiterSlider extends Component {
           </div>
 
           <span>
-            Once you are in the session, you can use these buttons to <br /> <strong>Mute</strong>
-            , <strong>Camera Toggle</strong>, and <strong>Screen Share</strong>.
+            Once you are in the session, you can use these buttons to <br />{" "}
+            <strong>Mute</strong>, <strong>Camera Toggle</strong>, and{" "}
+            <strong>Screen Share</strong>.
           </span>
         </div>
 
@@ -354,16 +347,17 @@ class RecruiterSlider extends Component {
       <Aux>
         <h1 className={classes.SlideTitle}>Text Chat</h1>
         <div className={classes.SlideContent}>
-
           <img src={textChatIcon} className={classes.TextChatIcon} />
           <span className={classes.TextChatLabel}>
             This text bubble icon will appear when you have connected to the
             session with a reviewer.
-          <br />
-          You can exchange messages through this chat during the session
-          duration. <br />
-          Your conversation is not stored and no user can see the previous
-          conversation.
+            <br />
+            You can exchange messages through this chat during the session
+            duration. <br />
+            You will hear a notification sound when you will recieve a message.
+            <br />
+            Your conversation is not stored and no user can see the previous
+            conversation.
           </span>
         </div>
         <button onClick={this.nextSlide} className={classes.ControlButtonNext}>
@@ -381,8 +375,7 @@ class RecruiterSlider extends Component {
         <h1 className={classes.SlideTitle}>Session Information</h1>
         <div className={classes.SlideContent}>
           <span>
-            This UI elements provides useful information about the
-            session.
+            This UI elements provides useful information about the session.
           </span>
           <div className={classes.sessionCardContainer}>
             <div className={classes.NameCard}>
@@ -438,8 +431,8 @@ class RecruiterSlider extends Component {
           </span>
           <img src={DigifairLogo} className={classes.DigifairLogo} />
           <span className={classes.TextChatLabel}>
-            Brought to you by Peter G., Michael S. and Mercury L. from Big Commit
-            Labs.
+            Brought to you by Peter G., Michael S. and Mercury L. from Big
+            Commit Labs.
           </span>
         </div>
         <button onClick={this.prevSlide} className={classes.ControlButtonPrev}>

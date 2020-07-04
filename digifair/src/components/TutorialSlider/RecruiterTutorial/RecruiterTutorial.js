@@ -67,25 +67,25 @@ class RecruiterSlider extends Component {
         <div className={classes.SlideContent}>
           <span>
             The session control buttons can be found on the slider menu on the
-          left <br /> (press on the hamburger menu below the logo).
-        </span>
+            left <br /> (press on the hamburger menu below the logo).
+          </span>
           <div className={classes.ButtonContainer}>
             <button className={classes.Button}>Disonnect Student</button>
             <span className={classes.ButtonText}>
-              This button is responsible for permanently kicking the student from
-              the session. It will cause you to jump into a new session.
-          </span>
+              This button is responsible for permanently kicking the student
+              from the session. It will cause you to jump into a new session.
+            </span>
           </div>
           <div className={classes.TextContainer}>
             <span>
               <strong>
                 You should always disconnect the session before finding the next
                 student.
-              <br />
+                <br />
               </strong>
-            It is possible that students lose connection or leave the session
-            themselves, <br />
-            in which case{" "}
+              It is possible that students lose connection or leave the session
+              themselves, <br />
+              in which case{" "}
               <strong>you still need to click on the disconnect button</strong>
             </span>
           </div>
@@ -109,20 +109,20 @@ class RecruiterSlider extends Component {
               className={classes.Button}
             >
               Invite Next Student
-          </button>
+            </button>
 
             <span className={classes.ButtonText}>
-              This button is responsible for opening your room for the next queued
-              student. After you have kicked the student and jumped to a new session,
-              when you are ready you can get next student.
-          </span>
+              This button is responsible for opening your room for the next
+              queued student. After you have kicked the student and jumped to a
+              new session, when you are ready you can get next student.
+            </span>
           </div>
           <div className={classes.TextContainer}>
             <span>
               <strong>
                 Initially, you can begin the search without disconnecting.
-              <br /> After, you should always disconnect the student first.
-            </strong>
+                <br /> After, you should always disconnect the student first.
+              </strong>
             </span>
           </div>
         </div>
@@ -147,9 +147,8 @@ class RecruiterSlider extends Component {
 
           <span>
             The above are Microphone Mute, Camera Toggle and Screen Share.
-          <br /> They are available for students to use also.
-        </span>
-
+            <br /> They are available for students to use also.
+          </span>
         </div>
         <button onClick={this.nextSlide} className={classes.ControlButtonNext}>
           Next
@@ -171,6 +170,8 @@ class RecruiterSlider extends Component {
           <br />
           You can exchange messages through this chat during the session
           duration. <br />
+          You will hear a notification sound when you will recieve a message.
+          <br />
           Your conversation is not stored and no student can see the previous
           conversation.
         </span>
@@ -191,9 +192,9 @@ class RecruiterSlider extends Component {
 
         <div className={classes.SlideContent}>
           <span>
-            There are three UI elements which provide useful information about the
-            session.
-        </span>
+            There are three UI elements which provide useful information about
+            the session.
+          </span>
           <div className={classes.sessionCardContainer}>
             <div className={classes.NameCard}>
               <img
@@ -204,9 +205,9 @@ class RecruiterSlider extends Component {
               <span>James Bond</span>
             </div>
             <span>
-              This card will appear when you have connected with a student on the
-              center top of your screen. It shows the student's name.
-          </span>
+              This card will appear when you have connected with a student on
+              the center top of your screen. It shows the student's name.
+            </span>
             <div className={classes.NameCard}>
               <div className={classes.SessionInfo}>
                 <div>
@@ -222,11 +223,10 @@ class RecruiterSlider extends Component {
             </div>
             <span>
               This indicates the session duration with the current student (in
-              minutes). It also shows how many students are currently awaiting in
-              queue for your company. This will be in the bottom left corner.
-          </span>
+              minutes). It also shows how many students are currently awaiting
+              in queue for your company. This will be in the bottom left corner.
+            </span>
           </div>
-
         </div>
         <button onClick={this.nextSlide} className={classes.ControlButtonNext}>
           Next
@@ -242,17 +242,16 @@ class RecruiterSlider extends Component {
         <h1 className={classes.SlideTitle}>Alerts</h1>
 
         <div className={classes.SlideContent}>
-
           <img src={errorIcon} className={classes.ErrorIcon} />
           <span className={classes.TextChatLabel}>
             Whenever the student disconnects for a period of time, we will send
-          you an alert. <br />
-          In some cases, students might've only temporarily lost connection or{" "}
+            you an alert. <br />
+            In some cases, students might've only temporarily lost connection or{" "}
             <br />
-          accidently closed the tab, so they can still reconnect. However if you
-          wish to disconnect them permanently, <br />
-          you can use the disconnect button and move onto a new session.
-        </span>
+            accidently closed the tab, so they can still reconnect. However if
+            you wish to disconnect them permanently, <br />
+            you can use the disconnect button and move onto a new session.
+          </span>
         </div>
         <button onClick={this.nextSlide} className={classes.ControlButtonNext}>
           Next
@@ -268,16 +267,14 @@ class RecruiterSlider extends Component {
         <h1 className={classes.SlideTitle}>Have fun!</h1>
 
         <div className={classes.SlideContent}>
-
-        <span className={classes.TextChatLabel}>
-          Connecting you with talent since 2020.
-        </span>
-        <img src={DigifairLogo} className={classes.DigifairLogo} />
-        <span className={classes.TextChatLabel}>
-          Brought to you by Peter G., Michael S. and Mercury L. from Big Commit
-          Labs.
-        </span>
-
+          <span className={classes.TextChatLabel}>
+            Connecting you with talent since 2020.
+          </span>
+          <img src={DigifairLogo} className={classes.DigifairLogo} />
+          <span className={classes.TextChatLabel}>
+            Brought to you by Peter G., Michael S. and Mercury L. from Big
+            Commit Labs.
+          </span>
         </div>
         <button onClick={this.prevSlide} className={classes.ControlButtonPrev}>
           Previous

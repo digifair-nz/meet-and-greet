@@ -61,8 +61,22 @@ QUEUE/DEQUEUE STUDENT
 // Queue to all
 const queueToAllStart = (state, action) => {
   // Make all the companies load
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+  // Iterate through the companies that are currentely not queued and have had no session
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    // Update their queuePositions and isQueued
+
+    if (!company.hadSession && !company.isQueued) {
+      company.queuing = true;
+    }
+    //return company;
+  });
+
   return updateObject(state, {
     loading: true,
+    companies: updatedCompanies,
   });
 };
 
@@ -76,6 +90,7 @@ const queueToAllSuccess = (state, action) => {
 
       if (company._id === action.companies[i].queueId) {
         company.isQueued = true;
+        company.queuing = false;
         company.queuePosition = action.companies[i].queuePosition;
       }
       //return company;
@@ -90,16 +105,45 @@ const queueToAllSuccess = (state, action) => {
 };
 
 const queueToAllFail = (state, action) => {
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+  // Iterate through the companies that are currentely not queued and have had no session
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    // Update their queuePositions and isQueued
+
+    if (!company.hadSession && !company.isQueued) {
+      company.queuing = false;
+    }
+    //return company;
+  });
+
   return updateObject(state, {
     loading: false,
     error: action.error,
+    companies: updatedCompanies,
   });
 };
 
 const dequeueFromAllStart = (state, action) => {
   // Make all the companies load
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+  // Iterate through the companies that are currentely not queued and have had no session
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    // Update their queuePositions and isQueued
+
+    if (!company.hadSession && company.isQueued) {
+      company.queuing = true;
+    }
+    //return company;
+  });
+
   return updateObject(state, {
     loading: true,
+
+    companies: updatedCompanies,
   });
 };
 
@@ -111,6 +155,7 @@ const dequeueFromAllSuccess = (state, action) => {
 
     if (company.isQueued && !company.hadSession) {
       company.isQueued = false;
+      company.queuing = false;
       company.queuePosition = null;
     }
   });
@@ -123,9 +168,23 @@ const dequeueFromAllSuccess = (state, action) => {
 };
 
 const dequeueFromAllFail = (state, action) => {
+  const updatedCompanies = cloneDeep(state.companies); // Make a deep copy of the companies array
+  // Iterate through the companies that are currentely not queued and have had no session
+  updatedCompanies.map((company) => {
+    // Loop through all the companies
+
+    // Update their queuePositions and isQueued
+
+    if (!company.hadSession && company.isQueued) {
+      company.queuing = false;
+    }
+    //return company;
+  });
+
   return updateObject(state, {
     loading: false,
     error: action.error,
+    companies: updatedCompanies,
   });
 };
 
