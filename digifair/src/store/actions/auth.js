@@ -91,6 +91,7 @@ export const auth = (eventId, email, password, isStudent) => {
 
     let authData = {
       email: email,
+      password: password,
     };
 
     if (isStudent) {
