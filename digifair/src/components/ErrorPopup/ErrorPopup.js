@@ -18,12 +18,13 @@ This is shown when an error occurs
 const errorPopup = (props) => {
   //Incase the event has been reset, log the user out
   if (props.error) {
+    console.log(props.error);
     if (props.error.reloginRequired) {
       props.logout();
     }
   }
 
-  console.log(props.error);
+ 
   return (
     <Modal show={props.show} modalClosed={props.modalClosed}>
       <div className={classes.ErrorContainer}>

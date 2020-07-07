@@ -25,6 +25,11 @@ class App extends Component {
   render() {
     let urlWithEventId = "/sign-in";
 
+    let eventId = localStorage.getItem("eventId");
+    if (eventId) {
+      urlWithEventId += "/" + eventId;
+    }
+
     if (this.props.eventId !== null) {
       urlWithEventId += "/" + this.props.eventId;
     }
