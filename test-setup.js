@@ -190,6 +190,11 @@ async function testSeed() {
         logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
     })
     await company3.save()
+    const company4 = new Company({
+        name: "Imagr",
+        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
+    })
+    await company4.save()
 
     const users = [
         { name: 'Patrick Calver', email: 'patrick@gmail.com' },
@@ -252,7 +257,7 @@ async function testSeed() {
         {
             name: 'Jiaru Lin',
             email: 'jiaru@gmail.com',
-            companyId: company2._id
+            companyId: company4._id
         },
         {
             name: 'Ben Rudduck',
@@ -268,7 +273,7 @@ async function testSeed() {
         await room.newSessionId()
     }
 
-    event.companiesAttending = [company1._id, company2._id, company3._id]
+    event.companiesAttending = [company1._id, company2._id, company3._id, company4._id]
     await event.save()
 
     const queue1 = new Queue({
@@ -283,10 +288,15 @@ async function testSeed() {
         eventId: event._id,
         companyId: company3._id
     })
+    const queue4 = new Queue({
+        eventId: event._id,
+        companyId: company4._id
+    })
 
     await queue1.save()
     await queue2.save()
     await queue3.save()
+    await queue4.save()
 
     return event._id
 }
