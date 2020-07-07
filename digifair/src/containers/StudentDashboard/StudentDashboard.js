@@ -86,9 +86,9 @@ class StudentDashboard extends Component {
         // Check that we haven't connected to the socket before
 
         var ws = new WebSocket(
-          // "wss://digifair-test.herokuapp.com/?token=" + this.props.token
+          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
           // "ws://localhost:3000/?token=" + this.props.token
-          "wss://www.digifair.app/?token=" + this.props.token
+          // "wss://www.digifair.app/?token=" + this.props.token
         );
 
         setInterval(() => {
