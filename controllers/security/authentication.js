@@ -30,7 +30,7 @@ async function adminLogin(req, res) {
 }
 
 async function studentLogin(req, res) {
-    if(!validate.isEmail(req.body, res)) {
+    if(!validate.isLogin(req.body, res)) {
         return
     }
     if(!validate.isId(req.params, res)) {
@@ -59,7 +59,7 @@ async function studentLogin(req, res) {
 }
 
 async function companyLogin(req, res) {
-    if(!validate.isEmail(req.body)) {
+    if(!validate.isLogin(req.body)) {
         return
     }
     if(!validate.isId(req.params)) {
