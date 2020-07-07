@@ -47,8 +47,13 @@ const companySchema = Joi.object({
     email: Joi.string().required().email(),
     name: Joi.string()
 })
+const loginSchema = Joi.object({
+    email: Joi.string().required().email(),
+    password: Joi.string()
+})
 
 module.exports = {
+    isLogin: isValid(loginSchema),
     isEvent: isValid(eventSchema),
     isId: isValid(idSchema),
     isString: isValid(stringSchema),
