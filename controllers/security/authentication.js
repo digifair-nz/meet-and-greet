@@ -59,10 +59,10 @@ async function studentLogin(req, res) {
 }
 
 async function companyLogin(req, res) {
-    if(!validate.isLogin(req.body)) {
+    if(!validate.isLogin(req.body, res)) {
         return
     }
-    if(!validate.isId(req.params)) {
+    if(!validate.isId(req.params, res)) {
         return
     }
 

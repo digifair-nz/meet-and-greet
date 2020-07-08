@@ -171,133 +171,51 @@ async function seedDatabase(opentok = false) {
 }
 
 async function testSeed() {
+    const userNames = ['Johniel', 'Annie', 'Ann Susan', 'Cecilia', 'Ric', 'Yoon Jung', 'Sherine', 'Jaay', 'Gene', 'Andrew', 'Pearly', 'Cristi', 'Richard Lee', 'Jordan', 'Mj', 'Jessie', 'Sultan', 'Naveen', 'Jerry', 'Henry', 'Nathanael Rais', 'Piyush', 'Spp', 'Vincent', 'David', 'Anahita', 'Thomas', 'Andrei', 'Dyego Oliveira', 'Cherie', 'Nidhi', 'Joe Gu', 'Taine', 'Ryan', 'Doris', 'Ryan', 'Di Kun', 'Sherman', 'Mridula', 'Dave Shin', 'Yoon Jung', 'Karl', 'Jafar', 'Joshua', 'George', 'Richard Lee', 'Anton Rozhanskii', 'Fernando', 'Sunny', 'Sharon', 'Chetan', 'Bernie', 'Vimi', 'Matt', 'Melissa', 'Saedeepu', 'Raman', 'Songyan', 'Ehsaas', 'Nishat']
+
+    const userEmails = ['accounts@johniel.nz', 'annie.e.freeman@gmail.com', 'annsusan1923@gmail.com', 'ceciliayin@yahoo.com', 'ricjohn.genoguin@gmail.com', 'byyoonj@gmail.com', 'sherine.balaha@gmail.com', 'sriramemailsyou@gmail.com', 'gene.d.culling@gmail.com', 'a.khomushin@gmail.com', 'choongpl@gmail.com', 'ilagancris@myvuw.ac.nz', 'richard_875@me.com', 'jordan.gelling@yahoo.co.nz', 'rhymermj@gmail.com', 'nzjessierongen@gmail.com', 'smob123@hotmail.com', 'thebanterage@gmail.com', 'jerryyangliufan@hotmail.com', 'henryb679@outlook.com', 'nathanael@nathansoftware.com', 'sharmapiyush4613@gmail.com', 'sooryaprakml@gmail.com', 'tranhieunz@gmail.com', 'davidcorner90@gmail.com', 'anahita.karpour@gmail.com', 'thomas@rainfords.net', 'tatarov.andrey@gmail.com', 'dyegomendonca@gmail.com', 'cheriedeng@gmail.com', 'nidhipatel01@hotmail.com', 'xiaozhougu@hotmail.com', 'tainejcollins@gmail.com', 'ryanbircham@gmail.com', 'hlee441@aucklanduni.ac.nz', 'rtan265@gmail.com', 'me@dikunong.nz', 'shermanchin33@gmail.com', 'mridulamanderwad@gmail.com', 'wndyddld12@gmail.com', 'byyoonj@gmail.com', 'karl.cc14@gmail.com', 'jmaa831@aucklanduni.ac.nz', 'joshuaglennmurphy@gmail.com', 'gbla987@aucklanduni.ac.nz', 'richard_875@me.com', 'anton_rozhanskii@yahoo.com', 'jparrax17@gmail.com', 'sunnyfengnz@gmail.com', 'sharonmathews00@gmail.com', 'takyarchetan@gmail.com', 'berniemaecruz@gmail.com', 'vimu94@gmail.com', 'matthewnsinclair@gmail.com', 'melissalokvw+sot@gmail.com', 'saedeepu23@gmail.com', 'er.ramankumari@gmail.com', 'songyanstteng@hotmail.com', 'ehsaas.grover@hotmail.com', 'dr.nishats@yahoo.com']
+
+    const recruiterNames = ['Alan Doak', 'Alex Corkin', 'Bevan Dunning', 'Cara Hill', 'Daniel Donbavand', 'Gus Watson', 'Ico', 'James Freeman', 'Janelle Baptist', 'Melonie Cole', 'Nick', 'Prae Songprasit', 'Sarah Lock', 'Shaun Field', 'Simon Murcott', 'Tom Bojesen-Trepka', 'Walter Lim']
+
+    const recruiterEmails = ['alan@sharesies.co.nz', 'alexcorkin@gmail.com', 'bevan.dunning@gmail.com', 'cara.hill@ackama.com', 'donbavand@gmail.com', 'gus@sharesies.co.nz', 'icos@amazon.com', 'j.daniel.freeman@gmail.com', 'janelle.baptist@gmail.com', 'melonie@mindshift.kiwi', 'nickcho@amazon.com', 'prae@lackofcolours.com', 'sarlock@amazon.com', 'shaun.field@nintex.com', 'simon.murcott@lyniate.com', 'tombt@amazon.com', 'waltissomewhere@gmail.com']
+
     const event = new Event({
-        name: "Beta test",
+        name: "CV Reviews",
         expirationDate: 'December 17, 1995 03:24:00'
     })
-    const company1 = new Company({
-        name: "Google",
-        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/googleLogo.png?alt=media&token=0bb51a33-acd0-4294-992b-c1a5dd40630e",
-    })
-    await company1.save()
-    const company2 = new Company({
-        name: "Xero",
-        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/xeroLogo.png?alt=media&token=91557793-95e2-47a2-b75b-c52f6152daa1",
-    })
-    await company2.save()
-    const company3 = new Company({
-        name: "Imagr",
-        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
-    })
-    await company3.save()
-    const company4 = new Company({
-        name: "Imagr",
-        logoURL: "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
-    })
-    await company4.save()
 
-    const users = [
-        { name: 'Patrick Calver', email: 'patrick@gmail.com' },
-        { name: 'Anqi Wang', email: 'anqi@gmail.com' },
-        { name: 'Toni King', email: 'toni@gmail.com' },
-        { name: 'Joyce Zhuang', email: 'joyce@gmail.com' },
-        { name: 'Laur Shekouh', email: 'laura@gmail.com' },
-        { name: 'Sophia Chen', email: 'sophia@gmail.com' },
-        { name: 'Kinan Cheung ', email: 'kinan@gmail.com' },
-        { name: 'Flynn Fromont', email: 'flynn@gmail.com' },
-        { name: 'Yuwei Shen', email: 'yuwei@gmail.com' },
-        { name: 'Daniel Li', email: 'daniel@gmail.com' },
-        { name: 'Helen Meng', email: 'helen@gmail.com' },
-        { name: 'Luke Patterson', email: 'luke@gmail.com' },
-        { name: 'Alan Lin', email: 'alan@gmail.com' },
-        { name: 'Hozhin Man', email: 'hozhin@gmail.com' },
-        { name: 'Hajin Kim', email: 'hajin@gmail.com' },
-        { name: 'Pascal Murabula ', email: 'pascal@gmail.com' },
-        { name: 'Jayna Patel', email: 'jayna@gmail.com' },
-        { name: 'Andy Chen', email: 'andy@gmail.com' },
-        { name: 'David Lister ', email: 'david@gmail.com' },
-        { name: 'Beverley Sun', email: 'beverley@gmail.com' },
-        { name: 'Louis Lo', email: 'louis@gmail.com' },
-        { name: 'Oliver Merton ', email: 'oliverm@gmail.com' },
-        { name: 'Marshall Heath', email: 'marshall@gmail.com' },
-        { name: 'Andrew Kim', email: 'andrew@gmail.com' },
-        { name: 'Riley Allen', email: 'riley@gmail.com' },
-        { name: 'Konstantin Deridov', email: 'kostya@gmail.com' },
-        { name: 'Oliver Zhu', email: 'oliverz@gmail.com' },
-        { name: 'Simon Cheng', email: 'simon@gmail.com' },
-        { name: 'Inuka Panditha', email: 'inuka@gmail.com' },
-        { name: 'Nic Barker ', email: 'nic@gmail.com' },
-        { name: 'So Tech', email: 'sot@gmail.com' },
-        { name: 'Finn Palmer', email: 'finn@gmail.com' },
-        { name: 'Steven Li', email: 'steven@gmail.com' },
-        { name: 'CD ES', email: 'cdes@gmail.com' },
-        { name: 'Jessica Fenwick', email: 'jessica@gmail.com' }
-    ]
-    for(const userData of users) {
-        const user = new User(userData)
-        await user.save()
+    for(let i = 0; i < userNames.length; i++) {
+        const user = new User({
+            name: userNames[i],
+            email: userEmails[i]
+        })
+        user.save()
     }
 
-    const rooms = [
-        {
-            name: 'Geordie Rogers',
-            email: 'geordie@gmail.com',
-            companyId: company1._id
-        },
-        {
-            name: 'Michael Shaimerden',
-            email: 'michael@gmail.com',
-            companyId: company1._id
-        },
-        {
-            name: 'Peter Goedeke',
-            email: 'peter@gmail.com',
-            companyId: company2._id
-        },
-        {
-            name: 'Jiaru Lin',
-            email: 'jiaru@gmail.com',
-            companyId: company4._id
-        },
-        {
-            name: 'Ben Rudduck',
-            email: 'ben@gmail.com',
-            companyId: company3._id
-        },
-    ]
-    for(const roomData of rooms) {
+    const companies = []
+    for(let i = 0; i < recruiterNames.length; i++) {
+        const company = new Company({
+            name: recruiterNames[i].split(' ')[0],
+            logoURL: ' '
+        })
+        companies.push(company._id)
         const room = new Room({
             eventId: event._id,
-            ...roomData
+            companyId: company._id,
+            name: recruiterNames[i],
+            email: recruiterEmails[i]
         })
-        await room.newSessionId()
+        const queue = new Queue({
+            eventId: event._id,
+            companyId: company._id    
+        })
+        queue.save()
+        company.save()
+        room.newSessionId()
     }
+    event.companiesAttending = companies
 
-    event.companiesAttending = [company1._id, company2._id, company3._id, company4._id]
-    await event.save()
-
-    const queue1 = new Queue({
-        eventId: event._id,
-        companyId: company1._id
-    })
-    const queue2 = new Queue({
-        eventId: event._id,
-        companyId: company2._id
-    })
-    const queue3 = new Queue({
-        eventId: event._id,
-        companyId: company3._id
-    })
-    const queue4 = new Queue({
-        eventId: event._id,
-        companyId: company4._id
-    })
-
-    await queue1.save()
-    await queue2.save()
-    await queue3.save()
-    await queue4.save()
-
+    event.save()
     return event._id
 }
 
