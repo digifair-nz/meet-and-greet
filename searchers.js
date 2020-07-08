@@ -16,6 +16,8 @@ module.exports = function(wsInstance) {
             this.activeNotifications = []
 
             const queue = await Queue.findById(queueId)
+            const company = await Company.findById(queue.companyId)
+            this.companyName = company.name
             this.companyId = queue.companyId
             this.eventId = queue.eventId
 
@@ -39,9 +41,9 @@ module.exports = function(wsInstance) {
 
                 const isGoogle = (await Company.findById(this.companyId)) == 'Google'
                 const rooms = await Room.find({ eventId: this.eventId, companyId: this.companyId })
-                // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
                 // console.log(`Rooms: ${rooms}`)
-                console.log(`Rooms 2: ${rooms.map(room => room.inSession)}`)
+                // console.log(`Pre rooms: event id: ${this.eventId}, company id: ${this.companyId}`)
+                console.log(`Rooms for ${this.companyName}: Map: ${rooms.map(room => room.inSession)} length: ${rooms.length}. Rooms:`, rooms)
                 const availableRooms = rooms.reduce((total, value) => total + !value.inSession, 0)
                 // console.log('running 2')
                 if(availableRooms == 0 || availableRooms <= this.activeNotifications) {
