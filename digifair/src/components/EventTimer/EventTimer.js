@@ -12,7 +12,7 @@ const eventTimer = (props) => {
     );
   };
 
-  const expiration = new Date(props.eventExpiration);
+  const expiration = new Date(props.expirationDate);
   return (
     <div className={classes.EventTimerContainer}>
       <img

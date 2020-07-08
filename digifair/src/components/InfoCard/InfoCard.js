@@ -108,7 +108,7 @@ class SessionInfoCard extends Component {
           <div className={classes.EventInfo}>
             <span className={classes.ContainerTitle}>Event Info</span>
             <span className={classes.EventName}>{this.props.eventName}</span>
-            <EventTimer eventExpiration={this.props.eventExpiration} />
+            <EventTimer eventExpiration={this.props.expirationDate} />
           </div>
         </div>
       );

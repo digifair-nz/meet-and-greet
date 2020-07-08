@@ -555,7 +555,6 @@ class ChatRoom extends Component {
       screenSubscriberClass,
     } = containerClasses(this.state);
 
-
     return (
       <div className={classes.ChatRoomContainer}>
         {/*This shows the recruiter user a tutorial of the platform covering kicking, inviting, chatting and video controlling  */}
@@ -568,7 +567,7 @@ class ChatRoom extends Component {
           <InfoCard
             eventName={this.props.event.eventName}
             queuedStudentsNum={this.props.queueLength}
-            eventExpiration={this.props.event.eventExpiration}
+            expirationDate={this.props.event.expirationDate}
             startTimer={this.state.connections.length > 1}
           />
         ) : null}

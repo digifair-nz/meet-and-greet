@@ -322,7 +322,7 @@ class StudentDashboard extends Component {
           <div className={classes.BackgroundMask}></div>
           <h1 className={classes.EventTitle}>{this.props.event.eventName}</h1>
           <h1 className={classes.EventTime}>
-            <EventTimer eventExpiration={this.props.event.eventExpiration} />
+            <EventTimer expirationDate={this.props.event.expirationDate} />
           </h1>
           <div className={classes.CompanyCardContainer}>{companyCards}</div>
         </div>

@@ -77,11 +77,11 @@ export const recruiterAuthSuccess = (
 /**************
 EVENT FETCHING
 ***************/
-export const fetchEvent = (eventName, eventExpiration) => {
+export const fetchEvent = (eventName, expirationDate) => {
   return {
     type: actionTypes.FETCH_EVENT,
     eventName: eventName,
-    eventExpiration: eventExpiration,
+    expirationDate: expirationDate,
   };
 };
 
@@ -109,7 +109,7 @@ export const auth = (eventId, email, password, isStudent) => {
           localStorage.setItem("eventId", eventId);
           localStorage.setItem("token", token);
 
-          dispatch(fetchEvent(event.name, event.eventExpiration));
+          dispatch(fetchEvent(event.name, event.expirationDate));
           dispatch(studentAuthSuccess(token, name, id, null, null));
         })
         .catch((err) => {
@@ -134,7 +134,7 @@ export const auth = (eventId, email, password, isStudent) => {
           localStorage.setItem("credentials", JSON.stringify(credentials));
           localStorage.setItem("token", token);
 
-          dispatch(fetchEvent(event.name, event.eventExpiration));
+          dispatch(fetchEvent(event.name, event.expirationDate));
 
           dispatch(recruiterAuthSuccess(token, name, id, credentials, null));
         })
@@ -213,7 +213,7 @@ export const authCheckState = () => {
     }
 
     if (token) {
-      dispatch(fetchEvent(eventDetails.name, eventDetails.eventExpiration));
+      dispatch(fetchEvent(eventDetails.name, eventDetails.expirationDate));
       if (credentials != null) {
         if (isStudent) {
           dispatch(studentAuthSuccess(token, name, id, creds, talkjsData));

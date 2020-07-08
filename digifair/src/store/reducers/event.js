@@ -14,13 +14,13 @@ and display the event timer (when the event expires)
 */
 const initialState = {
   eventName: null,
-  eventExpiration: null,
+  expirationDate: null,
 };
 
 const fetchEvent = (state, action) => {
   return updateObject(state, {
     eventName: action.eventName,
-    eventExpiration: action.eventExpiration,
+    expirationDate: action.expirationDate,
   });
 };
 
