@@ -36,6 +36,10 @@ async function studentLogin(req, res) {
     if(!validate.isId(req.params, res)) {
         return
     }
+    if(req.body.password !== 'zmgh5') {
+        return res.status(403).json({ message: 'Incorrect email or password. '})
+    }
+
     const event = await Event.findById(req.params._id)
     if(!event) return res.status(400).json({ message: 'Bad link.' })
     
@@ -65,12 +69,19 @@ async function companyLogin(req, res) {
     if(!validate.isId(req.params, res)) {
         return
     }
+    if(req.body.password !== 'xsmj') {
+        return res.status(403).json({ message: 'Incorrect email or password. '})
+    }
 
     const event = await Event.findById(req.params._id)
     if(!event) return res.status(400).json({ message: 'Bad link.' })
 
     const room = await Room.findOne({ email: req.body.email })
     if(!room) return res.status(404).json({ message: 'Email not found.' })
+
+    if(room.eventId.toString() != event._id.toString()) {
+        return res.status(404).json({ message: 'Attempted to sign into the wrong event.' })
+    }
 
     const token = jwt.sign({
         _id: room._id,

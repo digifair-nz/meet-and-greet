@@ -171,17 +171,25 @@ async function seedDatabase(opentok = false) {
 }
 
 async function testSeed() {
-    const userNames = ['test', 'Johniel', 'Annie', 'Ann Susan', 'Cecilia', 'Ric', 'Yoon Jung', 'Sherine', 'Jaay', 'Gene', 'Andrew', 'Pearly', 'Cristi', 'Richard Lee', 'Jordan', 'Mj', 'Jessie', 'Sultan', 'Naveen', 'Jerry', 'Henry', 'Nathanael Rais', 'Piyush', 'Spp', 'Vincent', 'David', 'Anahita', 'Thomas', 'Andrei', 'Dyego Oliveira', 'Cherie', 'Nidhi', 'Joe Gu', 'Taine', 'Ryan', 'Doris', 'Ryan', 'Di Kun', 'Sherman', 'Mridula', 'Dave Shin', 'Karl', 'Jafar', 'Joshua', 'George', 'Anton Rozhanskii', 'Fernando', 'Sunny', 'Sharon', 'Chetan', 'Bernie', 'Vimi', 'Matt', 'Melissa', 'Saedeepu', 'Raman', 'Songyan', 'Ehsaas', 'Nishat']
+    const userNames = ['Michaeled Shaimerden', 'Mercury Lin', 'Johniel', 'Annie', 'Ann Susan', 'Cecilia', 'Ric', 'Yoon Jung', 'Sherine', 'Jaay', 'Gene', 'Andrew', 'Pearly', 'Cristi', 'Richard Lee', 'Jordan', 'Mj', 'Jessie', 'Sultan', 'Naveen', 'Jerry', 'Henry', 'Nathanael Rais', 'Piyush', 'Spp', 'Vincent', 'David', 'Anahita', 'Thomas', 'Andrei', 'Dyego Oliveira', 'Cherie', 'Nidhi', 'Joe Gu', 'Taine', 'Ryan', 'Doris', 'Ryan', 'Di Kun', 'Sherman', 'Mridula', 'Dave Shin', 'Karl', 'Jafar', 'Joshua', 'George', 'Anton Rozhanskii', 'Fernando', 'Sunny', 'Sharon', 'Chetan', 'Bernie', 'Vimi', 'Matt', 'Melissa', 'Saedeepu', 'Raman', 'Songyan', 'Ehsaas', 'Nishat', 'Ethan', 'Jay', 'Kombe', 'Jin', 'Helen', 'Liam', 'Martin', 'James', 'Sahil', 'Dan', 'Clarissa', 'Cj', 'Satnam', 'Anna', 'Kabilan', 'Lawrence', 'Zaine', 'Negar', 'Sabrina Teoh', 'Patricia Virgen', 'Puru', 'Philip', 'Stepan Belousov', 'Zoe', 'Julie', 'Alex', 'Tasha', 'Amaryah', 'Callum', 'Mahuya', 'Justine', 'Shantal Jose', 'Rongomai', 'Suman', 'Praveen', 'Emily', 'Yvonne']
 
-    const userEmails = ['t@gmail.com', 'accounts@johniel.nz', 'annie.e.freeman@gmail.com', 'annsusan1923@gmail.com', 'ceciliayin@yahoo.com', 'ricjohn.genoguin@gmail.com', 'byyoonj@gmail.com', 'sherine.balaha@gmail.com', 'sriramemailsyou@gmail.com', 'gene.d.culling@gmail.com', 'a.khomushin@gmail.com', 'choongpl@gmail.com', 'ilagancris@myvuw.ac.nz', 'richard_875@me.com', 'jordan.gelling@yahoo.co.nz', 'rhymermj@gmail.com', 'nzjessierongen@gmail.com', 'smob123@hotmail.com', 'thebanterage@gmail.com', 'jerryyangliufan@hotmail.com', 'henryb679@outlook.com', 'nathanael@nathansoftware.com', 'sharmapiyush4613@gmail.com', 'sooryaprakml@gmail.com', 'tranhieunz@gmail.com', 'davidcorner90@gmail.com', 'anahita.karpour@gmail.com', 'thomas@rainfords.net', 'tatarov.andrey@gmail.com', 'dyegomendonca@gmail.com', 'cheriedeng@gmail.com', 'nidhipatel01@hotmail.com', 'xiaozhougu@hotmail.com', 'tainejcollins@gmail.com', 'ryanbircham@gmail.com', 'hlee441@aucklanduni.ac.nz', 'rtan265@gmail.com', 'me@dikunong.nz', 'shermanchin33@gmail.com', 'mridulamanderwad@gmail.com', 'wndyddld12@gmail.com', 'karl.cc14@gmail.com', 'jmaa831@aucklanduni.ac.nz', 'joshuaglennmurphy@gmail.com', 'gbla987@aucklanduni.ac.nz', 'anton_rozhanskii@yahoo.com', 'jparrax17@gmail.com', 'sunnyfengnz@gmail.com', 'sharonmathews00@gmail.com', 'takyarchetan@gmail.com', 'berniemaecruz@gmail.com', 'vimu94@gmail.com', 'matthewnsinclair@gmail.com', 'melissalokvw+sot@gmail.com', 'saedeepu23@gmail.com', 'er.ramankumari@gmail.com', 'songyanstteng@hotmail.com', 'ehsaas.grover@hotmail.com', 'dr.nishats@yahoo.com']
+    const userEmails = ['michael@tadesign.co.nz', 'lin8231@outlook.com', 'accounts@johniel.nz', 'annie.e.freeman@gmail.com', 'annsusan1923@gmail.com', 'ceciliayin@yahoo.com', 'ricjohn.genoguin@gmail.com', 'byyoonj@gmail.com', 'sherine.balaha@gmail.com', 'sriramemailsyou@gmail.com', 'gene.d.culling@gmail.com', 'a.khomushin@gmail.com', 'choongpl@gmail.com', 'ilagancris@myvuw.ac.nz', 'richard_875@me.com', 'jordan.gelling@yahoo.co.nz', 'rhymermj@gmail.com', 'nzjessierongen@gmail.com', 'smob123@hotmail.com', 'thebanterage@gmail.com', 'jerryyangliufan@hotmail.com', 'henryb679@outlook.com', 'nathanael@nathansoftware.com', 'sharmapiyush4613@gmail.com', 'sooryaprakml@gmail.com', 'tranhieunz@gmail.com', 'davidcorner90@gmail.com', 'anahita.karpour@gmail.com', 'thomas@rainfords.net', 'tatarov.andrey@gmail.com', 'dyegomendonca@gmail.com', 'cheriedeng@gmail.com', 'nidhipatel01@hotmail.com', 'xiaozhougu@hotmail.com', 'tainejcollins@gmail.com', 'ryanbircham@gmail.com', 'hlee441@aucklanduni.ac.nz', 'rtan265@gmail.com', 'me@dikunong.nz', 'shermanchin33@gmail.com', 'mridulamanderwad@gmail.com', 'wndyddld12@gmail.com', 'karl.cc14@gmail.com', 'jmaa831@aucklanduni.ac.nz', 'joshuaglennmurphy@gmail.com', 'gbla987@aucklanduni.ac.nz', 'anton_rozhanskii@yahoo.com', 'jparrax17@gmail.com', 'sunnyfengnz@gmail.com', 'sharonmathews00@gmail.com', 'takyarchetan@gmail.com', 'berniemaecruz@gmail.com', 'vimu94@gmail.com', 'matthewnsinclair@gmail.com', 'melissalokvw+sot@gmail.com', 'saedeepu23@gmail.com', 'er.ramankumari@gmail.com', 'songyanstteng@hotmail.com', 'ehsaas.grover@hotmail.com', 'dr.nishats@yahoo.com', 'ewpbaker@gmail.com','sjaybpatel@gmail.com','kombe.kampanga@hotmail.com','hajoung222@gmail.com','kimyen.hoang97@gmail.com','liam.scott.russell@gmail.com','martintiangco@gmail.com','yddjames@gmail.com','sahilbhatiani28@gmail.com','goodssendev@gmail.com','clarissabudiharto@gmail.com', 'cuciocj@gmail.com','bsatnam98@gmail.com','anna.henson@outlook.co.nz','kabilan-k@hotmail.com','lawrence.shum11@gmail.com','manizaine@gmail.com','negarmohamadhasan@gmail.com','sabrina_teoh@hotmail.com','ckt1418@aut.ac.nz','purubest@gmail.com','philip.machado@gmail.com','stepan@belousov.nz','pluie2000@hotmail.com','wenlijun07@gmail.com','me@alexverkerk.com','tashaselby27@outlook.com','amaryahhalo.h@gmail.com','cal.macaskill@gmail.com','mahuya78@gmail.com','justine.limranola@gmail.com','eireenshan@gmail.com','rongomaiwahine21@gmail.com','mail@sumanmhr.com','praveenbandarageofficial@gmail.com','ezemilyzhang@gmail.com','yvonnexu032@gmail.com']
 
-    const recruiterNames = ['test', 'Alan Doak', 'Alex Corkin', 'Bevan Dunning', 'Cara Hill', 'Daniel Donbavand', 'Gus Watson', 'Ico', 'James Freeman', 'Janelle Baptist', 'Melonie Cole', 'Nick', 'Prae Songprasit', 'Sarah Lock', 'Shaun Field', 'Simon Murcott', 'Tom Bojesen-Trepka', 'Walter Lim']
+    const recruiterNames = ['Alan Doak', 'Alex Corkin', 'Bevan Dunning', 'Cara Hill', 'Daniel Donbavand', 'Gus Watson', 'Ico', 'James Freeman', 'Janelle Baptist', 'Melonie Cole', 'Nick', 'Prae Songprasit', 'Sarah Lock', 'Shaun Field', 'Simon Murcott', 'Tom Bojesen-Trepka', 'Walter Lim']
 
     const recruiterEmails = ['t@gmail.com', 'alan@sharesies.co.nz', 'alexcorkin@gmail.com', 'bevan.dunning@gmail.com', 'cara.hill@ackama.com', 'donbavand@gmail.com', 'gus@sharesies.co.nz', 'icos@amazon.com', 'j.daniel.freeman@gmail.com', 'janelle.baptist@gmail.com', 'melonie@mindshift.kiwi', 'nickcho@amazon.com', 'prae@lackofcolours.com', 'sarlock@amazon.com', 'shaun.field@nintex.com', 'simon.murcott@lyniate.com', 'tombt@amazon.com', 'waltissomewhere@gmail.com']
 
+    const recruiterNames2 = ['Chris Crow', 'Nuri Gocay', 'James Freeman', 'Lena Plaksina', 'Lora Vardarova', 'Oliver Jacks', 'Prae Songprasit', 'Sarah Moyne', 'Sam Jarman', 'Simon Murcott', 'Walter Lim']
+
+    const recruiterEmails2 = ['cpcrow@gmail.com', 'gocad@amazon.com', 'j.daniel.freeman@gmail.com', 'lena.plaksina@gmail.com', 'lora.vardarova@gmail.com', 'oliver.jacks@pushpay.com', 'prae@lackofcolours.com', 's.moyne@auckland.ac.nz', 'sam@samjarman.co.nz', 'simon.murcott@lyniate.com', 'waltissomewhere@gmail.com']
+
     const event = new Event({
         name: "CV Reviews",
-        expirationDate: 'December 17, 1995 03:24:00'
+        expirationTime: 'July 9, 2020 13:00:00'
+    })
+    const event2 = new Event({
+        name: "CV Reviews",
+        expirationTime: 'July 9, 2020 19:00:00'
     })
 
     for(let i = 0; i < userNames.length; i++) {
@@ -189,7 +197,7 @@ async function testSeed() {
             name: userNames[i],
             email: userEmails[i]
         })
-        user.save()
+        await user.save()
     }
 
     const companies = []
@@ -209,14 +217,40 @@ async function testSeed() {
             eventId: event._id,
             companyId: company._id    
         })
-        queue.save()
-        company.save()
-        room.newSessionId()
+        await queue.save()
+        await company.save()
+        await room.newSessionId()
     }
     event.companiesAttending = companies
+    const companies2 = []
+    for(let i = 0; i < recruiterNames2.length; i++) {
+        const company = new Company({
+            name: recruiterNames2[i].split(' ')[0],
+            logoURL: ' '
+        })
+        companies2.push(company._id)
+        const room = new Room({
+            eventId: event2._id,
+            companyId: company._id,
+            name: recruiterNames2[i],
+            email: recruiterEmails2[i]
+        })
+        const queue = new Queue({
+            eventId: event2._id,
+            companyId: company._id    
+        })
+        await queue.save()
+        await company.save()
+        await room.newSessionId()
+    }
+    event2.companiesAttending = companies2
 
-    event.save()
-    return event._id
+    await event.save()
+    await event2.save()
+    return {
+        event1: event._id,
+        event2: event2._id
+    }
 }
 
 module.exports = {
