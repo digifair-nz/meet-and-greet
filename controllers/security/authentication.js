@@ -80,7 +80,7 @@ async function companyLogin(req, res) {
     if(!room) return res.status(404).json({ message: 'Email not found.' })
 
     if(room.eventId.toString() != event._id.toString()) {
-        return res.status(404).json({ message: 'Attempted to sign into the wrong event.' })
+        return res.status(404).json({ message: 'Attempted to sign into the wrong event.'})
     }
 
     const token = jwt.sign({
