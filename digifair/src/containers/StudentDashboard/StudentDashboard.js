@@ -121,7 +121,8 @@ class StudentDashboard extends Component {
                     // Notification
                     const title = "Your Queue is Ready!";
                     const body =
-                      "Google is ready for you. Accept or decline your queue";
+                      this.props.companies[i].name +
+                      " is ready for you. Accept or decline your queue";
                     //sendNotification(title, body);
 
                     let notification = new Notification(title, {

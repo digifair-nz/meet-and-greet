@@ -103,6 +103,8 @@ export const auth = (eventId, email, password, isStudent) => {
           const id = jwt(token)._id;
           const event = response.data.event;
 
+          console.log(event);
+          
           localStorage.setItem("event", JSON.stringify(event));
           localStorage.setItem("name", name);
           localStorage.setItem("id", id);
