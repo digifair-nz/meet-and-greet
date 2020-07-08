@@ -34,6 +34,10 @@ module.exports = function(wsInstance) {
         searchers.setupAll()
         return res.status(200).json({ message: 'Success.', eventId })
     })
+    router.post('/searcher', (req, res) => {
+        searchers.setupAll()
+        return res.status(200).json({ message: 'sucess' })
+    })
 
     return router
 }
