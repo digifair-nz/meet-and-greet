@@ -18,7 +18,7 @@ const initialState = {
     {
       logoURL:
         "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/googleLogo.png?alt=media&token=0bb51a33-acd0-4294-992b-c1a5dd40630e",
-      _id: "google",
+      _id: "Google",
       isQueued: false,
       hadSession: false,
       queuePosition: null,
@@ -28,7 +28,7 @@ const initialState = {
     {
       logoURL:
         "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/imagrLogo.png?alt=media&token=f502a483-cc74-4249-964a-d140086e804c",
-      _id: "imagr",
+      _id: "Imagr",
       isQueued: false,
       hadSession: false,
       queuePosition: null,
@@ -38,12 +38,12 @@ const initialState = {
     {
       logoURL:
         "https://firebasestorage.googleapis.com/v0/b/digifairnz.appspot.com/o/xeroLogo.png?alt=media&token=91557793-95e2-47a2-b75b-c52f6152daa1",
-      _id: "imagr",
+      _id: "Soul Machines",
       isQueued: false,
       hadSession: false,
       queuePosition: null,
       queuin: false,
-      description: "Imagr description",
+      description: "Soul description",
     },
   ],
   loading: false,

@@ -25,7 +25,7 @@ class ReadyCheckPrompt extends Component {
       });
       document.title = "Dashboard";
 
-      this.props.studentJoinChatroom(this.props.companyId);
+      this.props.onDeclineHandler();
 
       // this.this.props.history.push("/chat-room");
     }
@@ -42,7 +42,7 @@ class ReadyCheckPrompt extends Component {
   onDeclineHandler = () => {
     document.title = "Dashboard";
     this.props.onDeclineHandler();
-    this.props.declineJoinChatroom(this.props.companyId, this.props.index);
+    // this.props.declineJoinChatroom(this.props.companyId, this.props.index);
   };
 
   timerExpireHandler = () => {
@@ -72,22 +72,21 @@ class ReadyCheckPrompt extends Component {
           <CountdownTimer onTimerEnd={this.timerExpireHandler} />
           <span>Ready?</span>
         </div>
-        {this.props.loading ? (
-          <Spinner />
-        ) : (
-          <div className={classes.ButtonContainer}>
-            <Button
-              onClick={this.props.onClick}
-              clicked={this.onAcceptHandler}
-              btnType="Accept"
-            >
-              Accept
-            </Button>
-            <Button clicked={this.onDeclineHandler} btnType="Decline">
-              Decline
-            </Button>
-          </div>
-        )}
+
+        <div className={classes.ButtonContainer}>
+          <Button
+            onClick={this.props.onClick}
+            clicked={this.onAcceptHandler}
+            btnType="Accept"
+          >
+            Accept
+          </Button>
+          <button>hello</button>
+
+          <Button clicked={this.onDeclineHandler} btnType="Decline">
+            Decline
+          </Button>
+        </div>
       </div>
     );
   }

@@ -62,7 +62,7 @@ class StudentDashboard extends Component {
 
     if (localStorage.getItem("seenTutorial")) {
       this.setState({
-        showTutorial: false,
+        showTutorial: true,
       });
     }
 
@@ -80,82 +80,36 @@ class StudentDashboard extends Component {
       } else {
         notificationGranted = true;
       }
+      console.log("hello");
+      setTimeout(() => {
+        console.log("hello");
+        this.setState({
+          readyCompanyIndex: 0,
+          showReadyPromptPopUp: true,
+        });
+        // Wait 10 seconds before closing the pop up.
 
-      // Open a socket connection
-      // This page is only accessible to authenticated users but double check before making a connection
-      if (this.props.token !== null) {
-        // Check that we haven't connected to the socket before
+        // ****READY POP UP*****
+        if (notificationGranted) {
+          // Notification
+          const title = "Your Queue is Ready!";
+          const body = "Google is ready for you. Accept or decline your queue";
+          //sendNotification(title, body);
 
-        var ws = new WebSocket(
-          // "ws://localhost:3000/?token=" + this.props.token
-          "wss://digifair-test.herokuapp.com/?token=" + this.props.token
-        );
+          let notification = new Notification(title, {
+            body: body,
+            icon: digifairLogo,
+          });
 
-        setInterval(() => {
-          ws.send(
-            JSON.stringify({
-              messageType: "ping",
-            })
-          );
-        }, 30000);
+          audio.play();
 
-        // console.log("Socket Connection Opened!");
-        ws.onmessage = (message) => {
-          // dispatch update queue position
-          //console.log(message);
-          const packet = JSON.parse(message.data);
-          //console.log(packet.messageType);
-          if (this.props.companies !== null && packet.companyId !== null) {
-            // console.log(packet.companyId);
-
-            // Once the student reaches his turn
-            if (packet.messageType === "ready") {
-              // Find the company that is ready to chat and set the pop up
-              for (let i = 0; i < this.props.companies.length; i++) {
-                if (this.props.companies[i]._id === packet.companyId) {
-                  this.setState({
-                    readyCompanyIndex: i,
-                    showReadyPromptPopUp: true,
-                  });
-                  // Wait 10 seconds before closing the pop up.
-
-                  // ****READY POP UP*****
-                  if (notificationGranted) {
-                    // Notification
-                    const title = "Your Queue is Ready!";
-                    const body =
-                      "Google is ready for you. Accept or decline your queue";
-                    //sendNotification(title, body);
-
-                    let notification = new Notification(title, {
-                      body: body,
-                      icon: digifairLogo,
-                    });
-
-                    audio.play();
-
-                    notification.onclick = () => {
-                      document.title = "Dashboard";
-                      window.focus(); // Redirects to the window
-                    };
-                    document.title = "Digifair (1)";
-                  }
-
-                  break;
-                }
-              }
-            } else {
-              // Otherwise update queue position for the specific company
-              this.props.updateQueuePosition(
-                packet.companyId,
-                packet.queuePosition
-              );
-            }
-          }
-
-          console.log(message);
-        };
-      }
+          notification.onclick = () => {
+            document.title = "Dashboard";
+            window.focus(); // Redirects to the window
+          };
+          document.title = "Digifair (1)";
+        }
+      }, 5000);
     }
   }
 
