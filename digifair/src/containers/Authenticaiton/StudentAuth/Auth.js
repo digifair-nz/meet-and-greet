@@ -82,14 +82,14 @@ class StudentAuth extends Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.authenticated) {
-      window.removeEventListener("keydown", this.onKeydown, false);
-      this.setState({
-        invalidForm: false,
-      });
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.authenticated) {
+  //     window.removeEventListener("keydown", this.onKeydown, false);
+  //     this.setState({
+  //       invalidForm: false,
+  //     });
+  //   }
+  // }
 
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
@@ -125,6 +125,7 @@ class StudentAuth extends Component {
 
   submitHandler = (event) => {
     event.preventDefault();
+    // this.props.history.push("/dashboard");
     this.setState({ authenticated: true });
     // if (!this.props.authenticated) {
     //   event.preventDefault();
@@ -237,7 +238,7 @@ class StudentAuth extends Component {
 
     // console.log(this.props.token == null);
     if (this.state.authenticated) {
-      authed = <Redirect to={this.props.authRedirectPath} />;
+      authed = <Redirect to="/dashboard" />;
     }
 
     let errorMessage = null;
