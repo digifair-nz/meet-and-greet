@@ -18,7 +18,6 @@ class App extends Component {
     // check users local storage for a token and try to sign them in automatically
     // Also check credentials for a room session and redirect to the room if credentials are found
 
-    
     this.props.onTryAutoSignUp();
     console.log(this.props.hasCredentials);
     // localStorage.getItem("event")
@@ -26,56 +25,58 @@ class App extends Component {
   }
 
   render() {
-    let urlWithEventId = "/sign-in";
+    // let urlWithEventId = "/sign-in";
 
-    if (this.props.eventId !== null) {
-      urlWithEventId += "/" + this.props.eventId;
-    }
+    // if (this.props.eventId !== null) {
+    //   urlWithEventId += "/" + this.props.eventId;
+    // }
 
-    let routes = (
-      <Switch>
-        <Route path="/sign-in/:id" component={Auth} exact />
-        {/* <Route path="/" component={StudentDashboard} exact /> */}
-        <Redirect to={urlWithEventId} />
-      </Switch>
-    );
+    // let routes = (
+    //   <Switch>
+    //     <Route path="/sign-in/:id" component={Auth} exact />
+    //     {/* <Route path="/" component={StudentDashboard} exact /> */}
+    //     <Redirect to={urlWithEventId} />
+    //   </Switch>
+    // );
 
-    if (this.props.isAuthenticated && this.props.isStudent) {
-      routes = (
-        <Switch>
-          <Route path="/" component={StudentDashboard} exact />
-          <Route path="/chat-room" component={ChatRoom} exact />
-          <Redirect to="/" />
-          <Route path="/sign-in" component={Auth} exact />
-        </Switch>
-      );
-    }
+    // if (this.props.isAuthenticated && this.props.isStudent) {
+    //   routes = (
+    //     <Switch>
+    //
+    //
+    //       <Redirect to="/" />
+    //       <Route path="/sign-in" component={Auth} exact />
+    //     </Switch>
+    //   );
+    // }
 
-    if (
-      this.props.isAuthenticated &&
-      this.props.hasCredentials &&
-      this.props.isStudent
-    ) {
-      routes = (
-        <Switch>
-          <Route path="/chat-room" component={ChatRoom} exact />
-          <Route path="/" component={StudentDashboard} exact />
-          <Redirect to="/chat-room" />
-        </Switch>
-      );
-    } else if (this.props.isAuthenticated && !this.props.isStudent) {
-      routes = (
-        <Switch>
-          <Route path="/chat-room" component={ChatRoom} exact />
-          <Redirect to="/chat-room" />
-          <Route path="/sign-in" component={Auth} exact />
-        </Switch>
-      );
-    }
+    // if (
+    //   this.props.isAuthenticated &&
+    //   this.props.hasCredentials &&
+    //   this.props.isStudent
+    // ) {
+    //   routes = (
+    //     <Switch>
+    //       <Route path="/chat-room" component={ChatRoom} exact />
+    //       <Route path="/" component={StudentDashboard} exact />
+    //       <Redirect to="/chat-room" />
+    //     </Switch>
+    //   );
+    // } else if (this.props.isAuthenticated && !this.props.isStudent) {
+    //   routes = (
+
+    //   );
+    // }
 
     return (
       <div className="App">
-        <Layout>{routes}</Layout>
+        <Layout>
+          <Switch>
+            <Route path="/dashboard" component={StudentDashboard} exact />
+            <Route path="/chat-room" component={ChatRoom} exact />
+            <Route path="/" component={Auth} exact />
+          </Switch>
+        </Layout>
       </div>
     );
   }

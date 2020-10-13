@@ -10,7 +10,7 @@ import Input from "../../../components/UI/Input/Input";
 import SwitchButton from "../../../components/UI/SwitchButton/SwitchButton";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import sot_logo from "../../../assets/company_logos/logo-sot-clear.png";
-import Auxiliary from "../../../hoc/Auxiliary"
+import Auxiliary from "../../../hoc/Auxiliary";
 
 class StudentAuth extends Component {
   // REFRACTOR SO THAT OTHER COMPONENTS CAN REUSE!
@@ -52,6 +52,7 @@ class StudentAuth extends Component {
     isStudent: true,
     eventId: null,
     invalidFormMessage: null,
+    authenticated: false,
   };
 
   componentDidMount() {
@@ -123,42 +124,41 @@ class StudentAuth extends Component {
   };
 
   submitHandler = (event) => {
-    if (!this.props.authenticated) {
-      event.preventDefault();
-
-      // if (this.state.controls.email.value === "" && ) {
-      //   this.setState({
-      //     invalidForm: true,
-      //   });
-      // } else {
-      //   this.setState({
-      //     invalidForm: false,
-      //   });
-
-      if (
-        !this.checkValidity(this.state.controls.email.value, { isEmail: true })
-      ) {
-        this.setState({
-          invalidForm: true,
-          invalidFormMessage: "Invalid Email",
-        });
-      } else {
-        this.setState({
-          invalidForm: false,
-        });
-
-        // Dispatch auth action
-        if (!this.state.invalidForm) {
-          console.log(this.state.controls.email.value);
-          this.props.onAuth(
-            this.state.eventId,
-            this.state.controls.email.value,
-            this.state.controls.password.value,
-            this.state.isStudent
-          );
-        }
-      }
-    }
+    event.preventDefault();
+    this.setState({ authenticated: true });
+    // if (!this.props.authenticated) {
+    //   event.preventDefault();
+    //   // if (this.state.controls.email.value === "" && ) {
+    //   //   this.setState({
+    //   //     invalidForm: true,
+    //   //   });
+    //   // } else {
+    //   //   this.setState({
+    //   //     invalidForm: false,
+    //   //   });
+    //   if (
+    //     !this.checkValidity(this.state.controls.email.value, { isEmail: true })
+    //   ) {
+    //     this.setState({
+    //       invalidForm: true,
+    //       invalidFormMessage: "Invalid Email",
+    //     });
+    //   } else {
+    //     this.setState({
+    //       invalidForm: false,
+    //     });
+    //     // Dispatch auth action
+    //     if (!this.state.invalidForm) {
+    //       console.log(this.state.controls.email.value);
+    //       this.props.onAuth(
+    //         this.state.eventId,
+    //         this.state.controls.email.value,
+    //         this.state.controls.password.value,
+    //         this.state.isStudent
+    //       );
+    //     }
+    //   }
+    // }
   };
   userTypeSwitch = () => {
     this.setState((prevState) => ({
@@ -183,7 +183,6 @@ class StudentAuth extends Component {
       config: this.state.controls.email,
     };
 
-
     formElementsArray[1] = {
       id: "password",
       config: this.state.controls.password,
@@ -207,7 +206,9 @@ class StudentAuth extends Component {
       <Auxiliary>
         <Input
           key={formElementsArray[0].id}
-          changed={(event) => this.inputChangedHandler(event, formElementsArray[0].id)}
+          changed={(event) =>
+            this.inputChangedHandler(event, formElementsArray[0].id)
+          }
           elementType={formElementsArray[0].config.elementType}
           elementConfig={formElementsArray[0].config.elementConfig}
           value={formElementsArray[0].config.value}
@@ -218,7 +219,9 @@ class StudentAuth extends Component {
         />
         <Input
           key={formElementsArray[1].id}
-          changed={(event) => this.inputChangedHandler(event, formElementsArray[1].id)}
+          changed={(event) =>
+            this.inputChangedHandler(event, formElementsArray[1].id)
+          }
           elementType={formElementsArray[1].config.elementType}
           elementConfig={formElementsArray[1].config.elementConfig}
           value={formElementsArray[1].config.value}
@@ -233,7 +236,7 @@ class StudentAuth extends Component {
     let authed = null;
 
     // console.log(this.props.token == null);
-    if (this.props.authenticated) {
+    if (this.state.authenticated) {
       authed = <Redirect to={this.props.authRedirectPath} />;
     }
 
@@ -251,7 +254,6 @@ class StudentAuth extends Component {
     }
 
     return (
-
       <Auxiliary>
         <div className={classes.MobileOnly}>
           <img
@@ -259,7 +261,8 @@ class StudentAuth extends Component {
             src={digifairLogo}
             alt="Digifair Black and White Logo"
           />
-        Please use a <strong>computer</strong> or <strong>tablet</strong> to attend this event!
+          Please use a <strong>computer</strong> or <strong>tablet</strong> to
+          attend this event!
         </div>
 
         <div
@@ -269,8 +272,6 @@ class StudentAuth extends Component {
               : classes.AuthContainerCompany
           }
         >
-
-
           {
             authed /*This causes authenticated users to be redirected to the root */
           }
@@ -279,7 +280,6 @@ class StudentAuth extends Component {
             src={digifairLogo}
             alt="Digifair Black and White Logo"
           />
-
 
           <div className={classes.FormContainer}>
             <form
@@ -301,13 +301,13 @@ class StudentAuth extends Component {
             {this.props.loading ? (
               <Spinner />
             ) : (
-                <Button
-                  clicked={(event) => this.submitHandler(event)}
-                  btnType="Accept"
-                >
-                  Sign in
-                </Button>
-              )}
+              <Button
+                clicked={(event) => this.submitHandler(event)}
+                btnType="Accept"
+              >
+                Sign in
+              </Button>
+            )}
           </div>
           <div
             className={
@@ -340,12 +340,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (eventId, email, password, isStudent) =>
-      dispatch(actions.auth(eventId, email, password, isStudent)),
-    // onRecruiterAuth: (email, password) =>
-    //   dispatch(actions.recruiterAuth(email, password)),
-    onSetAuthRedirectPath: (path) =>
-      dispatch(actions.setAuthRedirectPath(path)),
+    // onAuth: (eventId, email, password, isStudent) =>
+    //   dispatch(actions.auth(eventId, email, password, isStudent)),
+    // // onRecruiterAuth: (email, password) =>
+    // //   dispatch(actions.recruiterAuth(email, password)),
+    // onSetAuthRedirectPath: (path) =>
+    //   dispatch(actions.setAuthRedirectPath(path)),
   };
 };
 

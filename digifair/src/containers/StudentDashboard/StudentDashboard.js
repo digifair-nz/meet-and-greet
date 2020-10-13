@@ -67,7 +67,7 @@ class StudentDashboard extends Component {
     }
 
     if (this.props.isStudent) {
-      this.props.fetchCompanies();
+      // this.props.fetchCompanies();
 
       document.title = "Dashboard";
 
@@ -351,7 +351,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchCompanies: () => dispatch(actions.fetchCompanies()),
+    // fetchCompanies: () => dispatch(actions.fetchCompanies()),
     updateQueuePosition: (companyId, queuePosition) =>
       dispatch(actions.updateQueuePosition(companyId, queuePosition)),
     logout: () => dispatch(actions.logout()),

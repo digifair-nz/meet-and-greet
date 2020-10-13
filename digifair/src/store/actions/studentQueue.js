@@ -130,15 +130,7 @@ export const queueStudent = (companyId, index) => {
   return (dispatch) => {
     dispatch(queueInit(companyId, index));
 
-    instance
-      .post("/user/enqueue/" + companyId)
-
-      .then((res) => {
-        dispatch(queueSuccess(companyId, index, res.data.queuePosition));
-      })
-      .catch((error) => {
-        dispatch(queueFail(companyId, index, error.response.data));
-      });
+    dispatch(queueSuccess(companyId, index, 1));
   };
 };
 
@@ -177,17 +169,7 @@ export const dequeueStudent = (companyId, index) => {
   return (dispatch) => {
     dispatch(dequeueInit(companyId, index));
 
-    instance
-      .post("/user/dequeue/" + companyId)
-
-      .then((res) => {
-        // console.log(res);
-
-        dispatch(dequeueSuccess(companyId, index));
-      })
-      .catch((error) => {
-        dispatch(dequeueFail(companyId, index, error.response.data));
-      });
+    dispatch(dequeueSuccess(companyId, index));
   };
 };
 
